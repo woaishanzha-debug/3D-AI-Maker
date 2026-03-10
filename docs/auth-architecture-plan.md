@@ -14,137 +14,47 @@ The system implements a B2B2C multi-tenant authorization flow:
 
 ---
 
-## 🛠️ Phase 1: Prisma Schema Definition
-**Target File:** `prisma/schema.prisma`
-**Action:** Append/Update the following models. Do not delete existing user fields without user confirmation.
-
-```prisma
-enum Role {
-  SUPER_ADMIN
-  ORG_ADMIN
-  TEACHER
-  STUDENT
-}
-
-model User {
-  id            String    @id @default(cuid())
-  role          Role      @default(STUDENT)
-  orgId         String?
-  organization  Organization? @relation(fields: [orgId], references: [id])
-  
-  teacherId     String?
-  teacher       User?     @relation("TeacherStudents", fields: [teacherId], references: [id])
-  students      User[]    @relation("TeacherStudents")
-
-  teacherLicenses TeacherLicense[]
-  createdCodes    InvitationCode[]
-}
-
-model Organization {
-  id            String    @id @default(cuid())
-  name          String
-  users         User[]
-  orgLicenses   OrgLicense[]
-}
-
-model CourseSeries {
-  id            String    @id @default(cuid())
-  name          String    // e.g., "3D打印体系", "AI互动体系"
-  courses       Course[]
-  orgLicenses   OrgLicense[]
-}
-
-model Course {
-  id            String    @id @default(cuid())
-  seriesId      String
-  series        CourseSeries @relation(fields: [seriesId], references: [id])
-  
-  teacherLicenses TeacherLicense[]
-  invitationCodes InvitationCode[]
-}
-
-model OrgLicense {
-  id            String    @id @default(cuid())
-  orgId         String
-  seriesId      String
-  totalSeats    Int
-  usedSeats     Int       @default(0)
-  expiresAt     DateTime
-  
-  organization  Organization @relation(fields: [orgId], references: [id])
-  series        CourseSeries @relation(fields: [seriesId], references: [id])
-}
-
-model TeacherLicense {
-  id            String    @id @default(cuid())
-  teacherId     String
-  courseId      String
-  allocatedSeats Int
-  usedSeats     Int       @default(0)
-  
-  teacher       User      @relation(fields: [teacherId], references: [id])
-  course        Course    @relation(fields: [courseId], references: [id])
-}
-
-model InvitationCode {
-  id            String    @id @default(cuid())
-  code          String    @unique
-  teacherId     String
-  courseId      String
-  maxUses       Int
-  usedCount     Int       @default(0)
-  
-  teacher       User      @relation(fields: [teacherId], references: [id])
-  course        Course    @relation(fields: [courseId], references: [id])
-}
-```
+## ✅ Phase 1: Prisma Schema Definition
+**Status:** COMPLETED
+**Action:** Updated `prisma/schema.prisma` with 4-level hierarchy and licensing models.
 
 ---
 
-## ⚙️ Phase 2: Core Server Actions (Business Logic)
-
+## ✅ Phase 2: Core Server Actions (Business Logic)
+**Status:** COMPLETED (Implemented by Jules)
 **Target Directory:** `src/actions/auth/`
-**Action:** Create isolated Next.js Server Actions with strict Prisma `$transaction` logic.
-
-**Required Functions to Implement:**
-
-1. `assignCourseToTeacher(orgId: string, teacherId: string, courseId: string, seats: number)`
-* *Logic:* Check `OrgLicense` remaining seats -> decrement Org available seats -> upsert `TeacherLicense`.
-
-
-2. `generateInvitationCode(teacherId: string, courseId: string, maxUses: number)`
-* *Logic:* Verify `TeacherLicense` has enough `allocatedSeats - usedSeats` -> create `InvitationCode`.
-
-
-3. `registerStudentWithCode(studentData: any, code: string)`
-* *Logic:* Validate code -> increment code `usedCount` -> increment `TeacherLicense.usedSeats` -> create User with `STUDENT` role, mapping `orgId` and `teacherId`.
-
-
+**Implementation:** 
+- `assignCourseToTeacher`: Handles atomic seat allocation from Org to Teacher.
+- `generateInvitationCode`: Validates teacher license before code creation.
+- `registerStudentWithCode`: Full registration flow with automatic hierarchy mapping.
 
 ---
 
-## 🔒 Phase 3: Middleware & Security
-
+## ✅ Phase 3: Middleware & Security
+**Status:** COMPLETED (Implemented by Jules)
 **Target File:** `src/middleware.ts`
-**Action:** Implement route-based RBAC.
-
-* `/admin/*` -> Requires `SUPER_ADMIN`
-* `/org/*` -> Requires `ORG_ADMIN`
-* `/teacher/*` -> Requires `TEACHER`
-
-**Target File:** `src/lib/dal.ts` (Data Access Layer)
-**Action:** Create a utility function `verifyStudentCourseAccess(studentId: string, courseId: string)` that performs a flat query checking if the student's `teacherId` has a valid `TeacherLicense` for the requested `courseId`.
+- Implemented RBAC for `/admin`, `/org`, and `/teacher`.
+**Target File:** `src/lib/dal.ts`
+- Implemented `verifyStudentCourseAccess` for data-level security.
 
 ---
 
-## 🎨 Phase 4: UI Scaffolding (Placeholder generation)
-
+## 🛠️ Phase 4: UI Scaffolding & Integration
+**Status:** NEXT
 **Target Directory:** `src/app/(dashboard)/`
-**Action:** Create the following page structures (UI only, wire up to actions later):
 
-* `org/matrix/page.tsx`: A matrix view for `ORG_ADMIN` to assign courses to teachers.
-* `teacher/codes/page.tsx`: A view for `TEACHER`s to generate and manage invitation codes.
+1. **ORG_ADMIN Matrix (`org/matrix/page.tsx`)**:
+   - Visual desk for assigning course series to teachers.
+   - Seat count visualization.
+
+2. **TEACHER Dashboard (`teacher/codes/page.tsx`)**:
+   - List assigned courses and seat status.
+   - Modal to generate new student invitation codes.
+
+3. **STUDENT Course View**:
+   - Filtered view showing only authorized courses.
+
+---
 
 ## 🏁 Execution Command for Agent
-
-"I have read the plan. I will start with Phase 1 by updating `prisma/schema.prisma` and running `npx prisma format`. Awaiting user approval to proceed to Phase 2."
+"I have merged Jules' contribution. All backend logic for RBAC is now local. Ready to start Phase 4 UI development."

@@ -18,8 +18,22 @@ export default withAuth(
     }
 
     // 2. 权限拦截：
-    // 如果是 SUPER_ADMIN 或 ADMIN，放行所有
     const token = req.nextauth.token;
+
+    // Route-based RBAC
+    if (pathname.startsWith("/admin") && token?.role !== "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    if (pathname.startsWith("/org") && token?.role !== "ORG_ADMIN" && token?.role !== "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    if (pathname.startsWith("/teacher") && token?.role !== "TEACHER" && token?.role !== "ORG_ADMIN" && token?.role !== "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    // 如果是 SUPER_ADMIN 或 ADMIN，放行所有其他页面
     if (token?.role === "SUPER_ADMIN" || token?.role === "ADMIN") {
       return NextResponse.next();
     }
@@ -63,6 +77,8 @@ export default withAuth(
 export const config = {
   matcher: [
     "/admin/:path*",
+    "/org/:path*",
+    "/teacher/:path*",
     "/tools/:path*",
     "/course/:path*",
     "/dashboard/:path*"
