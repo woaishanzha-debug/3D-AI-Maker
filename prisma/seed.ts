@@ -10,7 +10,10 @@ async function main() {
     const hashedPassword = await bcrypt.hash("woaishanzha", 10);
     const superAdmin = await prisma.user.upsert({
         where: { username: "adminmax" },
-        update: {},
+        update: {
+            password: hashedPassword,
+            role: "SUPER_ADMIN",
+        },
         create: {
             username: "adminmax",
             name: "超级管理员",
@@ -22,20 +25,80 @@ async function main() {
     });
     console.log(`✅ Super Admin created: ${superAdmin.username}`);
 
-    // 2. Create a Test Organization
-    const testOrg = await prisma.organization.create({
-        data: {
-            name: "宋工创意空间示范校",
+    // 2. Clear existing course data to avoid duplicates in this specific setup
+    await prisma.teacherLicense.deleteMany();
+    await prisma.invitationCode.deleteMany();
+    await prisma.orgLicense.deleteMany();
+    await prisma.course.deleteMany();
+    await prisma.courseSeries.deleteMany();
+
+    // 3. Create all 5 Course Series
+    const seriesData = [
+        {
+            id: "ai-interactive",
+            name: "AI 互动教育体系",
+            courses: ["AI 助手基础", "对话式编程入门"]
+        },
+        {
+            id: "3d-printing",
+            name: "3D 打印工具课程",
+            courses: ["Lithophane 照片浮雕", "模型切片与打印"]
+        },
+        {
+            id: "maker-l1",
+            name: "AI 创客教育 L1",
+            courses: ["景泰蓝工艺互动实验", "3D 打印笔空间建模"]
+        },
+        {
+            id: "maker-l2",
+            name: "AI 创客教育 L2",
+            courses: ["参数化设计进阶", "智能机械结构"]
+        },
+        {
+            id: "maker-l3",
+            name: "AI 创客教育 L3",
+            courses: ["综合创客项目集", "AI 视觉控制系统"]
+        }
+    ];
+
+    for (const s of seriesData) {
+        const series = await (prisma as any).courseSeries.upsert({
+            where: { id: s.id },
+            update: { name: s.name },
+            create: {
+                id: s.id,
+                name: s.name,
+                courses: {
+                    create: s.courses.map(name => ({ name }))
+                }
+            }
+        });
+        console.log(`✅ Course Series created: ${series.name}`);
+    }
+
+    // 4. Create a Test Organization
+    const testOrg = await prisma.organization.upsert({
+        where: { id: "test-org-1" },
+        update: {},
+        create: {
+            id: "test-org-1",
+            name: "多面体创客实验室",
         },
     });
-    console.log(`✅ Test Organization created: ${testOrg.name}`);
+    console.log(`✅ Test Organization: ${testOrg.name}`);
 
-    // 3. Create a Principal (ORG_ADMIN) for the Test Organization
-    const principalPassword = await bcrypt.hash("org123", 10);
-    const principal = await prisma.user.create({
-        data: {
-            username: "principal_song",
-            name: "宋校长",
+    // 5. Create a Principal (ORG_ADMIN)
+    const principalPassword = await bcrypt.hash("dmtjy888", 10);
+    const principal = await (prisma as any).user.upsert({
+        where: { username: "dmtjy" },
+        update: {
+            orgId: testOrg.id,
+            role: "ORG_ADMIN",
+        },
+        create: {
+            username: "dmtjy",
+            name: "多面体 校长",
+            initialPassword: "dmtjy888",
             password: principalPassword,
             role: "ORG_ADMIN",
             orgId: testOrg.id,
@@ -43,20 +106,6 @@ async function main() {
         },
     });
     console.log(`✅ Principal created: ${principal.username}`);
-
-    // 4. Create initial Course Series and Courses
-    const series1 = await prisma.courseSeries.create({
-        data: {
-            name: "3D打印体系",
-            courses: {
-                create: [
-                    { name: "掐丝珐琅互动实验" },
-                    { name: "3D打印建模基础" },
-                ]
-            }
-        }
-    });
-    console.log(`✅ Course Series created: ${series1.name}`);
 
     console.log("🏁 Seeding finished successfully.");
 }

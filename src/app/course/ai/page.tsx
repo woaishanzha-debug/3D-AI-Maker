@@ -1,10 +1,15 @@
 'use client';
 
-import { Cpu, Terminal, Sparkles, Binary, ArrowRight, BrainCircuit, ChevronLeft } from 'lucide-react';
+import { Cpu, Terminal, Sparkles, Binary, ArrowRight, BrainCircuit, ChevronLeft, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useAuthorization } from '@/hooks/useAuthorization';
+import { cn } from '@/lib/utils';
 
 export default function AICourseIndex() {
+    const { isAuthorizedSeries, isLoading } = useAuthorization();
+    const isAIAuthorized = isAuthorizedSeries('ai-interactive');
+
     const aiModules = [
         {
             id: 'A1',
@@ -12,6 +17,7 @@ export default function AICourseIndex() {
             desc: '拆解 Token 机制与概率引擎，理解 AI 如何构建逻辑。',
             tech: 'NLP | Tokenization',
             status: '开放试读',
+            isExperience: true,
             href: '/course/12-ai/lesson-1'
         },
         {
@@ -20,6 +26,7 @@ export default function AICourseIndex() {
             desc: '通过 Prompt Engineering 引导 AI 完成复杂任务设计。',
             tech: 'Prompt Design',
             status: '账号解锁',
+            isExperience: false,
             href: '/course/12-ai/lesson-2'
         }
     ];
@@ -75,16 +82,27 @@ export default function AICourseIndex() {
                             viewport={{ once: true }}
                             transition={{ delay: idx * 0.1 }}
                         >
-                            <Link href={module.href} className="group">
-                                <div className="h-full bg-white rounded-[32px] border-2 border-slate-100 p-8 hover:border-blue-600 transition-all hover:shadow-2xl hover:shadow-blue-500/10">
+                            <Link href={module.isExperience || isAIAuthorized ? module.href : "#"} className={cn("group", !module.isExperience && !isAIAuthorized && "cursor-not-allowed")}>
+                                <div className={cn(
+                                    "h-full bg-white rounded-[32px] border-2 border-slate-100 p-8 transition-all hover:shadow-2xl hover:shadow-blue-500/10",
+                                    !module.isExperience && !isAIAuthorized && !isLoading ? "opacity-60 grayscale-[0.8] hover:border-slate-200" : "hover:border-blue-600"
+                                )}>
                                     <div className="flex justify-between items-start mb-12">
                                         <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
                                             {idx === 0 ? <Binary className="w-6 h-6" /> : <BrainCircuit className="w-6 h-6" />}
                                         </div>
-                                        <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${module.status === '开放试读' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-100 text-slate-400'
-                                            }`}>
-                                            {module.status}
-                                        </span>
+                                        {!module.isExperience && !isAIAuthorized && !isLoading ? (
+                                            <div className="p-2 bg-slate-100 rounded-full text-slate-400">
+                                                <Lock className="w-4 h-4" />
+                                            </div>
+                                        ) : (
+                                            <span className={cn(
+                                                "text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest",
+                                                module.isExperience ? "bg-blue-600 text-white animate-pulse" : "bg-green-50 text-green-600 border border-green-100"
+                                            )}>
+                                                {isAIAuthorized ? "已授权" : module.status}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="space-y-4">
                                         <div className="text-[10px] font-black text-slate-300 tracking-widest font-mono">{module.id} | MODULE</div>
@@ -97,7 +115,9 @@ export default function AICourseIndex() {
                                     </div>
                                     <div className="mt-12 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 font-mono">
                                         <span>{module.tech}</span>
-                                        <ArrowRight className="w-4 h-4 text-blue-600 opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all" />
+                                        {(module.isExperience || isAIAuthorized) && (
+                                            <ArrowRight className="w-4 h-4 text-blue-600 opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all" />
+                                        )}
                                     </div>
                                 </div>
                             </Link>

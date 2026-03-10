@@ -8,16 +8,18 @@ import Image from 'next/image';
 interface AdminDashboardProps {
     organizations: any[];
     pendingWorks: any[];
+    courseSeries: any[];
     actions: {
         createOrgAndCodes: (formData: FormData) => Promise<void>;
         addTeacherToOrg: (formData: FormData) => Promise<void>;
         toggleCodeStatus: (id: string, status: string, name?: string) => Promise<void>;
         deleteOrganization: (id: string) => Promise<void>;
         deleteCode: (id: string) => Promise<void>;
+        allocateCourseToOrg: (formData: FormData) => Promise<void>;
     };
 }
 
-export default function AdminDashboard({ organizations, pendingWorks, actions }: AdminDashboardProps) {
+export default function AdminDashboard({ organizations, pendingWorks, courseSeries, actions }: AdminDashboardProps) {
     const [activeTab, setActiveTab] = useState<'auth' | 'works'>('auth');
 
     return (
@@ -102,10 +104,12 @@ export default function AdminDashboard({ organizations, pendingWorks, actions }:
                             </div>
                             <CodeTree
                                 organizations={organizations}
+                                courseSeries={courseSeries}
                                 onToggle={actions.toggleCodeStatus}
                                 onDelete={actions.deleteCode}
                                 onDeleteOrg={actions.deleteOrganization}
                                 onAddTeacher={actions.addTeacherToOrg}
+                                onAllocateCourse={actions.allocateCourseToOrg}
                             />
                         </div>
                     </div>

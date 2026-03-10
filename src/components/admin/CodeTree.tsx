@@ -1,21 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { Key, Power, Trash2, ChevronRight, ChevronDown, Ticket, School, Info, Copy, Crown, GraduationCap, PlusCircle, XCircle } from 'lucide-react';
+import { Key, Power, Trash2, ChevronRight, ChevronDown, Ticket, School, Info, Copy, Crown, GraduationCap, PlusCircle, XCircle, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CodeTreeProps {
     organizations: any[];
+    courseSeries: any[];
     onToggle: (id: string, status: string, name?: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     onDeleteOrg: (id: string) => Promise<void>;
     onAddTeacher: (formData: FormData) => Promise<void>;
+    onAllocateCourse: (formData: FormData) => Promise<void>;
 }
 
-export default function CodeTree({ organizations, onToggle, onDelete, onDeleteOrg, onAddTeacher }: CodeTreeProps) {
+export default function CodeTree({ organizations, courseSeries, onToggle, onDelete, onDeleteOrg, onAddTeacher, onAllocateCourse }: CodeTreeProps) {
     const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
     const [infoIds, setInfoIds] = useState<Set<string>>(new Set());
     const [showAddModal, setShowAddModal] = useState<string | null>(null);
+    const [showAllocateModal, setShowAllocateModal] = useState<string | null>(null);
     const [isToggling, setIsToggling] = useState<string | null>(null);
 
     const toggleExpand = (id: string) => {
@@ -62,8 +65,9 @@ export default function CodeTree({ organizations, onToggle, onDelete, onDeleteOr
                     {organizations.map((org) => {
                         const orgId = `org-${org.id}`;
                         const isOrgExpanded = expandedIds.has(orgId);
-                        const principals = org.invitationCodes.filter((c: any) => c.type === 'PRINCIPAL');
-                        const teachers = org.invitationCodes.filter((c: any) => c.type === 'TEACHER');
+                        const allUsers = org.users || [];
+                        const principals = allUsers.filter((u: any) => u.role === 'ORG_ADMIN');
+                        const teachers = allUsers.filter((u: any) => u.role === 'TEACHER');
 
                         return (
                             <div key={org.id} className="bg-white">
@@ -75,13 +79,30 @@ export default function CodeTree({ organizations, onToggle, onDelete, onDeleteOr
                                     )}
                                     onClick={() => toggleExpand(orgId)}
                                 >
+                                    <div className="col-span-12 px-8 pb-4 flex flex-wrap gap-2">
+                                        {org.orgLicenses?.map((lic: any) => (
+                                            <div key={lic.id} className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-lg text-[9px] font-black uppercase">
+                                                <Zap className="w-3 h-3" />
+                                                {lic.series?.name} ({lic.usedSeats}/{lic.totalSeats})
+                                            </div>
+                                        ))}
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); setShowAllocateModal(org.id); }}
+                                            className="flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[9px] font-black uppercase rounded-lg transition-all"
+                                        >
+                                            <PlusCircle className="w-3 h-3" /> 点亮课程体系
+                                        </button>
+                                    </div>
+
                                     <div className="col-span-5 flex items-center gap-4">
                                         <div className="flex items-center gap-2">
                                             {isOrgExpanded ? <ChevronDown className="w-6 h-6 text-slate-600" /> : <ChevronRight className="w-6 h-6 text-slate-300" />}
                                             <div className="p-3 bg-slate-900 rounded-[20px] shadow-xl">
                                                 <School className="w-5 h-5 text-white" />
                                             </div>
-                                            <span className="font-black text-slate-900 text-xl tracking-tight">{org.name}</span>
+                                            <div className="flex flex-col">
+                                                <span className="font-black text-slate-900 text-xl tracking-tight">{org.name}</span>
+                                            </div>
                                         </div>
                                         <button
                                             onClick={(e) => {
@@ -114,17 +135,17 @@ export default function CodeTree({ organizations, onToggle, onDelete, onDeleteOr
                                             <AccountNode
                                                 key={p.id}
                                                 node={p}
-                                                allCodes={org.invitationCodes}
+                                                allCodes={allUsers}
                                                 parentId={orgId}
                                                 {...{ toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }}
                                             />
                                         ))}
-                                        {/* 渲染并线老师号 (如果没有关联校长或者直属机构) */}
-                                        {teachers.filter((t: any) => !t.parentId).map((t: any) => (
+                                        {/* 渲染老师号 (如果没有关联校长) */}
+                                        {teachers.filter((t: any) => !t.teacherId).map((t: any) => (
                                             <AccountNode
                                                 key={t.id}
                                                 node={t}
-                                                allCodes={org.invitationCodes}
+                                                allCodes={allUsers}
                                                 parentId={orgId}
                                                 {...{ toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }}
                                             />
@@ -174,6 +195,45 @@ export default function CodeTree({ organizations, onToggle, onDelete, onDeleteOr
                     </div>
                 </div>
             )}
+
+            {/* Course Allocation Modal */}
+            {showAllocateModal && (
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xl z-[999] flex items-center justify-center p-6">
+                    <div className="bg-white rounded-[50px] shadow-2xl w-full max-w-lg overflow-hidden border border-white">
+                        <div className="p-10 bg-blue-600 text-white flex justify-between items-center">
+                            <div>
+                                <h3 className="text-2xl font-black italic uppercase tracking-tighter">点亮课程体系</h3>
+                                <p className="text-[10px] font-bold text-blue-200 mt-1 uppercase">Course Series Authorization</p>
+                            </div>
+                            <button onClick={() => setShowAllocateModal(null)} className="p-3 hover:bg-white/10 rounded-full transition-all"><XCircle className="w-8 h-8" /></button>
+                        </div>
+                        <form action={async (formData) => {
+                            formData.append('orgId', showAllocateModal);
+                            await onAllocateCourse(formData);
+                            setShowAllocateModal(null);
+                        }} className="p-10 space-y-8">
+                            <div className="grid gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">选择课程体系</label>
+                                    <select name="seriesId" required className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-5 font-black focus:border-blue-500 focus:bg-white transition-all outline-none appearance-none">
+                                        <option value="">请选择体系...</option>
+                                        {courseSeries.map(s => (
+                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">授权激活数 (席位)</label>
+                                    <input name="seats" type="number" min="1" max="10000" defaultValue="100" className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-5 font-black focus:border-blue-500 focus:bg-white transition-all outline-none" />
+                                </div>
+                            </div>
+                            <button type="submit" className="w-full py-6 bg-blue-600 text-white font-black rounded-3xl shadow-2xl hover:bg-blue-700 active:scale-95 transition-all uppercase text-sm tracking-widest flex items-center justify-center gap-3">
+                                <Zap className="w-5 h-5" /> 立即激活授权
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -182,11 +242,20 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
     const nodeId = `node-${node.id}`;
     const isExpanded = expandedIds.has(nodeId);
     const isInfoVisible = infoIds.has(nodeId);
-    const isPrincipal = node.type === 'PRINCIPAL';
-    const isTeacher = node.type === 'TEACHER';
+    const isPrincipal = node.role === 'ORG_ADMIN';
+    const isTeacher = node.role === 'TEACHER';
 
-    // 找出以此节点为父节点的子节点 (校长找老师，老师找学生)
-    const children = allCodes.filter((c: any) => c.parentId === node.id);
+    // 找出以此节点为父节点的子节点
+    // 如果是校长，子节点是老师 (User)
+    // 如果是老师，子节点是激活码 (InvitationCode)
+    const children = (allCodes || []).filter((c: any) => {
+        if (isPrincipal) return c.role === 'TEACHER' && c.teacherId === node.id;
+        if (isTeacher) return !c.role && c.teacherId === node.id;
+        return false;
+    });
+
+    // 这里的 code 显示改为 username
+    const displayCode = node.username || node.code;
 
     return (
         <div className={cn("border-l-4 transition-all", isPrincipal ? "border-amber-400" : (isTeacher ? "border-indigo-400" : "border-slate-300"))}>
@@ -205,7 +274,7 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="font-black text-slate-800 text-base uppercase">
-                                {isPrincipal ? '校长管理号' : '机构老师号'}
+                                {isPrincipal ? '校长管理号' : '机构老师号'} {node.name ? `(${node.name})` : ''}
                             </span>
                             <button onClick={(e) => toggleInfo(nodeId, e)} className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-300 hover:text-slate-600 transition-all">
                                 <Info className="w-4 h-4" />
@@ -213,7 +282,7 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    if (confirm('彻底删除此账号及其下属所有激活码？')) onDelete(node.id);
+                                    if (confirm('彻底删除此账号？')) onDelete(node.id);
                                 }}
                                 className="p-1.5 text-slate-200 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
                             >
@@ -224,8 +293,8 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                 </div>
 
                 <div className="col-span-2 font-mono font-black text-blue-600 text-sm flex items-center gap-2">
-                    {node.code}
-                    <button onClick={(e) => copyToClipboard(node.code, e)} className="text-slate-200 hover:text-blue-500 transition-all">
+                    {displayCode}
+                    <button onClick={(e) => copyToClipboard(displayCode, e)} className="text-slate-200 hover:text-blue-500 transition-all">
                         <Copy className="w-4 h-4" />
                     </button>
                 </div>
@@ -237,17 +306,17 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                 <div className="col-span-3 flex justify-end">
                     <button
                         disabled={isToggling === node.id}
-                        onClick={(e) => handleToggleInternal(node.id, node.status, isPrincipal ? '校长' : '管理员', e)}
+                        onClick={(e) => handleToggleInternal(node.id, 'ACTIVE', isPrincipal ? '校长' : '管理员', e)}
                         className={cn(
                             "px-6 py-2.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 border shadow-lg active:scale-95",
-                            node.status === 'ACTIVE'
+                            true // 暂时都显示正常
                                 ? 'bg-emerald-500 text-white border-emerald-600 ring-4 ring-emerald-500/10'
                                 : 'bg-rose-500 text-white border-rose-600 ring-4 ring-rose-500/10',
                             isToggling === node.id && "opacity-50 cursor-wait"
                         )}
                     >
                         <Power className="w-4 h-4" />
-                        {node.status === 'ACTIVE' ? '正常运行中' : '账户已冻结'}
+                        {'正常运行中'}
                     </button>
                 </div>
             </div>
@@ -255,21 +324,19 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
             {isInfoVisible && (
                 <div className="ml-20 mr-10 my-4 p-6 bg-slate-900 text-white rounded-[32px] shadow-2xl flex flex-wrap gap-10 text-[11px] font-black border-l-8 border-blue-500">
                     <div className="flex items-center gap-2 italic uppercase text-slate-500">创建日期: {new Date(node.createdAt).toLocaleString()}</div>
-                    <div className="flex items-center gap-2"><Key className="w-4 h-4 text-blue-400" /> 登录密匙: {node.initialPassword || '未设置'}</div>
-                    {node.disabledBy && <div className="flex items-center gap-2 text-rose-400 font-black tracking-widest"><Power className="w-4 h-4" /> 操作人: {node.disabledBy}</div>}
+                    <div className="flex items-center gap-2 font-black tracking-widest uppercase">角色: {node.role}</div>
                 </div>
             )}
 
             {isExpanded && children.length > 0 && (
                 <div className="ml-16 border-l-2 border-dashed border-slate-200">
                     {children.map((child: any) => (
-                        child.type === 'STUDENT' ? (
+                        (!child.role) ? ( // 激活码没有 role
                             <div key={child.id} className="grid grid-cols-12 py-4 px-8 items-center bg-white border-b border-slate-50 last:border-b-0 hover:bg-slate-50/50 transition-all group">
                                 <div className="col-span-5 flex items-center gap-3 pl-4">
                                     <div className="w-3 h-3 rounded-full bg-indigo-50" />
                                     <span className="text-[10px] font-black text-slate-400 italic flex items-center gap-2">
                                         <Ticket className="w-3.5 h-3.5" /> 学生激活码
-                                        {child.disabledBy && <span className="text-[9px] text-rose-500 ml-2 not-italic">被 {child.disabledBy} 停用</span>}
                                     </span>
                                     <button
                                         onClick={(e) => {
@@ -286,17 +353,9 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                                     使用: {child.usedCount} / {child.maxUses}
                                 </div>
                                 <div className="col-span-3 flex justify-end">
-                                    <button
-                                        disabled={isToggling === child.id}
-                                        onClick={(e) => handleToggleInternal(child.id, child.status, isTeacher ? '所属老师' : '管理校长', e)}
-                                        className={cn(
-                                            "px-4 py-1.5 rounded-full text-[9px] font-black transition-all border",
-                                            child.status === 'ACTIVE' ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-rose-50 text-rose-600 border-rose-200",
-                                            isToggling === child.id && "opacity-50 cursor-wait"
-                                        )}
-                                    >
-                                        {child.status === 'ACTIVE' ? '正常激活' : '已被禁用'}
-                                    </button>
+                                    <div className="px-4 py-1.5 rounded-full text-[9px] font-black transition-all border bg-emerald-50 text-emerald-600 border-emerald-200">
+                                        有效
+                                    </div>
                                 </div>
                             </div>
                         ) : (

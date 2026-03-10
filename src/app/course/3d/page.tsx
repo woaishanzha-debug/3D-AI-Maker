@@ -1,25 +1,30 @@
 'use client';
 
-import { Sparkles, ArrowRight, BookOpen, Clock, Users, ChevronLeft } from 'lucide-react';
+import { Sparkles, ArrowRight, BookOpen, Clock, Users, ChevronLeft, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useAuthorization } from '@/hooks/useAuthorization';
+import { cn } from '@/lib/utils';
 
 export default function ThreeDCourseIndex() {
+    const { isAuthorizedSeries, isLoading } = useAuthorization();
+    const is3DAuthorized = isAuthorizedSeries('3d-printing');
+
     const categories = [
         {
             title: 'S-系列：大屏互动轻量课',
             desc: '10个参数化 3D 建模工具原理。补足“只打不学”的痛点，打印前深度参与原理设计。',
             items: [
-                { id: 'S1', name: '光影魔术师 (Lithophane)', status: '免费', tech: '灰度映射算法' },
-                { id: 'S2', name: '物理链接器 (3D QR-Code)', status: '账号解锁', tech: '高低差投影算法' },
-                { id: 'S3', name: '柔性折叠结构 (Hinge)', status: '账号解锁', tech: '应力分散算法' },
-                { id: 'S4', name: '重力平衡大师 (不倒翁平衡工具)', status: '账号解锁', tech: '质心偏移算法' },
-                { id: 'S5', name: '拓扑格子构造 (点阵)', status: '账号解锁', tech: '空间平铺算法' },
-                { id: 'S6', name: '曼陀罗算法艺术 (生成式几何工具)', status: '账号解锁', tech: '对称递归算法' },
-                { id: 'S7', name: '斐波那契螺旋 (自然频率工具)', status: '账号解锁', tech: '黄金分割算法' },
-                { id: 'S8', name: 'Voronoi 细胞骨架 (泰森多边形工具)', status: '账号解锁', tech: '空间分区算法' },
-                { id: 'S9', name: '声波纹理解码 (音频视觉化工具)', status: '账号解锁', tech: '傅里叶变换 (FFT)' },
-                { id: 'S10', name: 'AI 创客助手 (Prompt-to-3D)', status: '账号解锁', tech: '大模型向量生成' },
+                { id: 'S1', name: '光影魔术师 (Lithophane)', status: '免费', tech: '灰度映射算法', isExperience: true },
+                { id: 'S2', name: '物理链接器 (3D QR-Code)', status: '账号解锁', tech: '高低差投影算法', isExperience: false },
+                { id: 'S3', name: '柔性折叠结构 (Hinge)', status: '账号解锁', tech: '应力分散算法', isExperience: false },
+                { id: 'S4', name: '重力平衡大师 (不倒翁平衡工具)', status: '账号解锁', tech: '质心偏移算法', isExperience: false },
+                { id: 'S5', name: '拓扑格子构造 (点阵)', status: '账号解锁', tech: '空间平铺算法', isExperience: false },
+                { id: 'S6', name: '曼陀罗算法艺术 (生成式几何工具)', status: '账号解锁', tech: '对称递归算法', isExperience: false },
+                { id: 'S7', name: '斐波那契螺旋 (自然频率工具)', status: '账号解锁', tech: '黄金分割算法', isExperience: false },
+                { id: 'S8', name: 'Voronoi 细胞骨架 (泰森多边形工具)', status: '账号解锁', tech: '空间分区算法', isExperience: false },
+                { id: 'S9', name: '声波纹理解码 (音频视觉化工具)', status: '账号解锁', tech: '傅里叶变换 (FFT)', isExperience: false },
+                { id: 'S10', name: 'AI 创客助手 (Prompt-to-3D)', status: '账号解锁', tech: '大模型向量生成', isExperience: false },
             ],
             href: '/tools',
             icon: Sparkles,
@@ -77,7 +82,10 @@ export default function ThreeDCourseIndex() {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className={`bg-white rounded-[48px] border-2 ${cat.borderColor} p-8 md:p-12 relative overflow-hidden group hover:shadow-2xl transition-all shadow-xl shadow-slate-200/50`}
+                        className={cn(
+                            "bg-white rounded-[48px] border-2 p-8 md:p-12 relative overflow-hidden group hover:shadow-2xl transition-all shadow-xl shadow-slate-200/50",
+                            cat.borderColor
+                        )}
                     >
                         <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-700">
                             <cat.icon className="w-80 h-80" />
@@ -86,8 +94,8 @@ export default function ThreeDCourseIndex() {
                         <div className="flex flex-col lg:flex-row gap-16 relative z-10">
                             {/* Left Column: Category Info */}
                             <div className="lg:w-1/3 space-y-8">
-                                <div className={`w-20 h-20 rounded-3xl ${cat.bgColor} flex items-center justify-center`}>
-                                    <cat.icon className={`w-10 h-10 ${cat.color}`} />
+                                <div className={cn("w-20 h-20 rounded-3xl flex items-center justify-center", cat.bgColor)}>
+                                    <cat.icon className={cn("w-10 h-10", cat.color)} />
                                 </div>
                                 <div>
                                     <h2 className="text-3xl font-black mb-4 group-hover:text-slate-900 transition-colors italic">{cat.title}</h2>
@@ -104,33 +112,44 @@ export default function ThreeDCourseIndex() {
                             <div className="lg:w-2/3">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     {cat.items.map((item, i) => {
-                                        const isS1 = item.id === 'S1';
+                                        const isAccessible = item.isExperience || is3DAuthorized;
                                         const itemContent = (
-                                            <div className={`p-6 rounded-3xl border transition-all shadow-sm h-full flex flex-col justify-between ${isS1
-                                                ? 'bg-white border-orange-200 hover:border-orange-500 hover:shadow-xl cursor-pointer group/item'
-                                                : 'bg-slate-50 border-slate-100 opacity-60 grayscale-[0.5]'
-                                                }`}>
+                                            <div className={cn(
+                                                "p-6 rounded-3xl border transition-all shadow-sm h-full flex flex-col justify-between group/item",
+                                                isAccessible ? "bg-white border-orange-200 hover:border-orange-500 hover:shadow-xl cursor-pointer" : "bg-slate-50 border-slate-100 opacity-60 grayscale-[0.5]"
+                                            )}>
                                                 <div>
                                                     <div className="flex items-center justify-between mb-4">
                                                         <span className="text-[12px] font-black text-slate-300 tracking-tighter">{item.id}</span>
-                                                        <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter ${isS1 ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/20 animate-pulse' : 'bg-slate-200 text-slate-500'
-                                                            }`}>
-                                                            {isS1 ? '开放试读' : '账号解锁'}
-                                                        </span>
+                                                        {!isAccessible && !isLoading ? (
+                                                            <div className="p-1.5 bg-slate-100 rounded-full text-slate-400">
+                                                                <Lock className="w-3 h-3" />
+                                                            </div>
+                                                        ) : (
+                                                            <span className={cn(
+                                                                "text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg transition-all",
+                                                                item.isExperience ? 'bg-orange-600 text-white shadow-orange-600/20 animate-pulse' : 'bg-green-50 text-green-600 border border-green-100'
+                                                            )}>
+                                                                {is3DAuthorized ? '已授权' : item.status}
+                                                            </span>
+                                                        )}
                                                     </div>
-                                                    <h4 className={`font-black mb-2 italic ${isS1 ? 'text-slate-900 group-hover/item:text-orange-600' : 'text-slate-400'}`}>
+                                                    <h4 className={cn(
+                                                        "font-black mb-2 italic transition-colors",
+                                                        isAccessible ? "text-slate-900 group-hover/item:text-orange-600" : "text-slate-400"
+                                                    )}>
                                                         {item.name}
                                                     </h4>
                                                 </div>
                                                 <div className="flex items-center justify-between mt-4">
                                                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.tech}</p>
-                                                    {isS1 && <ArrowRight className="w-4 h-4 text-orange-600 opacity-0 group-hover/item:opacity-100 translate-x-[-10px] group-hover/item:translate-x-0 transition-all" />}
+                                                    {isAccessible && <ArrowRight className="w-4 h-4 text-orange-600 opacity-0 group-hover/item:opacity-100 translate-x-[-10px] group-hover/item:translate-x-0 transition-all" />}
                                                 </div>
                                             </div>
                                         );
 
-                                        return isS1 ? (
-                                            <Link key={i} href="/course/3d/s1-lithophane">
+                                        return isAccessible ? (
+                                            <Link key={i} href={item.id === 'S1' ? "/course/3d/s1-lithophane" : cat.href}>
                                                 {itemContent}
                                             </Link>
                                         ) : (

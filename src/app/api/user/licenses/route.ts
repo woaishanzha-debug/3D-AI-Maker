@@ -1,0 +1,60 @@
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+export async function GET() {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // @ts-expect-error - role/id extension
+    const { id: userId, role, orgId } = session.user;
+
+    let authorizedSeriesIds: string[] = [];
+    let authorizedCourseIds: string[] = [];
+
+    if (role === 'SUPER_ADMIN') {
+        return NextResponse.json({ seriesIds: ['ALL'], courseIds: ['ALL'] });
+    }
+
+    if (role === 'ORG_ADMIN' && orgId) {
+        // 校长：获取机构购买的所有系列
+        const orgLicenses = await (prisma as any).orgLicense.findMany({
+            where: { orgId }
+        });
+        authorizedSeriesIds = orgLicenses.map((lic: any) => lic.seriesId);
+    } else if (role === 'TEACHER') {
+        // 老师：获取分配给自己个人的课程
+        const teacherLicenses = await (prisma as any).teacherLicense.findMany({
+            where: { teacherId: userId }
+        });
+        authorizedCourseIds = teacherLicenses.map((lic: any) => lic.courseId);
+
+        // 老师也可能继承机构的系列权限（可选逻辑，这里简单起见，老师只能看到分配给自己的具体课程所属系列）
+        const courses = await (prisma as any).course.findMany({
+            where: { id: { in: authorizedCourseIds } }
+        });
+        authorizedSeriesIds = Array.from(new Set(courses.map((c: any) => c.seriesId)));
+    } else if (role === 'STUDENT') {
+        // 学生：查所属激活码对应的课程权限
+        const user = await (prisma as any).user.findUnique({
+            where: { id: userId },
+            include: {
+                usedInvitationCode: {
+                    include: { course: true }
+                }
+            }
+        });
+        if (user?.usedInvitationCode?.courseId) {
+            authorizedCourseIds = [user.usedInvitationCode.courseId];
+            authorizedSeriesIds = [user.usedInvitationCode.course.seriesId];
+        }
+    }
+
+    return NextResponse.json({
+        seriesIds: authorizedSeriesIds,
+        courseIds: authorizedCourseIds
+    });
+}

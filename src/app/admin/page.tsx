@@ -4,10 +4,11 @@ import AdminDashboard from '@/components/admin/AdminDashboard';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
 
 /**
  * 服务器动作：创建一个完整的机构体系
- * 层级：Organization -> Principal (1) -> Teachers (count) -> Students (quota per teacher)
+ * 层级：Organization -> ORG_ADMIN (Principal) -> TEACHER (linked to principal) -> InvitationCode (Student)
  */
 async function createOrgAndCodes(formData: FormData) {
     'use server'
@@ -18,114 +19,152 @@ async function createOrgAndCodes(formData: FormData) {
     const studentQuota = parseInt(formData.get('studentQuota') as string || '0');
 
     if (!orgName || !loginUsername || !initialPassword) return;
-    if (!/^[a-zA-Z0-9_-]+$/.test(loginUsername)) return;
+
+    const hashedPassword = await bcrypt.hash(initialPassword, 10);
 
     // 1. 创建机构
     const org = await prisma.organization.create({
         data: { name: orgName }
     });
 
-    // 2. 创建校长账号 (Principal)
-    const principalId = `pr${Math.random().toString(36).substring(2, 15)}`;
-    const principalCode = loginUsername.toUpperCase();
-    await (prisma as any).$executeRawUnsafe(
-        `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "status", "initialPassword", "createdAt") 
-         VALUES (?, ?, 'PRINCIPAL', ?, 'ACTIVE', ?, CURRENT_TIMESTAMP)`,
-        principalId, principalCode, org.id, initialPassword
-    );
-
-    // 3. 创建教师及名下学生
-    for (let i = 0; i < teacherCount; i++) {
-        const tId = `tr${Math.random().toString(36).substring(2, 15)}`;
-        const tCode = `${loginUsername}_T${i + 1}`.toUpperCase();
-
-        await (prisma as any).$executeRawUnsafe(
-            `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "initialPassword", "createdAt") 
-             VALUES (?, ?, 'TEACHER', ?, ?, 'ACTIVE', ?, CURRENT_TIMESTAMP)`,
-            tId, tCode, org.id, principalId, initialPassword
-        );
-
-        // 为该老师分发学生
-        for (let j = 0; j < studentQuota; j++) {
-            const sId = `st${Math.random().toString(36).substring(2, 15)}`;
-            const sCode = `S-${tCode}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-            await (prisma as any).$executeRawUnsafe(
-                `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "createdAt") 
-                 VALUES (?, ?, 'STUDENT', ?, ?, 'ACTIVE', CURRENT_TIMESTAMP)`,
-                sId, sCode, org.id, tId
-            );
-        }
-    }
-    revalidatePath('/admin');
-}
-
-/**
- * 服务器动作：向现有机构扩容老师
- */
-async function addTeacherToOrg(formData: FormData) {
-    'use server'
-    const orgId = formData.get('orgId') as string;
-    const loginUsername = formData.get('loginUsername') as string;
-    const initialPassword = formData.get('initialPassword') as string;
-    const studentQuota = parseInt(formData.get('studentQuota') as string || '0');
-
-    if (!orgId || !loginUsername || !initialPassword) return;
-
-    const tId = `tr${Math.random().toString(36).substring(2, 15)}`;
-    const tCode = loginUsername.toUpperCase();
-
-    // 寻找该机构下的校长账号作为父级
-    const principal = await (prisma as any).invitationCode.findFirst({
-        where: { organizationId: orgId, type: 'PRINCIPAL' }
+    // 2. 创建校长账号 (ORG_ADMIN)
+    const principal = await prisma.user.create({
+        data: {
+            username: loginUsername,
+            password: hashedPassword,
+            initialPassword: initialPassword, // 存储明文用于显示
+            name: `${orgName} 校长`,
+            role: 'ORG_ADMIN',
+            orgId: org.id,
+            credits: 5000
+        } as any
     });
 
-    await (prisma as any).$executeRawUnsafe(
-        `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "initialPassword", "createdAt") 
-         VALUES (?, ?, 'TEACHER', ?, ?, 'ACTIVE', ?, CURRENT_TIMESTAMP)`,
-        tId, tCode, orgId, principal?.id || null, initialPassword
-    );
+    // 获取一个默认课程用于关联学生激活码
+    const defaultCourse = await prisma.course.findFirst();
 
-    for (let j = 0; j < studentQuota; j++) {
-        const sId = `st${Math.random().toString(36).substring(2, 15)}`;
-        const sCode = `S-${tCode}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-        await (prisma as any).$executeRawUnsafe(
-            `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "createdAt") 
-             VALUES (?, ?, 'STUDENT', ?, ?, 'ACTIVE', CURRENT_TIMESTAMP)`,
-            sId, sCode, orgId, tId
-        );
+    // 3. 创建教师及名下学生激活码
+    if (defaultCourse) {
+        for (let i = 0; i < teacherCount; i++) {
+            const teacherUsername = `${loginUsername}_T${i + 1}`.toUpperCase();
+            const teacher = await prisma.user.create({
+                data: {
+                    username: teacherUsername,
+                    password: hashedPassword,
+                    initialPassword: initialPassword,
+                    name: `${orgName} 讲师 ${i + 1}`,
+                    role: 'TEACHER',
+                    orgId: org.id,
+                    teacherId: principal.id, // 关联到校长
+                    credits: 1000
+                } as any
+            });
+
+            // 为该老师创建学生激活码 (InvitationCode)
+            for (let j = 0; j < studentQuota; j++) {
+                const sCode = `S-${teacherUsername}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+                await prisma.invitationCode.create({
+                    data: {
+                        code: sCode,
+                        teacherId: teacher.id,
+                        courseId: defaultCourse.id,
+                        maxUses: 1,
+                        initialPassword: '无' // 学生使用码直接激活
+                    } as any
+                });
+            }
+        }
+    }
+
+    revalidatePath('/admin');
+}
+
+/**
+ * 状态切换：更新用户状态
+ */
+async function toggleCodeStatus(id: string, currentStatus: string, operator: string = 'Admin') {
+    'use server'
+    const newStatus = currentStatus === 'ACTIVE' ? 'DISABLED' : 'ACTIVE';
+    // 尝试更新 User
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (user) {
+        await (prisma as any).user.update({
+            where: { id },
+            data: {
+                status: newStatus,
+                disabledBy: newStatus === 'DISABLED' ? operator : null
+            }
+        });
+    } else {
+        // 尝试更新 InvitationCode
+        await (prisma as any).invitationCode.update({
+            where: { id },
+            data: {
+                status: newStatus,
+                disabledBy: newStatus === 'DISABLED' ? operator : null
+            }
+        });
     }
     revalidatePath('/admin');
 }
 
 /**
- * 状态切换：支持记录操作者
+ * 为机构分配课程体系授权
  */
-async function toggleCodeStatus(codeId: string, currentStatus: string, operatorName: string = 'ADMIN') {
+async function allocateCourseToOrg(formData: FormData) {
     'use server'
-    const newStatus = currentStatus === 'ACTIVE' ? 'DISABLED' : 'ACTIVE';
-    // 如果是停用，记录停用人；如果是启用，清空停用人
-    const disabledBy = newStatus === 'DISABLED' ? operatorName : null;
+    const orgId = formData.get('orgId') as string;
+    const seriesId = formData.get('seriesId') as string;
+    const seats = parseInt(formData.get('seats') as string || '100');
 
-    await (prisma as any).$executeRawUnsafe(
-        `UPDATE "InvitationCode" SET "status" = ?, "disabledBy" = ? WHERE "id" = ?`,
-        newStatus, disabledBy, codeId
-    );
+    if (!orgId || !seriesId) return;
+
+    await (prisma as any).orgLicense.create({
+        data: {
+            orgId,
+            seriesId,
+            totalSeats: seats,
+            usedSeats: 0,
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 默认一年有效期
+        }
+    });
+
     revalidatePath('/admin');
 }
 
 async function deleteOrganization(orgId: string) {
     'use server'
-    await (prisma as any).$executeRawUnsafe(`DELETE FROM "InvitationCode" WHERE "organizationId" = ?`, orgId);
-    await (prisma as any).organization.delete({ where: { id: orgId } });
+    // 先删除该机构下的所有激活码 (InvitationCode)
+    const users = await prisma.user.findMany({ where: { orgId } as any });
+    const userIds = users.map(u => u.id);
+    await (prisma as any).invitationCode.deleteMany({
+        where: { teacherId: { in: userIds } }
+    });
+    // 删除用户
+    await prisma.user.deleteMany({ where: { orgId } as any });
+    // 删除机构
+    await prisma.organization.delete({ where: { id: orgId } });
     revalidatePath('/admin');
 }
 
-async function deleteCode(codeId: string) {
+async function deleteCode(id: string) {
     'use server'
-    // 删除该节点及其所有子节点 (例如删除老师会连带删除学生)
-    await (prisma as any).$executeRawUnsafe(`DELETE FROM "InvitationCode" WHERE "parentId" = ?`, codeId);
-    await (prisma as any).$executeRawUnsafe(`DELETE FROM "InvitationCode" WHERE "id" = ?`, codeId);
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (user) {
+        if (user.role === 'TEACHER') {
+            await (prisma as any).invitationCode.deleteMany({ where: { teacherId: id } });
+        }
+        await prisma.user.delete({ where: { id } });
+    } else {
+        await (prisma as any).invitationCode.delete({ where: { id } });
+    }
     revalidatePath('/admin');
+}
+
+// 占位
+async function addTeacherToOrg(formData: FormData) {
+    'use server'
+    console.log("Add teacher logic should be moved to OrgMatrix page");
 }
 
 export default async function AdminPage() {
@@ -136,11 +175,31 @@ export default async function AdminPage() {
 
     const organizations = await prisma.organization.findMany({
         include: {
-            invitationCodes: {
-                orderBy: { createdAt: 'asc' }
+            users: {
+                include: {
+                    createdCodes: {
+                        include: {
+                            course: true
+                        }
+                    }
+                }
+            },
+            orgLicenses: {
+                include: {
+                    series: true
+                }
             }
-        },
-        orderBy: { createdAt: 'desc' }
+        } as any,
+        orderBy: { createdAt: 'desc' } as any
+    }) as any[];
+
+    // 为了兼容 CodeTree，我们将所有关联的 invitationCodes 提取并合并
+    const transformedOrgs = organizations.map(org => {
+        const allInvitationCodes = (org.users || []).flatMap((u: any) => u.createdCodes || []);
+        return {
+            ...org,
+            users: [...(org.users || []), ...allInvitationCodes]
+        };
     });
 
     const pendingWorks = await prisma.post.findMany({
@@ -149,16 +208,22 @@ export default async function AdminPage() {
         orderBy: { createdAt: 'desc' }
     });
 
+    const allSeries = await prisma.courseSeries.findMany({
+        include: { courses: true }
+    });
+
     return (
         <AdminDashboard
-            organizations={organizations}
+            organizations={transformedOrgs}
             pendingWorks={pendingWorks}
+            courseSeries={allSeries}
             actions={{
                 createOrgAndCodes,
                 addTeacherToOrg,
                 toggleCodeStatus,
                 deleteOrganization,
-                deleteCode
+                deleteCode,
+                allocateCourseToOrg
             }}
         />
     );

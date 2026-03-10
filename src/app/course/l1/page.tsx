@@ -1,14 +1,18 @@
 'use client';
 
-import { ArrowLeft, CheckCircle2, Cpu, PenTool, LayoutTemplate, Sparkles, BookOpen, Star, ArrowRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Cpu, PenTool, LayoutTemplate, Sparkles, BookOpen, Star, ArrowRight, Lock } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { BusinessModal } from '@/components/BusinessModal';
+import { useAuthorization } from '@/hooks/useAuthorization';
+import { cn } from '@/lib/utils';
 
 export default function CourseL1Page() {
     const [completions, setCompletions] = useState<string[]>([]);
     const [showBusinessModal, setShowBusinessModal] = useState(false);
+    const { isAuthorizedSeries, isLoading } = useAuthorization();
+    const isL1Authorized = isAuthorizedSeries('maker-l1');
 
     useEffect(() => {
         fetch('/api/courses/complete')
@@ -230,20 +234,27 @@ export default function CourseL1Page() {
                                         const isCompleted = completions.includes(lessonKey);
                                         const isCloisonne = lesson.name.includes('掐丝珐琅');
                                         const isInteractive = isCloisonne; // Currently only cloisonne is interactive
+                                        const isLocked = !isL1Authorized && !isInteractive && !isLoading;
 
                                         return (
                                             <li
                                                 key={i}
-                                                className={`group flex items-start gap-4 p-3 rounded-2xl transition-all border ${isInteractive
-                                                    ? 'bg-blue-50/50 border-blue-100 hover:border-blue-400 hover:bg-white hover:shadow-xl cursor-pointer shadow-sm'
-                                                    : 'bg-slate-50 border-slate-100 opacity-60 grayscale-[0.3]'
-                                                    }`}
+                                                className={cn(
+                                                    "group flex items-start gap-4 p-3 rounded-2xl transition-all border",
+                                                    isInteractive
+                                                        ? 'bg-blue-50/50 border-blue-100 hover:border-blue-400 hover:bg-white hover:shadow-xl cursor-pointer shadow-sm'
+                                                        : isL1Authorized
+                                                            ? 'bg-slate-50 border-slate-100 hover:border-slate-300 hover:bg-white cursor-pointer'
+                                                            : 'bg-slate-50 border-slate-100 opacity-60 grayscale-[0.8]'
+                                                )}
                                             >
                                                 <div className="pt-0.5">
                                                     {isInteractive ? (
                                                         <div className="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/30">
                                                             <Sparkles className="w-3 h-3 text-white animate-pulse" />
                                                         </div>
+                                                    ) : isLocked ? (
+                                                        <Lock className="w-5 h-5 text-slate-300" />
                                                     ) : (
                                                         <CheckCircle2
                                                             onClick={() => toggleCompletion(lessonKey)}
@@ -254,13 +265,21 @@ export default function CourseL1Page() {
 
                                                 <div className="flex flex-col gap-2 grow">
                                                     <div className="flex items-center justify-between">
-                                                        <span className={`text-sm font-black italic tracking-tight ${isInteractive ? 'text-slate-900 group-hover:text-blue-600' : 'text-slate-400'
-                                                            } ${isCompleted ? 'line-through opacity-60' : ''}`}>
+                                                        <span className={cn(
+                                                            "text-sm font-black italic tracking-tight",
+                                                            isInteractive ? 'text-slate-900 group-hover:text-blue-600' : isL1Authorized ? 'text-slate-700' : 'text-slate-400',
+                                                            isCompleted && 'line-through opacity-60'
+                                                        )}>
                                                             {lesson.name}
                                                         </span>
-                                                        {isInteractive && (
+                                                        {isInteractive && !isL1Authorized && (
                                                             <span className="text-[8px] px-2 py-0.5 bg-blue-600 text-white font-black uppercase tracking-widest rounded-full shadow-lg">
                                                                 Visitor Access
+                                                            </span>
+                                                        )}
+                                                        {isL1Authorized && !isInteractive && (
+                                                            <span className="text-[8px] px-2 py-0.5 bg-green-50 text-green-600 font-black uppercase tracking-widest rounded-full border border-green-100">
+                                                                UNLOCKED
                                                             </span>
                                                         )}
                                                     </div>
@@ -278,9 +297,18 @@ export default function CourseL1Page() {
                                                                 <BookOpen className="w-3 h-3" /> PPT CONTENT
                                                             </span>
                                                             <span className="text-[9px] text-slate-200 font-medium">|</span>
-                                                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest bg-slate-200/50 px-2 py-0.5 rounded italic">
-                                                                账号解锁
-                                                            </span>
+                                                            {isLocked ? (
+                                                                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest bg-slate-200/50 px-2 py-0.5 rounded italic">
+                                                                    账号解锁
+                                                                </span>
+                                                            ) : (
+                                                                <button
+                                                                    className="text-[9px] text-blue-600 font-bold uppercase tracking-widest hover:underline"
+                                                                    onClick={() => alert('PPT 内容将在下一版本开放直接预览')}
+                                                                >
+                                                                    VIEW CONTENT
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>

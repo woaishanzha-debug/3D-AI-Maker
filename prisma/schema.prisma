@@ -20,6 +20,9 @@ model User {
   username String? @unique
   email    String? @unique
   password String?
+  initialPassword String?
+  status          String  @default("ACTIVE") // ACTIVE, DISABLED
+  disabledBy      String?
   role     Role    @default(STUDENT)
 
   orgId        String?
@@ -43,7 +46,8 @@ model User {
   createdCodes    InvitationCode[]
 
   // Track the code used for registration
-  usedInvitationCodeId String? @unique
+  usedInvitationCodeId String? 
+  usedInvitationCode   InvitationCode? @relation("UsedCode", fields: [usedInvitationCodeId], references: [id])
 }
 
 model Completion {
@@ -100,6 +104,7 @@ model TeacherLicense {
   courseId       String
   allocatedSeats Int
   usedSeats      Int    @default(0)
+  createdAt      DateTime @default(now())
 
   teacher User   @relation(fields: [teacherId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])
@@ -112,9 +117,14 @@ model InvitationCode {
   courseId  String
   maxUses   Int
   usedCount Int    @default(0)
+  status    String   @default("ACTIVE") // ACTIVE, DISABLED
+  disabledBy String?
+  initialPassword String?
+  createdAt DateTime @default(now())
 
   teacher User   @relation(fields: [teacherId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])
+  usedByUsers User[] @relation("UsedCode")
 }
 
 model ToolHistory {

@@ -1,11 +1,12 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
-import { CreditCard, History, Clock, Package, Share2, Award, Users, PlusCircle, GraduationCap, Sparkles, Ticket, Power, Trash2, XCircle } from 'lucide-react';
+import { redirect } from 'next/navigation'; // Trigger re-compilation after prisma generate
+import { CreditCard, History, Clock, Package, Share2, Award, Users, PlusCircle, GraduationCap, Sparkles, Ticket, Power, Trash2, XCircle, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { revalidatePath } from 'next/cache';
+import bcrypt from 'bcryptjs';
 import ChangePasswordForm from '../../components/dashboard/ChangePasswordForm';
 import DashboardCodeTree from '../../components/dashboard/DashboardCodeTree';
 
@@ -20,29 +21,55 @@ function cn(...inputs: (string | boolean | undefined | null | { [key: string]: b
 }
 
 // --- Server Actions ---
-async function toggleStatus(id: string, current: string, operator: string) {
+async function toggleStatus(id: string, current: string, operator: string = 'System') {
     'use server'
     const newStatus = current === 'ACTIVE' ? 'DISABLED' : 'ACTIVE';
-    await (prisma as any).invitationCode.update({
-        where: { id },
-        data: {
-            status: newStatus,
-            disabledBy: newStatus === 'DISABLED' ? operator : null
-        }
-    });
+
+    // 尝试更新 User (校长/老师)
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (user) {
+        await (prisma as any).user.update({
+            where: { id },
+            data: {
+                status: newStatus,
+                disabledBy: newStatus === 'DISABLED' ? operator : null
+            }
+        });
+    } else {
+        // 尝试更新 InvitationCode (学生激活码)
+        await (prisma as any).invitationCode.update({
+            where: { id },
+            data: {
+                status: newStatus,
+                disabledBy: newStatus === 'DISABLED' ? operator : null
+            }
+        });
+    }
     revalidatePath('/dashboard');
 }
 
 async function deleteSubCode(id: string) {
     'use server'
-    // 递归删除子级
-    await (prisma as any).$executeRawUnsafe(`DELETE FROM "InvitationCode" WHERE "parentId" = ?`, id);
-    await (prisma as any).invitationCode.delete({ where: { id } });
+    // 查找是否是 User
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (user) {
+        // 如果是老师，先删除其名下的激活码
+        if (user.role === 'TEACHER') {
+            await (prisma as any).invitationCode.deleteMany({ where: { teacherId: id } });
+        }
+        await prisma.user.delete({ where: { id } });
+    } else {
+        // 如果是激活码
+        await (prisma as any).invitationCode.delete({ where: { id } });
+    }
     revalidatePath('/dashboard');
 }
 
 async function addTeacherToOrgAction(formData: FormData) {
     'use server'
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return;
+
     const orgId = formData.get('orgId') as string;
     const loginUsername = formData.get('loginUsername') as string;
     const initialPassword = formData.get('initialPassword') as string;
@@ -50,29 +77,77 @@ async function addTeacherToOrgAction(formData: FormData) {
 
     if (!orgId || !loginUsername || !initialPassword) return;
 
-    const tId = `tr${Math.random().toString(36).substring(2, 15)}`;
-    const tCode = loginUsername.toUpperCase();
+    const hashedPassword = await bcrypt.hash(initialPassword, 10);
+    const principalId = (session.user as any).id;
 
-    // 寻找该机构下的校长账号作为父级
-    const principal = await (prisma as any).invitationCode.findFirst({
-        where: { organizationId: orgId, type: 'PRINCIPAL' }
+    // 1. 创建讲师账号
+    const teacher = await (prisma as any).user.create({
+        data: {
+            username: loginUsername,
+            password: hashedPassword,
+            initialPassword: initialPassword,
+            name: `机构讲师 (${loginUsername})`,
+            role: 'TEACHER',
+            orgId: orgId,
+            teacherId: principalId, // 关联到当前校长
+            credits: 1000
+        }
     });
 
-    await (prisma as any).$executeRawUnsafe(
-        `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "initialPassword", "createdAt") 
-         VALUES (?, ?, 'TEACHER', ?, ?, 'ACTIVE', ?, CURRENT_TIMESTAMP)`,
-        tId, tCode, orgId, principal?.id || null, initialPassword
-    );
-
-    for (let j = 0; j < studentQuota; j++) {
-        const sId = `st${Math.random().toString(36).substring(2, 15)}`;
-        const sCode = `S-${tCode}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-        await (prisma as any).$executeRawUnsafe(
-            `INSERT INTO "InvitationCode" ("id", "code", "type", "organizationId", "parentId", "status", "createdAt") 
-             VALUES (?, ?, 'STUDENT', ?, ?, 'ACTIVE', CURRENT_TIMESTAMP)`,
-            sId, sCode, orgId, tId
-        );
+    // 2. 为讲解生成学生激活码
+    const defaultCourse = await (prisma as any).course.findFirst();
+    if (defaultCourse) {
+        for (let j = 0; j < studentQuota; j++) {
+            const sCode = `S-${loginUsername}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+            await (prisma as any).invitationCode.create({
+                data: {
+                    code: sCode,
+                    teacherId: teacher.id,
+                    courseId: defaultCourse.id,
+                    maxUses: 1,
+                    initialPassword: '无'
+                }
+            });
+        }
     }
+    revalidatePath('/dashboard');
+}
+
+async function assignCourseToTeacherAction(formData: FormData) {
+    'use server'
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return;
+
+    const teacherId = formData.get('teacherId') as string;
+    const courseAndLicense = formData.get('courseAndLicense') as string;
+    const seats = parseInt(formData.get('seats') as string || '0');
+
+    if (!teacherId || !courseAndLicense || !seats) return;
+
+    const [courseId, orgLicenseId] = courseAndLicense.split('|');
+
+    if (!courseId || !orgLicenseId) return;
+
+    // 1. 创建 TeacherLicense
+    await (prisma as any).teacherLicense.create({
+        data: {
+            teacherId,
+            courseId,
+            allocatedSeats: seats,
+            usedSeats: 0
+        }
+    });
+
+    // 2. 更新 OrgLicense 的已用席位
+    await (prisma as any).orgLicense.update({
+        where: { id: orgLicenseId },
+        data: {
+            usedSeats: {
+                increment: seats
+            }
+        }
+    });
+
     revalidatePath('/dashboard');
 }
 
@@ -82,20 +157,36 @@ export default async function DashboardPage() {
         redirect('/login');
     }
 
+    const role = (session.user as any).role;
     const userId = (session.user as any).id;
+
+    const includeOptions: any = {
+        toolHistories: {
+            orderBy: { createdAt: 'desc' },
+            take: 5
+        },
+        posts: {
+            orderBy: { createdAt: 'desc' },
+            take: 3
+        }
+    };
+
+    // Only include student-specific relations if they are a student
+    if (role === 'STUDENT') {
+        includeOptions.usedInvitationCode = {
+            include: {
+                course: {
+                    include: {
+                        series: true
+                    }
+                }
+            }
+        };
+    }
 
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: {
-            toolHistories: {
-                orderBy: { createdAt: 'desc' },
-                take: 5
-            },
-            posts: {
-                orderBy: { createdAt: 'desc' },
-                take: 3
-            }
-        }
+        include: includeOptions
     }) as any;
 
     if (!user) {
@@ -104,21 +195,56 @@ export default async function DashboardPage() {
 
     // 获取该账户下的组织完整结构 (如果是校长或老师)
     let organization = null;
-    if (user.organizationId) {
-        organization = await (prisma as any).organization.findUnique({
-            where: { id: user.organizationId },
+    if (user.orgId) {
+        const orgData = await (prisma as any).organization.findUnique({
+            where: { id: user.orgId },
             include: {
-                invitationCodes: {
-                    orderBy: { createdAt: 'desc' }
+                users: {
+                    include: {
+                        createdCodes: {
+                            include: {
+                                course: true
+                            }
+                        },
+                        teacherLicenses: {
+                            include: {
+                                course: true
+                            }
+                        }
+                    }
+                },
+                orgLicenses: {
+                    include: {
+                        series: {
+                            include: {
+                                courses: true
+                            }
+                        }
+                    }
                 }
-            }
+            } as any
         });
 
-        // 数据沙盒化：普通老师只能看到自己那一支的树，校长看全貌
-        if (organization && user.role === 'TEACHER' && user.usedInvitationCodeId) {
-            organization.invitationCodes = organization.invitationCodes.filter((c: any) =>
-                c.id === user.usedInvitationCodeId || c.parentId === user.usedInvitationCodeId
-            );
+        if (orgData) {
+            // 提取所有激活码并扁平化
+            const allInvitationCodes = (orgData.users || []).flatMap((u: any) => u.createdCodes || []);
+
+            // 为了兼容 CodeTree，我们将 invitationCodes 混入 users 列表中
+            organization = {
+                ...orgData,
+                users: [...(orgData.users || []), ...allInvitationCodes]
+            };
+
+            // 数据沙盒化：如果是老师，只能看到自己这一支（自己和自己名下的激活码）
+            if (user.role === 'TEACHER') {
+                const myTeacherId = user.id;
+                organization.users = organization.users.filter((item: any) => {
+                    // 1. 如果是用户，必须是老师本人
+                    if (item.role) return item.id === myTeacherId;
+                    // 2. 如果是激活码，必须是老师生成的
+                    return item.teacherId === myTeacherId;
+                });
+            }
         }
     }
 
@@ -182,7 +308,52 @@ export default async function DashboardPage() {
                             onToggle={toggleStatus}
                             onDelete={deleteSubCode}
                             onAddTeacher={addTeacherToOrgAction}
+                            onAssignCourse={assignCourseToTeacherAction}
                         />
+                    </div>
+                )}
+
+                {/* Student Specific View: My Course Context */}
+                {user.role === 'STUDENT' && user.usedInvitationCode && (
+                    <div className="bg-white p-10 rounded-[48px] border-2 border-slate-100 shadow-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="flex items-center gap-4 border-b border-slate-100 pb-6">
+                            <div className="p-3 bg-blue-50 rounded-2xl">
+                                <GraduationCap className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-black italic tracking-tight text-slate-900 uppercase">我的授权课程系统</h2>
+                                <p className="text-xs text-slate-400 font-black uppercase tracking-[0.2em]">Authorized Curriculum Context</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100 group hover:bg-white hover:border-blue-200 transition-all">
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">当前课程体系 Series</div>
+                                <div className="text-2xl font-black text-slate-900 italic tracking-tight group-hover:text-blue-600 transition-colors">
+                                    {user.usedInvitationCode.course.series.name}
+                                </div>
+                            </div>
+                            <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100 group hover:bg-white hover:border-emerald-200 transition-all">
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">激活课程模块 Module</div>
+                                <div className="text-2xl font-black text-emerald-600 italic tracking-tight">
+                                    {user.usedInvitationCode.course.name}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-4">
+                            <Link href={
+                                user.usedInvitationCode.course.series.id === 'maker-l1' ? '/course/maker' :
+                                    user.usedInvitationCode.course.series.id === 'maker-l2' ? '/course/maker' :
+                                        user.usedInvitationCode.course.series.id === 'maker-l3' ? '/course/maker' :
+                                            user.usedInvitationCode.course.series.id === 'ai-interactive' ? '/course/ai' :
+                                                user.usedInvitationCode.course.series.id === '3d-printing' ? '/course/3d' : '/'
+                            }>
+                                <button className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl group">
+                                    <BookOpen className="w-5 h-5 group-hover:rotate-12 transition-transform" /> 立即进入课程中心 <ArrowRight className="w-5 h-5" />
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 )}
 

@@ -1,20 +1,28 @@
 'use client';
 
 import Link from 'next/link';
-import { Box, Image as ImageIcon, ShieldAlert, BadgeCheck, Cpu, Layers, Zap, LogIn, Trophy, Menu, X } from 'lucide-react';
+import { Box, Image as ImageIcon, ShieldAlert, BadgeCheck, Cpu, Layers, Zap, LogIn, Trophy, Menu, X, Lock } from 'lucide-react';
 import { UserNav } from './UserNav';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { BusinessModal } from './BusinessModal';
 import { cn } from '@/lib/utils';
+import { useAuthorization } from '@/hooks/useAuthorization';
 
 export function Header() {
     const { data: session } = useSession();
     const [showBusinessModal, setShowBusinessModal] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { isAuthorizedSeries, isLoading } = useAuthorization();
 
     // @ts-expect-error - NextAuth user type extension
     const isAdmin = session?.user?.role === "SUPER_ADMIN" || session?.user?.role === "ADMIN";
+
+    const NavBadge = ({ authorized }: { authorized: boolean | undefined }) => {
+        if (isLoading) return null;
+        if (authorized) return <BadgeCheck className="w-3 h-3 text-blue-500" />;
+        return <span className="px-1.5 py-0.5 bg-slate-100 text-slate-400 text-[8px] font-black rounded-md border border-slate-200 uppercase tracking-tighter">Trial</span>;
+    };
 
     return (
         <>
@@ -34,19 +42,28 @@ export function Header() {
                         {/* 1. AI互动教育体系 */}
                         <Link href="/course/ai" className="flex items-center gap-2 px-4 py-2 text-[14px] font-bold text-slate-600 hover:text-blue-600 transition-all group">
                             <Cpu className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
-                            <span>AI 互动教育体系</span>
+                            <div className="flex items-center gap-1">
+                                <span>AI 互动教育体系</span>
+                                <NavBadge authorized={isAuthorizedSeries('ai-interactive')} />
+                            </div>
                         </Link>
 
                         {/* 2. 3D打印教育体系 */}
                         <Link href="/course/3d" className="flex items-center gap-2 px-4 py-2 text-[14px] font-bold text-slate-600 hover:text-orange-600 transition-all group">
                             <Layers className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
-                            <span>3D 打印教育体系</span>
+                            <div className="flex items-center gap-1">
+                                <span>3D 打印教育体系</span>
+                                <NavBadge authorized={isAuthorizedSeries('3d-printing')} />
+                            </div>
                         </Link>
 
                         {/* 3. AI创客教育体系 */}
                         <Link href="/course/maker" className="flex items-center gap-2 px-4 py-2 text-[14px] font-bold text-slate-600 hover:text-purple-600 transition-all group">
                             <Zap className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
-                            <span>AI 创客教育体系</span>
+                            <div className="flex items-center gap-1">
+                                <span>AI 创客教育体系</span>
+                                <NavBadge authorized={isAuthorizedSeries('maker-l1') || isAuthorizedSeries('maker-l2') || isAuthorizedSeries('maker-l3')} />
+                            </div>
                         </Link>
 
                         <div className="h-4 w-[1px] bg-slate-200 mx-2"></div>

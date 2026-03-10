@@ -1,12 +1,17 @@
 'use client';
 
-import { Zap, Box, ShoppingBag, ArrowRight, ShieldCheck, Microscope, FlaskConical, ChevronLeft } from 'lucide-react';
+import { Zap, Box, ShoppingBag, ArrowRight, ShieldCheck, Microscope, FlaskConical, ChevronLeft, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useAuthorization } from '@/hooks/useAuthorization';
 
 export default function MakerCourseIndex() {
+    const { isAuthorizedSeries, isLoading } = useAuthorization();
+
     const kits = [
         {
+            id: 'maker-l1',
             level: 'L1',
             title: '3D打印非遗套件',
             target: 'Level 1: 空间感知与文化认知',
@@ -18,6 +23,7 @@ export default function MakerCourseIndex() {
             href: '/course/l1'
         },
         {
+            id: 'maker-l2',
             level: 'L2',
             title: '3D打印声光电套件',
             target: 'Level 2: 硬件系统与物理交互',
@@ -29,6 +35,7 @@ export default function MakerCourseIndex() {
             href: '/course/l2'
         },
         {
+            id: 'maker-l3',
             level: 'L3',
             title: 'AI 编程智能套件',
             target: 'Level 3: 算法驱动与智能造物',
@@ -81,55 +88,80 @@ export default function MakerCourseIndex() {
 
             {/* Kits List */}
             <div className="max-w-7xl mx-auto px-6 py-20 space-y-12">
-                {kits.map((kit, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="group relative bg-white rounded-[48px] p-8 md:p-12 border-2 border-slate-100 hover:border-slate-200 transition-all overflow-hidden shadow-xl shadow-slate-200/40"
-                    >
-                        <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000">
-                            <Box className="w-80 h-80 rotate-12" />
-                        </div>
+                {kits.map((kit, i) => {
+                    const authorized = isAuthorizedSeries(kit.id);
 
-                        <div className="flex flex-col lg:flex-row gap-12 items-center relative z-10">
-                            <div className={`w-24 h-24 rounded-[32px] ${kit.bg} flex flex-col items-center justify-center border-2 ${kit.borderColor} shadow-sm shrink-0`}>
-                                <span className={`text-4xl font-black ${kit.color}`}>{kit.level}</span>
-                                <span className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-tighter">PHASE</span>
+                    return (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className={cn(
+                                "group relative bg-white rounded-[48px] p-8 md:p-12 border-2 border-slate-100 transition-all overflow-hidden shadow-xl shadow-slate-200/40",
+                                !authorized && !isLoading && "bg-slate-50/50 grayscale-[0.8] opacity-80"
+                            )}
+                        >
+                            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000">
+                                <Box className="w-80 h-80 rotate-12" />
                             </div>
 
-                            <div className="grow space-y-4 text-center lg:text-left">
-                                <h2 className="text-3xl font-black italic text-slate-900">{kit.title}</h2>
-                                <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
-                                    <ShieldCheck className="w-4 h-4 text-blue-500" /> {kit.target}
+                            <div className="flex flex-col lg:flex-row gap-12 items-center relative z-10">
+                                <div className={`w-24 h-24 rounded-[32px] ${kit.bg} flex flex-col items-center justify-center border-2 ${kit.borderColor} shadow-sm shrink-0`}>
+                                    <span className={`text-4xl font-black ${kit.color}`}>{kit.level}</span>
+                                    <span className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-tighter">PHASE</span>
                                 </div>
-                                <p className="max-w-3xl text-slate-500 font-medium leading-relaxed mx-auto lg:mx-0">
-                                    {kit.desc}
-                                </p>
 
-                                <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-6">
-                                    {kit.modules.map(mod => (
-                                        <div key={mod} className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-black text-slate-400 border border-slate-100 flex items-center gap-2 uppercase tracking-tighter">
-                                            <div className="w-1 h-1 rounded-full bg-blue-500" /> {mod}
-                                        </div>
-                                    ))}
+                                <div className="grow space-y-4 text-center lg:text-left">
+                                    <div className="flex flex-col lg:flex-row items-center lg:items-end gap-3 justify-center lg:justify-start">
+                                        <h2 className="text-3xl font-black italic text-slate-900">{kit.title}</h2>
+                                        {!authorized && !isLoading && (
+                                            <span className="px-3 py-1 bg-slate-900 text-white text-[9px] font-black rounded-full uppercase tracking-widest italic mb-1 flex items-center gap-2 border border-white/20">
+                                                <Lock className="w-3 h-3 text-blue-400" /> 体验模式 (Trial Mode)
+                                            </span>
+                                        )}
+                                        {authorized && !isLoading && (
+                                            <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black rounded-full uppercase tracking-widest italic mb-1 border border-blue-100">
+                                                已授权 (Licensed)
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
+                                        <ShieldCheck className="w-4 h-4 text-blue-500" /> {kit.target}
+                                    </div>
+                                    <p className="max-w-3xl text-slate-500 font-medium leading-relaxed mx-auto lg:mx-0">
+                                        {kit.desc}
+                                    </p>
+
+                                    <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-6">
+                                        {kit.modules.map(mod => (
+                                            <div key={mod} className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-black text-slate-400 border border-slate-100 flex items-center gap-2 uppercase tracking-tighter">
+                                                <div className="w-1 h-1 rounded-full bg-blue-500" /> {mod}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="shrink-0 w-full lg:w-auto flex flex-col items-center">
+                                    <Link href={kit.href} className="w-full">
+                                        <button className={cn(
+                                            "w-full lg:w-56 py-6 rounded-3xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl active:scale-95 group",
+                                            authorized
+                                                ? "bg-slate-900 text-white hover:bg-blue-600 hover:scale-[1.02] shadow-blue-500/10"
+                                                : "bg-white border-2 border-slate-200 text-slate-400 hover:border-blue-500 hover:text-blue-600"
+                                        )}>
+                                            {authorized ? '开启正式学习' : '进入体验课'}
+                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        </button>
+                                    </Link>
+                                    <p className="text-[10px] text-center mt-4 font-black text-slate-300 flex items-center justify-center gap-2 uppercase tracking-widest">
+                                        <ShoppingBag className="w-3.5 h-3.5" /> Hardware Bundle Required
+                                    </p>
                                 </div>
                             </div>
-
-                            <div className="shrink-0 w-full lg:w-auto flex flex-col items-center">
-                                <Link href={kit.href} className="w-full">
-                                    <button className="w-full lg:w-56 py-6 bg-slate-900 text-white rounded-3xl font-black text-sm flex items-center justify-center gap-3 transition-all hover:bg-blue-600 hover:scale-[1.02] shadow-xl shadow-blue-500/10 active:scale-95 group">
-                                        开启课程学习 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </Link>
-                                <p className="text-[10px] text-center mt-4 font-black text-slate-300 flex items-center justify-center gap-2 uppercase tracking-widest">
-                                    <ShoppingBag className="w-3.5 h-3.5" /> Hardware Bundle Required
-                                </p>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    );
+                })}
             </div>
 
             {/* Bottom Highlights */}
