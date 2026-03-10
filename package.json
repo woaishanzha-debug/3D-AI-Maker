@@ -1,0 +1,50 @@
+{
+  "name": "3d-ai-maker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "check:all": "npm run type-check && npm run lint && prettier --check ."
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
+    "@prisma/client": "^6.19.2",
+    "@types/qrcode": "^1.5.6",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.35.0",
+    "lucide-react": "^0.577.0",
+    "next": "14.2.35",
+    "next-auth": "^4.24.13",
+    "paper": "^0.12.18",
+    "qrcode": "^1.5.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "recharts": "^3.7.0",
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.183.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/paper": "^0.11.14",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/three": "^0.183.1",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "eslint-config-prettier": "^10.1.8",
+    "postcss": "^8",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "prisma": "^6.19.2",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+
+  --secondary: #7e22ce;
+  --secondary-hover: #6b21a8;
+
+  --accent: #e11d48;
+
+  /* 适合浅色背景的透光毛玻璃材质 */
+  --surface: rgba(255, 255, 255, 0.75);
+  --surface-deep: rgba(240, 248, 255, 0.85);
+
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(2, 132, 199, 0.04), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(126, 34, 206, 0.04), transparent 25%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-surface backdrop-blur-xl border border-border shadow-glass rounded-2xl;
+  }
+
+  .glass-panel-deep {
+    @apply bg-surface-deep backdrop-blur-3xl border border-border shadow-glass rounded-xl;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  }
+
+  .neon-border {
+    @apply relative overflow-hidden rounded-2xl before:absolute before:inset-0 before:-z-10 before:p-[2px] before:bg-gradient-to-r before:from-primary before:to-secondary before:rounded-2xl before:content-[''];
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+  color: #fff;
+}
