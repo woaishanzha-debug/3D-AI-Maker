@@ -7,24 +7,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  SUPER_ADMIN
+  ORG_ADMIN
+  TEACHER
+  STUDENT
+}
+
 model User {
-  id             String        @id @default(cuid())
-  name           String?
-  username       String?       @unique 
-  email          String?       @unique
-  password       String?
-  role           String        @default("USER") 
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  
-  // 记录该用户是使用哪个邀请码激活的
+  id       String  @id @default(cuid())
+  name     String?
+  username String? @unique
+  email    String? @unique
+  password String?
+  role     Role    @default(STUDENT)
+
+  orgId        String?
+  organization Organization? @relation(fields: [orgId], references: [id])
+
+  teacherId String?
+  teacher   User?   @relation("TeacherStudents", fields: [teacherId], references: [id])
+  students  User[]  @relation("TeacherStudents")
+
+  // Existing metadata and relations
+  credits   Int      @default(100)
+  createdAt DateTime @default(now())
+
+  // Relations to other modules
+  posts         Post[]
+  toolHistories ToolHistory[]
+  completions   Completion[]
+
+  // New auth relations
+  teacherLicenses TeacherLicense[]
+  createdCodes    InvitationCode[]
+
+  // Track the code used for registration
   usedInvitationCodeId String? @unique
-  
-  credits        Int           @default(100)
-  createdAt      DateTime      @default(now())
-  posts          Post[]
-  toolHistories  ToolHistory[]
-  completions    Completion[]
 }
 
 model Completion {
@@ -39,38 +58,72 @@ model Completion {
 }
 
 model Organization {
-  id              String           @id @default(cuid())
-  name            String
-  createdAt       DateTime         @default(now())
-  users           User[]
+  id          String       @id @default(cuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  users       User[]
+  orgLicenses OrgLicense[]
+}
+
+model CourseSeries {
+  id          String       @id @default(cuid())
+  name        String // e.g., "3D打印体系", "AI互动体系"
+  courses     Course[]
+  orgLicenses OrgLicense[]
+}
+
+model Course {
+  id       String       @id @default(cuid())
+  name     String?
+  seriesId String
+  series   CourseSeries @relation(fields: [seriesId], references: [id])
+
+  teacherLicenses TeacherLicense[]
   invitationCodes InvitationCode[]
 }
 
+model OrgLicense {
+  id         String   @id @default(cuid())
+  orgId      String
+  seriesId   String
+  totalSeats Int
+  usedSeats  Int      @default(0)
+  expiresAt  DateTime
+
+  organization Organization @relation(fields: [orgId], references: [id])
+  series       CourseSeries @relation(fields: [seriesId], references: [id])
+}
+
+model TeacherLicense {
+  id             String @id @default(cuid())
+  teacherId      String
+  courseId       String
+  allocatedSeats Int
+  usedSeats      Int    @default(0)
+
+  teacher User   @relation(fields: [teacherId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+}
+
 model InvitationCode {
-  id             String       @id @default(cuid())
-  code           String       @unique
-  type           String       @default("STUDENT") // PRINCIPAL, TEACHER, STUDENT
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  // 层级关系：学生关联到老师，老师和校长关联到机构
-  parentId       String?      
-  
-  maxUses        Int          @default(1)
-  usedCount      Int          @default(0)
-  status         String       @default("ACTIVE") // ACTIVE, DISABLED
-  disabledBy     String?      // 记录是谁停用了该账号
-  initialPassword String?      
-  createdAt      DateTime     @default(now())
+  id        String @id @default(cuid())
+  code      String @unique
+  teacherId String
+  courseId  String
+  maxUses   Int
+  usedCount Int    @default(0)
+
+  teacher User   @relation(fields: [teacherId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
 }
 
 model ToolHistory {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  toolType    String
-  creditCost  Int
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  toolType   String
+  creditCost Int
+  createdAt  DateTime @default(now())
 }
 
 model Post {
