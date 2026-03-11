@@ -231,7 +231,7 @@ export default function CourseL1Page() {
                                     {phase.lessons.map((lesson, i) => {
                                         const lessonKey = `${idx}-${i}`;
                                         const isCompleted = completions.includes(lessonKey);
-                                        const experienceSlugs = ['cloisonne-intro', 'cloisonne', 'shadow-play'];
+                                        const experienceSlugs = ['cloisonne-intro', 'cloisonne', 'shadow-play', 'blue-white-porcelain'];
                                         const isInteractive = isL1Authorized || experienceSlugs.includes(lesson.slug);
                                         const isLocked = !isL1Authorized && !experienceSlugs.includes(lesson.slug) && !isLoading;
 
