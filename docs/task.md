@@ -30,3 +30,7 @@
   - [x] 6.1 初始化 Prisma 并补全数据模型 (User, Organization, InvitationCode)
   - [x] 6.2 搭建基于 Auth.js 的受邀登录验证体系 (凭邀请码自动绑定机构注册)
   - [x] 6.3 实现管理员 Dashboard (生成邀请码配置、批量导出 CSV、查看激活率)
+  - [x] 6.4 实现 B2B 树形层级管理 UI (`DashboardCodeTree`) 并解决 Vercel 构建冲突
+- [x] 7. 部署与环境治理
+  - [x] 7.1 解决 Vercel/Prisma 协议冲突 (见 `docs/deployment_notes.md`)
+  - [x] 7.2 自动化 DB Push 构建流程
