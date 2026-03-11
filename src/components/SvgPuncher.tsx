@@ -168,6 +168,7 @@ export default function SvgPuncher() {
                     const result = (hit.item as any).unite(ball);
                     result.data.isPuppetPart = true;
                     hit.item.replaceWith(result);
+                    ball.remove();
                 }
             } else if (tool === 'hole') {
                 const hit = paper.project.hitTest(event.point, { fill: true });
@@ -176,6 +177,7 @@ export default function SvgPuncher() {
                     const result = (hit.item as any).subtract(hole);
                     result.data.isPuppetPart = true;
                     hit.item.replaceWith(result);
+                    hole.remove();
                 }
             }
         };
@@ -239,6 +241,7 @@ export default function SvgPuncher() {
 
                             const color = item.fillColor ? (item.fillColor as any).clone() : new paper.Color('black');
                             item.remove(); cutter.remove(); joint.remove();
+                            partA.remove(); partB.remove();
 
                             const finalize = (p: any) => {
                                 if (!p || p.isEmpty()) return;
