@@ -125,8 +125,7 @@ export async function generateInvitationCode(
     });
 
     // Explicitly typing the accumulator and current value for the reduce function
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const potentialUsedSeats = activeCodes.reduce((acc: number, code: any) => acc + (code.maxUses - code.usedCount), 0);
+    const potentialUsedSeats = activeCodes.reduce((acc: number, code: Prisma.InvitationCodeGetPayload<{}>) => acc + (code.maxUses - code.usedCount), 0);
     const availableSeats = teacherLicense.allocatedSeats - teacherLicense.usedSeats - potentialUsedSeats;
 
     if (availableSeats < maxUses) {
@@ -149,8 +148,7 @@ export async function generateInvitationCode(
 }
 
 export async function registerStudentWithCode(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  studentData: any,
+  studentData: Prisma.UserCreateInput,
   code: string
 ) {
   return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -212,7 +210,7 @@ export async function registerStudentWithCode(
     // 6. Create Student User
     return await tx.user.create({
       data: {
-        ...studentData,
+        ...(studentData as any),
         username: generatedUsername,
         role: "STUDENT",
         orgId: invitationCode.teacher.orgId,
