@@ -1,0 +1,79 @@
+{
+    "title": "掐丝珐琅：从宫廷金丝到数字构造",
+    "slides": [
+        {
+            "index": 1,
+            "title": "智驭文明：数字时代的非遗探索",
+            "content": [
+                "掐丝珐琅（景泰蓝）不仅仅是器物，它是金属与火的史诗。",
+                "今天，我们将探讨如何通过 3D 打印与数字化矢量技术，传承这项极致的“金丝艺术”。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_1_img_3.png"
+            ]
+        },
+        {
+            "index": 2,
+            "title": "技艺溯源：丝路上的流光溢彩",
+            "content": [
+                "起源于古波斯，14世纪通过丝绸之路传入中国。",
+                "明清时期成为宫廷重器，因明景泰年间制作最为精美，故名“景泰蓝”。",
+                "它是权力与审美的象征：繁复、华丽、永不褪色。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_4_img_17.jpg"
+            ]
+        },
+        {
+            "index": 3,
+            "title": "传统六工序：极致的工匠耐心",
+            "content": [
+                "1. 制胎：打造金属骨架。",
+                "2. 掐丝：用极细扁铜丝掐成图案（核心！）。",
+                "3. 点蓝：在格子内填充珐琅釉料。",
+                "4. 烧制：经历千度火炼。",
+                "5. 打磨：直至平滑如镜。",
+                "6. 镀金：使器物金碧辉煌。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_8_img_28.jpg"
+            ]
+        },
+        {
+            "index": 4,
+            "title": "数字化转换：不仅是复刻",
+            "content": [
+                "制胎数字化：3D打印直接成型复杂曲面，无需锤揲。",
+                "掐丝数字化：用算法生成的精密槽位代替手工绕丝。",
+                "点蓝数字化：3D打印笔或数字化滴釉，实现精准填色。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_10_img_35.jpg"
+            ]
+        },
+        {
+            "index": 5,
+            "title": "核心知识：什么是 SVG？",
+            "content": [
+                "SVG (Scalable Vector Graphics) 是数字世界的“线条指令”。",
+                "位图（JPG）是像素点，放大就糊；矢量图（SVG）是数学公式，无限缩放依然清晰。",
+                "在我们的画板中，你绘制的每一笔都会转为 SVG 路径，这正是 3D 打印笔最完美的“数字导轨”。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_14_img_50.svg"
+            ]
+        },
+        {
+            "index": 6,
+            "title": "准备好了吗？",
+            "content": [
+                "接下来，你将进入“数字掐丝实验室”。",
+                "运用对称美学，绘制出属于你的当代景泰蓝底稿。",
+                "我们将实践：亲手勾勒线条 -> 生成 SVG -> 准备 3D 打印。"
+            ],
+            "images": [
+                "/presentations/cloisonne/assets/slide_12_img_42.png"
+            ]
+        }
+    ]
+}

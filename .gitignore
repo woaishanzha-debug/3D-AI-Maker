@@ -19,8 +19,6 @@ prisma/dev.db
 prisma/dev.db-journal
 
 # Large Assets and Local Files
-public/presentations/
-public/courseware/
 *.ppt
 *.pptx
 *.pdf

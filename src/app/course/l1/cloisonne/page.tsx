@@ -107,7 +107,7 @@ export default function CloisonneLesson() {
                                     <span className="text-xs font-black text-white/40 uppercase tracking-widest">Interactive Courseware</span>
                                 </div>
 
-                                <PresentationViewer slug="掐丝珐琅课件" dataFile="refined.json" />
+                                <PresentationViewer slug="cloisonne" dataFile="refined.json" />
 
                                 <div className="absolute top-8 right-8 z-30 flex gap-4">
                                     <button onClick={() => setStep(2)} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-500 transition-all shadow-2xl active:scale-95">
