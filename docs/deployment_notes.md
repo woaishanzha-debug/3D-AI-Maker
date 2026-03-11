@@ -1,30 +1,13 @@
 # Vercel Build Troubleshooting: Prisma SQLite Protocol Conflict
 
-### 1. Problem Description
-During deployment on Vercel, the build failed with Error code **P1012**:
-`error: Error validating datasource db: the URL must start with the protocol file:.`
+### 4. Final Solution: Pivot to PostgreSQL (Neon)
+SQLite on Vercel is **read-only** at runtime. While the app could boot, any write operation (like creating an organization or generating codes) triggered a `SqliteError: attempt to write a readonly database`.
 
-### 2. Root Cause
-- The project uses **SQLite** (`provider = "sqlite"`) in `prisma/schema.prisma`.
-- Vercel sometimes auto-injects an environment variable `DATABASE_URL` if a database integration (like Neon Postgres) is added to the project.
-- Next.js and Prisma 6 detect this injected variable. Since Neon uses `postgres://`, it conflicts with the SQLite expectation of `file:`.
-
-### 3. Solution (The "Safe Fallback" Strategy)
-Modified `prisma.config.ts` to strictly enforce the `file:` protocol for SQLite, effectively ignoring any external Postgres URLs injected by Vercel.
-
-**Updated `prisma.config.ts` snippet:**
-```typescript
-export default defineConfig({
-  // ...
-  datasource: {
-    // Only use DATABASE_URL if it explicitly starts with 'file:'
-    // Otherwise, force fallback to the local dev file.
-    url: (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('file:')) 
-         ? process.env.DATABASE_URL 
-         : "file:./dev.db",
-  },
-});
-```
+**Actions taken:**
+- Switched Prisma provider to `postgresql`.
+- Integrated with **Neon Postgres** via Vercel's native integration.
+- Restored standard `DATABASE_URL` environment variable usage.
+- Enabled automatic `prisma db push` and `prisma db seed` during the Vercel build pipeline to initialize the remote database.
 
 ### 4. Build Pipeline Update
 Updated `package.json` build script to ensure database synchronization on every deployment:
