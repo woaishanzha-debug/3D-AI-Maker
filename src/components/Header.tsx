@@ -96,7 +96,7 @@ export function Header() {
                             {session ? (
                                 <div className="flex items-center gap-2">
                                     {isAdmin && (
-                                        <Link href="/admin" className="p-2 text-slate-400 hover:text-blue-600 transition-colors hidden sm:block" title="管理控制台">
+                                        <Link href="/admin" className="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="管理控制台">
                                             <ShieldAlert className="w-5 h-5" />
                                         </Link>
                                     )}
@@ -139,6 +139,18 @@ export function Header() {
                     isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
                 )}>
                     <nav className="flex flex-col px-6 py-8 gap-1">
+                        {isAdmin && (
+                            <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-blue-50/50 border border-blue-100 transition-colors mb-2">
+                                <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+                                    <ShieldAlert className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <span className="font-black text-lg text-slate-900 block">管理控制台</span>
+                                    <span className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Admin Dashboard Access</span>
+                                </div>
+                            </Link>
+                        )}
+
                         <Link href="/course/ai" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors">
                             <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
                                 <Cpu className="w-6 h-6 text-blue-600" />
@@ -168,20 +180,30 @@ export function Header() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 px-2 pt-4">
+                            <button
+                                onClick={() => {
+                                    setIsMobileMenuOpen(false);
+                                    setShowBusinessModal(true);
+                                }}
+                                className="col-span-2 flex items-center justify-center gap-2 p-5 rounded-2xl bg-blue-600 text-white font-black shadow-xl shadow-blue-600/20 mb-2 active:scale-95 transition-all"
+                            >
+                                <BadgeCheck className="w-5 h-5 text-blue-200" /> 商务合作签约
+                            </button>
+
                             <Link
                                 href="/student-join"
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className="flex items-center justify-center gap-2 p-5 rounded-2xl bg-blue-50 text-blue-600 font-bold border border-blue-100"
                             >
-                                学生激活通道
+                                学生激活
                             </Link>
 
                             <Link
                                 href="/login?type=teacher"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="flex items-center justify-center gap-2 p-5 rounded-2xl bg-slate-900 text-white font-black hover:bg-black transition-all"
+                                className="flex items-center justify-center gap-2 p-5 rounded-2xl bg-slate-100 text-slate-600 font-bold border border-slate-200"
                             >
-                                <BadgeCheck className="w-5 h-5 text-blue-400" /> 教师与机构
+                                教师登录
                             </Link>
                         </div>
                     </nav>

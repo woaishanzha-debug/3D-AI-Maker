@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import { CreditCard, History, Clock, Package, Share2, Award, Users, GraduationCap, Sparkles, BookOpen, ArrowRight } from 'lucide-react';
+import { CreditCard, History, Clock, Package, Share2, Award, Users, GraduationCap, Sparkles, BookOpen, ArrowRight, ShieldAlert, BadgeCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { revalidatePath } from 'next/cache';
@@ -301,13 +301,34 @@ export default async function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-6 bg-blue-50 border-2 border-blue-100 px-8 py-5 rounded-[28px] shadow-xl shadow-blue-500/5 group hover:bg-white transition-all cursor-default">
-                        <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                            <CreditCard className="w-6 h-6" />
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-6 bg-blue-50 border-2 border-blue-100 px-8 py-5 rounded-[28px] shadow-xl shadow-blue-500/5 group hover:bg-white transition-all cursor-default">
+                            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                                <CreditCard className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <div className="text-[10px] text-blue-600 font-black uppercase tracking-widest mb-1 opacity-60">AI 创客资产 (Credits)</div>
+                                <div className="text-3xl font-black text-slate-900 tracking-tight">{user.credits} <span className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Coins</span></div>
+                            </div>
                         </div>
-                        <div>
-                            <div className="text-[10px] text-blue-600 font-black uppercase tracking-widest mb-1 opacity-60">AI 创客资产 (Credits)</div>
-                            <div className="text-3xl font-black text-slate-900 tracking-tight">{user.credits} <span className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Coins</span></div>
+
+                        {/* Mobile & Tablet Shortcuts */}
+                        <div className="grid grid-cols-2 gap-3">
+                            {(user.role === 'SUPER_ADMIN' || user.role === 'ORG_ADMIN') && (
+                                <Link href="/admin" className="p-4 rounded-2xl bg-slate-900 text-white flex flex-col items-center gap-2 hover:bg-black transition-all">
+                                    <ShieldAlert className="w-6 h-6 text-blue-400" />
+                                    <span className="text-[10px] font-black uppercase tracking-wider">管理控制台</span>
+                                </Link>
+                            )}
+                            {(user.role === 'SUPER_ADMIN' || user.role === 'ORG_ADMIN' || user.role === 'TEACHER') && (
+                                <button
+                                    onClick={() => alert('已为您在顶栏菜单（右上角三横杠）中激活“商务合作签约”通道，请点击查看。')}
+                                    className="p-4 rounded-2xl bg-white border-2 border-slate-100 flex flex-col items-center gap-2 hover:border-blue-500 transition-all text-slate-900"
+                                >
+                                    <BadgeCheck className="w-6 h-6 text-blue-600" />
+                                    <span className="text-[10px] font-black uppercase tracking-wider">商务授权</span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
