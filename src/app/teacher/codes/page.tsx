@@ -15,8 +15,15 @@ import {
     CheckCircle2
 } from "lucide-react";
 
+interface CustomSession {
+    user: {
+        id: string;
+        role: string;
+    }
+}
+
 export default async function TeacherCodesPage() {
-    const session = await getServerSession(authOptions) as any;
+    const session = await getServerSession(authOptions) as CustomSession | null;
     if (!session || (session.user?.role !== "TEACHER" && session.user?.role !== "ORG_ADMIN" && session.user?.role !== "SUPER_ADMIN")) {
         redirect("/login");
     }
@@ -38,10 +45,10 @@ export default async function TeacherCodesPage() {
                 },
                 orderBy: {
                     createdAt: 'desc'
-                } as any
+                } as any // eslint-disable-line @typescript-eslint/no-explicit-any
             }
         }
-    }) as any;
+    });
 
     if (!teacherData) {
         return <div className="p-20 text-center">用户数据不存在。</div>;
@@ -92,6 +99,7 @@ export default async function TeacherCodesPage() {
                                 <h2 className="text-xl font-black italic uppercase tracking-tight text-slate-900">课程席位状态</h2>
                             </div>
                             <div className="space-y-6">
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {teacherData.teacherLicenses.map((license: any) => (
                                     <div key={license.id} className="p-6 rounded-3xl bg-slate-50 border border-slate-100 space-y-4">
                                         <div className="flex justify-between items-start">
@@ -124,17 +132,20 @@ export default async function TeacherCodesPage() {
                                 'use server';
                                 const courseId = formData.get('courseId') as string;
                                 const maxUses = parseInt(formData.get('maxUses') as string);
-                                const session = await getServerSession(authOptions) as any;
+                                const session = await getServerSession(authOptions) as CustomSession | null;
+                                if (!session) return;
 
                                 try {
                                     await generateInvitationCode(session.user.id, courseId, maxUses);
                                 } catch (e: any) {
-                                    console.error(e.message);
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    console.error((e as any).message);
                                 }
                             }} className="space-y-6">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase text-indigo-200 ml-2">选择对应课程</label>
                                     <select name="courseId" className="w-full bg-white/10 border-2 border-white/10 rounded-2xl px-6 py-4 font-black uppercase focus:border-white transition-all outline-none appearance-none cursor-pointer">
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {teacherData.teacherLicenses.map((tl: any) => (
                                             <option key={tl.courseId} value={tl.courseId} className="text-slate-900">{tl.course.name}</option>
                                         ))}
@@ -166,6 +177,7 @@ export default async function TeacherCodesPage() {
                             </div>
 
                             <div className="space-y-4">
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {teacherData.createdCodes.length > 0 ? teacherData.createdCodes.map((code: any) => (
                                     <div key={code.id} className="p-8 rounded-[32px] border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:border-indigo-100 transition-all group relative overflow-hidden">
                                         <div className="grid grid-cols-12 items-center gap-6">

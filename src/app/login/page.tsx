@@ -4,7 +4,7 @@ import { Lock, ArrowRight, ShieldCheck, Mail, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState } from 'react';
 
 import { BusinessModal } from '@/components/BusinessModal';
 import { cn } from '@/lib/utils';

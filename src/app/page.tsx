@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Award, Terminal, Layers, Database } from 'lucide-react';
+import { ArrowRight, Sparkles, Award } from 'lucide-react';
 import Link from 'next/link';
 import NewsTicker from '@/components/NewsTicker';
 import STEAMRadar from '@/components/STEAMRadar';

@@ -42,6 +42,7 @@ export const PresentationViewer = ({ slug, dataFile = 'data.json' }: { slug: str
 
     const toggleFullscreen = () => {
         if (!document.fullscreenElement) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             viewerRef.current?.requestFullscreen().catch((err: any) => {
                 console.error(`Error attempting to enable full-screen mode: ${err.message}`);
             });

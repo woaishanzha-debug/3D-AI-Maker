@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Key, Power, Trash2, ChevronRight, ChevronDown, Ticket, School, Info, Copy, Crown, GraduationCap, PlusCircle, XCircle, Zap } from 'lucide-react';
+import { Power, Trash2, ChevronRight, ChevronDown, Ticket, School, Info, Copy, Crown, GraduationCap, PlusCircle, XCircle, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CodeTreeProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     organizations: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     courseSeries: any[];
     onToggle: (id: string, status: string, name?: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
@@ -65,8 +67,11 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
                     {organizations.map((org) => {
                         const orgId = `org-${org.id}`;
                         const isOrgExpanded = expandedIds.has(orgId);
-                        const allUsers = org.users || [];
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const allUsers = (org.users || []) as any[];
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const principals = allUsers.filter((u: any) => u.role === 'ORG_ADMIN');
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const teachers = allUsers.filter((u: any) => u.role === 'TEACHER');
 
                         return (
@@ -80,6 +85,7 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
                                     onClick={() => toggleExpand(orgId)}
                                 >
                                     <div className="col-span-12 px-8 pb-4 flex flex-wrap gap-2">
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {org.orgLicenses?.map((lic: any) => (
                                             <div key={lic.id} className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-lg text-[9px] font-black uppercase">
                                                 <Zap className="w-3 h-3" />
@@ -131,22 +137,22 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
                                 {isOrgExpanded && (
                                     <div className="ml-12 border-l-4 border-slate-100">
                                         {/* 渲染校长号 */}
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {principals.map((p: any) => (
                                             <AccountNode
                                                 key={p.id}
                                                 node={p}
                                                 allCodes={allUsers}
-                                                parentId={orgId}
                                                 {...{ toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }}
                                             />
                                         ))}
                                         {/* 渲染老师号 (如果没有关联校长) */}
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {teachers.filter((t: any) => !t.teacherId).map((t: any) => (
                                             <AccountNode
                                                 key={t.id}
                                                 node={t}
                                                 allCodes={allUsers}
-                                                parentId={orgId}
                                                 {...{ toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }}
                                             />
                                         ))}
@@ -170,7 +176,7 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
                             <button onClick={() => setShowAddModal(null)} className="p-3 hover:bg-white/10 rounded-full transition-all"><XCircle className="w-8 h-8" /></button>
                         </div>
                         <form action={async (formData) => {
-                            formData.append('orgId', showAddModal);
+                            formData.append('orgId', showAddModal!);
                             await onAddTeacher(formData);
                             setShowAddModal(null);
                         }} className="p-10 space-y-8">
@@ -208,7 +214,7 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
                             <button onClick={() => setShowAllocateModal(null)} className="p-3 hover:bg-white/10 rounded-full transition-all"><XCircle className="w-8 h-8" /></button>
                         </div>
                         <form action={async (formData) => {
-                            formData.append('orgId', showAllocateModal);
+                            formData.append('orgId', showAllocateModal!);
                             await onAllocateCourse(formData);
                             setShowAllocateModal(null);
                         }} className="p-10 space-y-8">
@@ -238,7 +244,8 @@ export default function CodeTree({ organizations, courseSeries, onToggle, onDele
     );
 }
 
-function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function AccountNode({ node, allCodes, toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }: any) {
     const nodeId = `node-${node.id}`;
     const isExpanded = expandedIds.has(nodeId);
     const isInfoVisible = infoIds.has(nodeId);
@@ -248,6 +255,7 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
     // 找出以此节点为父节点的子节点
     // 如果是校长，子节点是老师 (User)
     // 如果是老师，子节点是激活码 (InvitationCode)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const children = (allCodes || []).filter((c: any) => {
         if (isPrincipal) return c.role === 'TEACHER' && c.teacherId === node.id;
         if (isTeacher) return !c.role && c.teacherId === node.id;
@@ -330,6 +338,7 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
 
             {isExpanded && children.length > 0 && (
                 <div className="ml-16 border-l-2 border-dashed border-slate-200">
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {children.map((child: any) => (
                         (!child.role) ? ( // 激活码没有 role
                             <div key={child.id} className="grid grid-cols-12 py-4 px-8 items-center bg-white border-b border-slate-50 last:border-b-0 hover:bg-slate-50/50 transition-all group">
@@ -363,7 +372,6 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
                                 key={child.id}
                                 node={child}
                                 allCodes={allCodes}
-                                parentId={nodeId}
                                 {...{ toggleExpand, toggleInfo, copyToClipboard, handleToggleInternal, onDelete, isToggling, expandedIds, infoIds }}
                             />
                         )
@@ -373,4 +381,3 @@ function AccountNode({ node, allCodes, parentId, toggleExpand, toggleInfo, copyT
         </div>
     );
 }
-

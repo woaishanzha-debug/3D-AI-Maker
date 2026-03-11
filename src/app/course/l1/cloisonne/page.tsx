@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, MessageCircle, PlayCircle, Trophy, Wand2, Box, ChevronRight, Share2, Sparkles, GraduationCap, RotateCcw, Lightbulb } from 'lucide-react';
+import { ArrowLeft, BookOpen, MessageCircle, Trophy, Wand2, Box, ChevronRight, Share2, Sparkles, GraduationCap, Lightbulb } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SymmetryCanvas = dynamic(() => import('@/components/SymmetryCanvas').then((mod) => mod.SymmetryCanvas), {

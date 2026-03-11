@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Zap, PlayCircle, Lightbulb, Box, Share2, Sparkles, Wand2, Download, MousePointer2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Zap, Lightbulb, Box, Share2, Sparkles, Wand2 } from 'lucide-react';
 
 export default function LithophaneCourse() {
     const [step, setStep] = useState(0);
@@ -226,7 +226,7 @@ export default function LithophaneCourse() {
                                     className="p-6 rounded-3xl bg-blue-600 shadow-xl shadow-blue-600/30 flex flex-col items-center gap-3 active:scale-95 transition-all text-white hover:bg-blue-500 hover:shadow-blue-500/50"
                                 >
                                     <Wand2 className="w-6 h-6 animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest tracking-[0.2em]">启动灰度生成器</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest">启动灰度生成器</span>
                                 </Link>
                             </div>
                         </motion.div>

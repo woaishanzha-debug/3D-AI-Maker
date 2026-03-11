@@ -37,7 +37,7 @@ async function createOrgAndCodes(formData: FormData) {
             role: 'ORG_ADMIN',
             orgId: org.id,
             credits: 5000
-        } as any
+        } as any // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
     // 获取一个默认课程用于关联学生激活码
@@ -57,7 +57,7 @@ async function createOrgAndCodes(formData: FormData) {
                     orgId: org.id,
                     teacherId: principal.id, // 关联到校长
                     credits: 1000
-                } as any
+                } as any // eslint-disable-line @typescript-eslint/no-explicit-any
             });
 
             // 为该老师创建学生激活码 (InvitationCode)
@@ -70,7 +70,7 @@ async function createOrgAndCodes(formData: FormData) {
                         courseId: defaultCourse.id,
                         maxUses: 1,
                         initialPassword: '无' // 学生使用码直接激活
-                    } as any
+                    } as any // eslint-disable-line @typescript-eslint/no-explicit-any
                 });
             }
         }
@@ -88,6 +88,7 @@ async function toggleCodeStatus(id: string, currentStatus: string, operator: str
     // 尝试更新 User
     const user = await prisma.user.findUnique({ where: { id } });
     if (user) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (prisma as any).user.update({
             where: { id },
             data: {
@@ -97,6 +98,7 @@ async function toggleCodeStatus(id: string, currentStatus: string, operator: str
         });
     } else {
         // 尝试更新 InvitationCode
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (prisma as any).invitationCode.update({
             where: { id },
             data: {
@@ -119,6 +121,7 @@ async function allocateCourseToOrg(formData: FormData) {
 
     if (!orgId || !seriesId) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (prisma as any).orgLicense.create({
         data: {
             orgId,
@@ -135,12 +138,15 @@ async function allocateCourseToOrg(formData: FormData) {
 async function deleteOrganization(orgId: string) {
     'use server'
     // 先删除该机构下的所有激活码 (InvitationCode)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const users = await prisma.user.findMany({ where: { orgId } as any });
     const userIds = users.map(u => u.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (prisma as any).invitationCode.deleteMany({
         where: { teacherId: { in: userIds } }
     });
     // 删除用户
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await prisma.user.deleteMany({ where: { orgId } as any });
     // 删除机构
     await prisma.organization.delete({ where: { id: orgId } });
@@ -152,22 +158,25 @@ async function deleteCode(id: string) {
     const user = await prisma.user.findUnique({ where: { id } });
     if (user) {
         if (user.role === 'TEACHER') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (prisma as any).invitationCode.deleteMany({ where: { teacherId: id } });
         }
         await prisma.user.delete({ where: { id } });
     } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (prisma as any).invitationCode.delete({ where: { id } });
     }
     revalidatePath('/admin');
 }
 
 // 占位
-async function addTeacherToOrg(formData: FormData) {
+async function addTeacherToOrg() {
     'use server'
     console.log("Add teacher logic should be moved to OrgMatrix page");
 }
 
 export default async function AdminPage() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const session = await getServerSession(authOptions) as any;
     if (!session || session.user?.role !== 'SUPER_ADMIN') {
         redirect('/login');
@@ -189,12 +198,16 @@ export default async function AdminPage() {
                     series: true
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         orderBy: { createdAt: 'desc' } as any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any[];
 
     // 为了兼容 CodeTree，我们将所有关联的 invitationCodes 提取并合并
     const transformedOrgs = organizations.map(org => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const allInvitationCodes = (org.users || []).flatMap((u: any) => u.createdCodes || []);
         return {
             ...org,

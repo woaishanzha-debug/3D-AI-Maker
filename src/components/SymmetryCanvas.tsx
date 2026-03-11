@@ -16,9 +16,12 @@ export const SymmetryCanvas: React.FC<SymmetryCanvasProps> = () => {
     // Keep these as any for now because Paper.js types are complex via dynamic import, 
     // but we can at least remove the global disable and use local ignores if needed,
     // or better, use unknown/casting.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paperRef = useRef<any>(null);
     const pathsRef = useRef<{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         active: any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mirror: any;
     }>({ active: null, mirror: null });
     const symmetryRef = useRef(symmetryMode);

@@ -6,8 +6,11 @@ import { PlusCircle, Shield, CheckCircle, XCircle } from 'lucide-react';
 import Image from 'next/image';
 
 interface AdminDashboardProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     organizations: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pendingWorks: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     courseSeries: any[];
     actions: {
         createOrgAndCodes: (formData: FormData) => Promise<void>;

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Box, Image as ImageIcon, ShieldAlert, BadgeCheck, Cpu, Layers, Zap, LogIn, Trophy, Menu, X, Lock } from 'lucide-react';
+import { Box, Image as ImageIcon, ShieldAlert, BadgeCheck, Cpu, Layers, Zap, LogIn, Trophy, Menu, X } from 'lucide-react';
 import { UserNav } from './UserNav';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -15,8 +15,8 @@ export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { isAuthorizedSeries, isLoading } = useAuthorization();
 
-    // @ts-expect-error - NextAuth user type extension
-    const isAdmin = session?.user?.role === "SUPER_ADMIN" || session?.user?.role === "ADMIN";
+    const user = session?.user as { role?: string } | undefined;
+    const isAdmin = user?.role === "SUPER_ADMIN" || user?.role === "ADMIN";
 
     const NavBadge = ({ authorized }: { authorized: boolean | undefined }) => {
         if (isLoading) return null;

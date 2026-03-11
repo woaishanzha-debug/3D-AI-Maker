@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation'; // Trigger re-compilation after prisma generate
-import { CreditCard, History, Clock, Package, Share2, Award, Users, PlusCircle, GraduationCap, Sparkles, Ticket, Power, Trash2, XCircle, BookOpen, ArrowRight } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { CreditCard, History, Clock, Package, Share2, Award, Users, GraduationCap, Sparkles, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { revalidatePath } from 'next/cache';
@@ -10,11 +10,27 @@ import bcrypt from 'bcryptjs';
 import ChangePasswordForm from '../../components/dashboard/ChangePasswordForm';
 import DashboardCodeTree from '../../components/dashboard/DashboardCodeTree';
 
+// Define types to avoid 'any'
+interface CustomUser {
+    id: string;
+    name?: string;
+    username?: string;
+    role: string;
+    credits: number;
+    orgId?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    toolHistories?: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    posts?: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    usedInvitationCode?: any;
+}
+
 // 简单实现 cn 函数以避免导入问题
 function cn(...inputs: (string | boolean | undefined | null | { [key: string]: boolean })[]) {
     return inputs.filter(Boolean).map(item => {
-        if (typeof item === 'object') {
-            return Object.entries(item!).filter(([, v]) => v).map(([k]) => k).join(' ');
+        if (typeof item === 'object' && item !== null) {
+            return Object.entries(item).filter(([, v]) => v).map(([k]) => k).join(' ');
         }
         return item;
     }).join(' ');
@@ -25,10 +41,10 @@ async function toggleStatus(id: string, current: string, operator: string = 'Sys
     'use server'
     const newStatus = current === 'ACTIVE' ? 'DISABLED' : 'ACTIVE';
 
-    // 尝试更新 User (校长/老师)
     const user = await prisma.user.findUnique({ where: { id } });
     if (user) {
-        await (prisma as any).user.update({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (prisma.user as any).update({
             where: { id },
             data: {
                 status: newStatus,
@@ -36,8 +52,8 @@ async function toggleStatus(id: string, current: string, operator: string = 'Sys
             }
         });
     } else {
-        // 尝试更新 InvitationCode (学生激活码)
-        await (prisma as any).invitationCode.update({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (prisma.invitationCode as any).update({
             where: { id },
             data: {
                 status: newStatus,
@@ -50,17 +66,16 @@ async function toggleStatus(id: string, current: string, operator: string = 'Sys
 
 async function deleteSubCode(id: string) {
     'use server'
-    // 查找是否是 User
     const user = await prisma.user.findUnique({ where: { id } });
     if (user) {
-        // 如果是老师，先删除其名下的激活码
         if (user.role === 'TEACHER') {
-            await (prisma as any).invitationCode.deleteMany({ where: { teacherId: id } });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (prisma.invitationCode as any).deleteMany({ where: { teacherId: id } });
         }
         await prisma.user.delete({ where: { id } });
     } else {
-        // 如果是激活码
-        await (prisma as any).invitationCode.delete({ where: { id } });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (prisma.invitationCode as any).delete({ where: { id } });
     }
     revalidatePath('/dashboard');
 }
@@ -78,10 +93,11 @@ async function addTeacherToOrgAction(formData: FormData) {
     if (!orgId || !loginUsername || !initialPassword) return;
 
     const hashedPassword = await bcrypt.hash(initialPassword, 10);
-    const principalId = (session.user as any).id;
+    const principalId = (session.user as CustomUser).id;
 
     // 1. 创建讲师账号
-    const teacher = await (prisma as any).user.create({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const teacher = await (prisma.user as any).create({
         data: {
             username: loginUsername,
             password: hashedPassword,
@@ -89,17 +105,19 @@ async function addTeacherToOrgAction(formData: FormData) {
             name: `机构讲师 (${loginUsername})`,
             role: 'TEACHER',
             orgId: orgId,
-            teacherId: principalId, // 关联到当前校长
+            teacherId: principalId,
             credits: 1000
         }
     });
 
     // 2. 为讲解生成学生激活码
-    const defaultCourse = await (prisma as any).course.findFirst();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defaultCourse = await (prisma.course as any).findFirst();
     if (defaultCourse) {
         for (let j = 0; j < studentQuota; j++) {
             const sCode = `S-${loginUsername}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-            await (prisma as any).invitationCode.create({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (prisma.invitationCode as any).create({
                 data: {
                     code: sCode,
                     teacherId: teacher.id,
@@ -129,7 +147,8 @@ async function assignCourseToTeacherAction(formData: FormData) {
     if (!courseId || !orgLicenseId) return;
 
     // 1. 创建 TeacherLicense
-    await (prisma as any).teacherLicense.create({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (prisma.teacherLicense as any).create({
         data: {
             teacherId,
             courseId,
@@ -139,7 +158,8 @@ async function assignCourseToTeacherAction(formData: FormData) {
     });
 
     // 2. 更新 OrgLicense 的已用席位
-    await (prisma as any).orgLicense.update({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (prisma.orgLicense as any).update({
         where: { id: orgLicenseId },
         data: {
             usedSeats: {
@@ -157,9 +177,11 @@ export default async function DashboardPage() {
         redirect('/login');
     }
 
-    const role = (session.user as any).role;
-    const userId = (session.user as any).id;
+    const customUser = session.user as CustomUser;
+    const role = customUser.role;
+    const userId = customUser.id;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const includeOptions: any = {
         toolHistories: {
             orderBy: { createdAt: 'desc' },
@@ -187,7 +209,7 @@ export default async function DashboardPage() {
     const user = await prisma.user.findUnique({
         where: { id: userId },
         include: includeOptions
-    }) as any;
+    }) as unknown as CustomUser;
 
     if (!user) {
         redirect('/login');
@@ -196,7 +218,8 @@ export default async function DashboardPage() {
     // 获取该账户下的组织完整结构 (如果是校长或老师)
     let organization = null;
     if (user.orgId) {
-        const orgData = await (prisma as any).organization.findUnique({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const orgData = await (prisma.organization as any).findUnique({
             where: { id: user.orgId },
             include: {
                 users: {
@@ -222,11 +245,12 @@ export default async function DashboardPage() {
                         }
                     }
                 }
-            } as any
+            }
         });
 
         if (orgData) {
             // 提取所有激活码并扁平化
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const allInvitationCodes = (orgData.users || []).flatMap((u: any) => u.createdCodes || []);
 
             // 为了兼容 CodeTree，我们将 invitationCodes 混入 users 列表中
@@ -238,6 +262,7 @@ export default async function DashboardPage() {
             // 数据沙盒化：如果是老师，只能看到自己这一支（自己和自己名下的激活码）
             if (user.role === 'TEACHER') {
                 const myTeacherId = user.id;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 organization.users = organization.users.filter((item: any) => {
                     // 1. 如果是用户，必须是老师本人
                     if (item.role) return item.id === myTeacherId;
@@ -370,6 +395,7 @@ export default async function DashboardPage() {
 
                             {user.toolHistories && user.toolHistories.length > 0 ? (
                                 <div className="space-y-4">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {user.toolHistories.map((log: any) => (
                                         <div key={log.id} className="flex items-center justify-between p-6 bg-slate-50/50 rounded-3xl border border-slate-100 hover:bg-white hover:border-blue-200 transition-all group">
                                             <div className="flex items-center gap-6">
@@ -403,6 +429,7 @@ export default async function DashboardPage() {
 
                             {user.posts && user.posts.length > 0 ? (
                                 <div className="space-y-6">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {user.posts.map((post: any) => (
                                         <Link key={post.id} href={`/gallery`} className="block group/item">
                                             <div className="relative aspect-video rounded-[24px] overflow-hidden border-2 border-slate-100 shadow-lg group-hover/item:-translate-y-1 transition-transform">

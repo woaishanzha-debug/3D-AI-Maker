@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { X, ShieldCheck, MessageSquare, Clock } from 'lucide-react';
+import Image from 'next/image';
 
 interface BusinessModalProps {
     isOpen: boolean;
@@ -47,14 +48,12 @@ export function BusinessModal({ isOpen, onClose }: BusinessModalProps) {
                         <div className="relative group max-w-[220px] mx-auto py-2">
                             <div className="absolute -inset-4 bg-blue-100/50 rounded-[3rem] blur opacity-40 group-hover:opacity-60 transition duration-1000"></div>
                             <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-slate-100 overflow-hidden aspect-square flex items-center justify-center">
-                                <img
+                                <Image
                                     src="/contact-qr.JPG"
                                     alt="官方授权二维码"
+                                    width={400}
+                                    height={400}
                                     className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement;
-                                        target.src = "https://placehold.co/400x400/FFFFFF/000000/png?text=QR+Code+Missing";
-                                    }}
                                 />
                             </div>
                         </div>

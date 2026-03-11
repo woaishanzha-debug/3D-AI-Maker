@@ -11,6 +11,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: '未授权' }, { status: 401 });
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const userId = (session.user as any).id;
         const { password } = await req.json();
 

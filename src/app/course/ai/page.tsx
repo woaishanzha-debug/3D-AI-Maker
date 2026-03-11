@@ -1,6 +1,6 @@
 'use client';
 
-import { Cpu, Terminal, Sparkles, Binary, ArrowRight, BrainCircuit, ChevronLeft, Lock } from 'lucide-react';
+import { Sparkles, Binary, ArrowRight, BrainCircuit, ChevronLeft, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuthorization } from '@/hooks/useAuthorization';

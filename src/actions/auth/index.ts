@@ -66,29 +66,29 @@ export async function assignCourseToTeacher(
 
     // 6. Upsert TeacherLicense
     const existingTeacherLicense = await tx.teacherLicense.findFirst({
-        where: {
-            teacherId: teacherId,
-            courseId: courseId
-        }
+      where: {
+        teacherId: teacherId,
+        courseId: courseId
+      }
     });
 
     if (existingTeacherLicense) {
-        return await tx.teacherLicense.update({
-            where: { id: existingTeacherLicense.id },
-            data: {
-                allocatedSeats: {
-                    increment: seats
-                }
-            }
-        });
+      return await tx.teacherLicense.update({
+        where: { id: existingTeacherLicense.id },
+        data: {
+          allocatedSeats: {
+            increment: seats
+          }
+        }
+      });
     } else {
-        return await tx.teacherLicense.create({
-            data: {
-              teacherId,
-              courseId,
-              allocatedSeats: seats,
-            },
-        });
+      return await tx.teacherLicense.create({
+        data: {
+          teacherId,
+          courseId,
+          allocatedSeats: seats,
+        },
+      });
     }
   });
 }
@@ -118,13 +118,14 @@ export async function generateInvitationCode(
     // 2. Check if the teacher has enough seats allocated
     // Calculate currently pending codes potential usage
     const activeCodes = await tx.invitationCode.findMany({
-        where: {
-            teacherId: teacherId,
-            courseId: courseId
-        }
+      where: {
+        teacherId: teacherId,
+        courseId: courseId
+      }
     });
 
     // Explicitly typing the accumulator and current value for the reduce function
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const potentialUsedSeats = activeCodes.reduce((acc: number, code: any) => acc + (code.maxUses - code.usedCount), 0);
     const availableSeats = teacherLicense.allocatedSeats - teacherLicense.usedSeats - potentialUsedSeats;
 
@@ -183,7 +184,7 @@ export async function registerStudentWithCode(
     }
 
     if (teacherLicense.usedSeats >= teacherLicense.allocatedSeats) {
-        throw new Error("教师名额已满");
+      throw new Error("教师名额已满");
     }
 
     // 4. Increment usedCount on InvitationCode
