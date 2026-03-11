@@ -1,0 +1,89 @@
+{
+  "title": "刺绣",
+  "slides": [
+    {
+      "index": 1,
+      "title": "非遗刺绣",
+      "content": [],
+      "images": [
+        "/presentations/embroidery/assets/slide_1_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "刺绣的历史与文化艺术",
+      "content": [
+        "3D打印笔实践：立体刺绣的现代创作"
+      ],
+      "images": [
+        "/presentations/embroidery/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "刺绣的历史与文化艺术",
+      "content": [],
+      "images": [
+        "/presentations/embroidery/assets/slide_3_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "刺绣，是中国最古老的传统手工艺之一，它用一针一线在织物上勾勒出万千世界。它不仅是一种装饰艺术，更是中华民族文化、历史与审美观念的集中体现。",
+      "content": [
+        "历史典故：苏绣的“闺阁之美”",
+        "同学们，你们知道“苏绣”吗？苏绣是中国四大名绣之一，以其“精、细、雅、洁”的特点而闻名。在古代，刺绣是大家闺秀的必修课，她们在闺阁之中，用绣花针和丝线，将内心的情感、对自然的观察绣入帕子、衣物或扇面之中。",
+        "有一个著名的故事，讲述了一位绣娘在绣制《猫戏蝶》时，为了让猫咪的眼睛栩栩如生，用线材将猫的眼睛绣得如同活物一般。当有人不经意间触碰绣品时，绣品上的猫咪竟然跳了起来。这个故事虽然是传说，却生动地说明了刺绣艺术的极致精细与传神，它是一种需要极度耐心和专注的艺术创作。"
+      ],
+      "images": [
+        "/presentations/embroidery/assets/slide_4_thumb.png"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "传统技法：针尖上的“画笔”",
+      "content": [
+        "刺绣的艺术特点主要体现在：",
+        "针法之美： 刺绣有上百种针法，如平绣、乱针绣、盘金绣等，每一种都产生不同的纹理和视觉效果。",
+        "色彩之美： 绣线颜色丰富，通过丝线的交织和叠压，可以创造出色彩的渐变和层次感。",
+        "•  • 构图之美： 刺绣图案讲究布局，常常将花鸟虫鱼、山水人物融入其中，形成和谐的画面。"
+      ],
+      "images": [
+        "/presentations/embroidery/assets/slide_6_thumb.png"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "3D打印笔实践：立体刺绣的现代创作",
+      "content": [],
+      "images": [
+        "/presentations/embroidery/assets/slide_7_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "用3D打印机制作好的刺绣图案底板，底板上凹陷的线条模仿刺绣图案的轮廓。",
+      "content": [
+        "勾勒轮廓： 沿图案的线条，",
+        "用3D打印笔描绘出刺绣的轮廓。",
+        "模仿针法： 在轮廓内部，用3D打印笔模仿刺绣的各种针法，例如，用平行的线条模仿平绣，用不规则的线条模仿乱针绣。",
+        "•  • 色彩填充： 在不同的区域使用不同的线材，进行色彩填充，创造出如同丝线交织的丰富色彩效果。",
+        "细致耐心： 3D打印“刺绣”需要极高的细致与耐心，控制好每",
+        "一根线条的走向和厚度。",
+        "色彩搭配： 像传统刺绣一样，大胆使用鲜艳的色彩，创造出引人注目的视觉效果。",
+        "•  • 纹理模拟： 尝试用不同的3D打印笔移动速度和出丝量，来模拟不同的“针法”纹理。"
+      ],
+      "images": [
+        "/presentations/embroidery/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "感谢观看",
+      "content": [],
+      "images": [
+        "/presentations/embroidery/assets/slide_9_thumb.jpeg"
+      ]
+    }
+  ]
+}

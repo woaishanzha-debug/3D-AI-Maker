@@ -7,7 +7,10 @@ export default withAuth(
 
     // 1. 公开课逻辑：每个体系的第一节课公开
     const publicLessons = [
-      "/course/l1/lesson-1",
+      "/course/l1/cloisonne-intro",
+      "/course/l1/cloisonne",
+      "/course/l1/shadow-play",
+      "/course/l1/blue-white-porcelain",
       "/tools/s1",
       "/tools/lithophane-generator",
       "/course/12-ai/lesson-1"
@@ -48,7 +51,10 @@ export default withAuth(
 
         // 不需要登录即可访问的路径
         const publicPaths = [
-          "/course/l1/lesson-1",
+          "/course/l1/cloisonne-intro",
+          "/course/l1/cloisonne",
+          "/course/l1/shadow-play",
+          "/course/l1/blue-white-porcelain",
           "/course/12-ai/lesson-1",
           "/tools/s1",
           "/tools/lithophane-generator",

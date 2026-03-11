@@ -1,0 +1,156 @@
+{
+  "title": "虎符",
+  "slides": [
+    {
+      "index": 1,
+      "title": "传承与创新的",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_1_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "一 虎符的艺术与文化内涵",
+      "content": [
+        "三 人工智能工具创作教学"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "虎符的艺术与文化内涵",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_3_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "虎符是中国古代调兵遣将的信物，通常由青铜或黄金制成，形状像卧虎，故名“虎符”。它的独特之处在于一分为二，左半归于皇帝或君主，右半交由统兵大将。当需要调动军队时，派遣使者手持右半符，只有与左半符完全吻合，才能验证命令的真实性。这种严谨的设计象征着至高无上的皇权与绝对的信任。",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_5_thumb.png"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "1. 历史典故：信陵君窃符救赵",
+      "content": [
+        "同学们，你们知道吗？历史上最著名的虎符故事之一，就发生在战国时期。魏国公子信陵君为了拯救被秦国围困的赵国，却无法从魏王那里得到发兵的虎符。他联合魏王宠妃如姬，最终盗得魏王左半符，成功调动军队，解了赵国之围。这个故事不仅展示了虎符的重要性，也体现了信陵君的仁义与智慧。",
+        "这个故事告诉我们，小小的虎符，承载的不仅是军事命令，更是君臣之间的信任，以及关乎国家存亡的重大责任。"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_6_thumb.png"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "虎符的制作工艺极为严谨，它的每一条纹路、每一个字刻都必须精确无误。只有当两半虎符的接口完美无瑕地拼接在一起时，命令才有效。这种“合二为一”的契合之美，不仅是技术上的精益求精，更是文化上的严谨与信赖。",
+      "content": [
+        "2. 传统工艺：严谨的“契合之美”"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_7_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "3D打印笔实践：",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "1. 创作环节：细节与拼接",
+      "content": [
+        "装饰细节： 在虎符表面用3D打印笔绘制象征威严的纹路、祥云，或是篆书体的文字，如“皇帝”“秦”等，增强虎符的艺术感。",
+        "完美拼接： 完成装饰后，学生需要尝试将两半虎符完美地拼接在一起，感受“合二为一”的成就感。",
+        "利用3D打印笔，让学生们亲手创作一个可以“合二为一”的虎符。"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "控制出丝： 掌握3D打印笔的精细出丝技巧，以便在小范围内进行精准绘制。",
+      "content": [
+        "接口处理： 在拼接时，用3D打印笔在接口处轻轻加热，使其能够平滑地粘合。",
+        "色彩搭配： 可使用不同颜色的线材，为虎符增添个性化的艺术风格。"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "人工智能工具",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "布尔运算（Boolean Operation）源于数学逻辑，它是一种组合多个形状来创造新形状的运算。在人工智能的图像生成领域，我们可以利用布尔运算模型将多张图片进行“逻辑组合”：",
+      "content": [
+        "合集（Union）： 类似于虎符的完美“合二为一”，将两张图片的元素叠加融合。",
+        "交集（Intersection）： 找出两张图片中共同的元素。",
+        "差集（Difference）： 从一张图片中减去另一张图片的部分。",
+        "我们可以将虎符的契合之美与布尔运算的逻辑之美进行类比，从而理解人工智能是如何通过这些基本运算来重构图像的。",
+        "1. 认识布尔运算模型"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "2. 提示词（Prompt）讲解与实例",
+      "content": [
+        "一个有效的提示词应包含：",
+        "主体描述、风格描述和运算指令。",
+        "对[图片 A]和[图片 B]进行[布尔运算指令]，风格为[风格]，色彩为[色彩描述]。",
+        "实例演练：用布尔运算模型创作虎符主题图",
+        "第一步： 准备两张图片，例如：一张威风凛凛的老虎图片和一张古朴的青铜器纹样图片。",
+        "第二步： 撰写提示词，告诉AI如何进行创作。",
+        "提示词： 对老虎和青铜器进行合集运算，生成一幅具有立体感的图片，风格为*赛博朋克*，色彩为*霓虹蓝*。",
+        "第三步： AI根据提示词生成一幅将老虎和青铜器元素融合的全新图像。"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_14_thumb.png"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "回顾：本课我们学习了虎符的历史与文化，利用3D打印笔完成了虎符的装饰与拼接，并学会了用AI的布尔运算模型进行创意图像创作。",
+      "content": [
+        "展望：布尔运算在3D建模和图像处理中有广泛应用。未来，我们可以探索如何用这一原理，创作更多由不同部分完美契合的艺术品。"
+      ],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_15_thumb.png"
+      ]
+    },
+    {
+      "index": 15,
+      "title": "您的观看",
+      "content": [],
+      "images": [
+        "/presentations/tiger-tally/assets/slide_16_thumb.png"
+      ]
+    }
+  ]
+}

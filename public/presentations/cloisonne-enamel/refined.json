@@ -1,0 +1,151 @@
+{
+  "title": "景泰蓝",
+  "slides": [
+    {
+      "index": 1,
+      "title": "HANDMADE",
+      "content": [
+        "景泰蓝，又名“铜胎掐丝珐琅”，是一种将铜与珐琅完美结合的中国传统工艺品。它的制作过程极为繁复，需要经过制胎、掐丝、点蓝、烧蓝、磨光和镀金等多道工序。它的色彩浓烈，光泽如宝石般绚烂，是中国古代宫廷艺术的巅峰之作。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_1_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "景泰蓝的艺术与文化内涵",
+      "content": [
+        "3D打印笔实践：花瓶的现代创作"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_2_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "Part 01",
+      "content": [
+        "景泰蓝的艺术与文化内涵"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_4_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "同学们，你们知道吗？“景泰蓝”这个美丽的名字，来源于一个重要的历史人物——明朝的景泰皇帝。在明景泰年间，这种珐琅器工艺达到了前所未有的高峰，其色彩和技艺都令人叹为观止。景泰皇帝对它爱不释手，甚至将之视若珍宝。为了纪念这个时代，后人便将这种独特的艺术品称为“景泰蓝”。",
+      "content": [
+        "这个故事告诉我们，一件艺术品的流传与发展，离不开时代的推动与人们的喜爱，而景泰蓝就是中华美学中最耀眼的一颗明珠。",
+        "历史典故：因帝王之爱而得名"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_5_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "传统工艺：掐丝与填釉之美",
+      "content": [
+        "景泰蓝的核心工艺在于“掐丝”和“填釉”。“掐丝”就是用极细的铜丝在胎体上掐出各种精美的图案，如同绘画中的线条勾勒；而“填釉”则是在这些铜丝构成的“小格子”中，填入不同颜色的珐琅彩，经过高温烧制，最终形成我们看到的绚丽色彩。这种“丝为骨，釉为肉”的工艺，共同塑造了景泰蓝的立体美感。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_6_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "Part 02",
+      "content": [
+        "利用3D打印笔，让学生亲手体验景泰蓝的“掐丝”与“填釉”过程。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_7_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "1. 创作环节：色彩填充",
+      "content": [
+        "填充色彩： 选择不同颜色的3D打印线材，像填色一样，小心翼翼地将花瓶表面的凹槽区域填充完整。",
+        "色彩搭配： 鼓励学生根据自己的审美，或参考传统的景泰蓝配色，进行大胆的色彩组合，创造出独一无二的作品。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_8_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "2. 创作要点与技巧",
+      "content": [
+        "控制出丝速度： 保持缓慢均匀的出丝速度，以确保颜色填充平整，没有气泡或空隙。",
+        "分层填充： 可以在一个区域内填充多层，以增加色彩的厚度和立体感，模拟景泰蓝的釉彩效果。",
+        "表面处理： 完成填充后，可以尝试用3D打印笔的热笔尖对表面进行轻微的熨烫，使其更加光滑。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_9_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "Part 03",
+      "content": [],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_10_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "1. 认识提示词反推模型",
+      "content": [
+        "类比景泰蓝：一件景泰蓝作品是“成品”，而匠人脑海中的“构思”就是它的“提示词”。提示词反推模型，就是帮助我们从“成品”反推出“构思”的过程。",
+        "提示词反推模型是一种人工智能工具，它可以分析一张已有的图片，然后自动生成最有可能创建出这张图片的文字描述（提示词）。这个过程就像在欣赏一件景泰蓝作品时，我们不仅看到它最终的美丽，还能反推出匠人最初在心中构思的每一个细节：纹理、色彩、造型等等。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_11_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "2.实例演练：从景泰蓝图片反推提示词",
+      "content": [
+        "第一步： 准备一张图片，例如：一张色彩绚烂、纹理复杂的景泰蓝花瓶照片。",
+        "第二步： 将图片输入提示词反推模型。",
+        "第三步： AI将生成一段描述图片的提示词，例如：",
+        "反推提示词： a stunning cloisonné vase with a highly intricate floral pattern, ornate gold wire filigree, vivid blue, red, and turquoise enamel, exquisite craftsmanship, high resolution, studio lighting",
+        "（一个令人惊叹的景泰蓝花瓶，带有高度复杂的花卉图案，华丽的金色掐丝，鲜艳的蓝色、红色和绿松石色珐琅，精湛的工艺，高分辨率，摄影棚灯光）",
+        "第四步： 学生可以分析这段提示词，理解景泰蓝的关键元素（如“掐丝”“珐琅”“高分辨率”），然后在此基础上进行修改。例如，将“花卉图案”改为“山水图案”，将“蓝色”改为“紫色”，从而生成一幅全新的AI作品。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_12_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "Part 04",
+      "content": [],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "提示词反推模型不仅可以用于艺术创作，也可以用于设计、摄影等领域。希望同学们能将这种“反向思维”应用于更多方面，创造出更多优秀的作品。",
+      "content": [
+        "本课我们学习了景泰蓝的历史与工艺，利用3D打印笔进行了创意填充，并学会了用AI的提示词反推模型来解构艺术，激发创作灵感。"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_14_thumb.png"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "感谢观看",
+      "content": [
+        "DYEING CRAFT"
+      ],
+      "images": [
+        "/presentations/cloisonne-enamel/assets/slide_15_thumb.jpeg"
+      ]
+    }
+  ]
+}

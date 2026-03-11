@@ -1,0 +1,151 @@
+{
+  "title": "马勺",
+  "slides": [
+    {
+      "index": 1,
+      "title": "东方非遗",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_1_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "马勺脸谱的艺术与文化内涵",
+      "content": [
+        "3D打印笔实践：马勺脸谱的现代创作",
+        "人工智能（风格迁移）工具创作教学"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "马勺脸谱的艺术",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_5_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "文化背景：镇宅辟邪与祈福",
+      "content": [
+        "关中马勺脸谱是陕西地区一种古老的民间艺术，通常在木制马勺上绘制而成。马勺原本是农家舀水或盛粮的工具，在农闲时，勤劳智慧的关中人便用它作为画布，创作出色彩鲜明、造型夸张的脸谱，形成了独特的艺术形式。",
+        "马勺脸谱不仅仅是装饰品，它承载着深厚的文化寓意。在西北民间，人们相信这些脸谱具有镇宅辟邪、驱灾纳福的功能。它们常被悬挂在农家大门或室内，用以祈求家庭平安、生活顺遂。这些脸谱的夸张造型和威严神态，正是人们对抗邪祟、向往美好生活的精神寄托。"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_6_thumb.png"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "艺术特色：粗犷豪迈与象征主义",
+      "content": [
+        "马勺脸谱的艺术风格深受秦腔脸谱影响，以色彩对比强烈、线条粗犷有力为主要特点。它不追求写实，而是通过象征性的色彩和图案来表达人物性格和情感：",
+        "红色代表忠诚，如关公。",
+        "黑色代表正直，如包拯。",
+        "这些特点共同塑造了马勺脸谱的独特美感，也反映出西北人朴实、豪迈的性格。"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_7_thumb.JPG"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "3D打印笔实践：",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "本课程的实践环节将利用3D打印技术，通过一种创新的方式来体验马勺脸谱的绘制。学生将使用3D打印笔，在预制的马勺形状模型上进行创作。",
+      "content": [
+        "线稿设计： 借鉴传统马勺脸谱的构图，或根据自己的创意设计脸谱的轮廓和图案。",
+        "3D打印笔操作： 掌握3D打印笔的出丝速度，用它来勾勒脸谱的轮廓线，并填充色彩。",
+        "立体效果： 利用3D打印笔材料的堆叠特性，可以刻意加粗某些线条或增加图案的厚度，形成具有立体感的浮雕效果。",
+        "1. 创作环节：线描与填色"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "2. 创作要点与技巧",
+      "content": [
+        "大胆用色： 马勺脸谱的精髓在于色彩的冲击力，鼓励学生大胆使用鲜明的颜色搭配。",
+        "线条控制： 尝试控制出丝粗细，以表现不同线条的疏密和强弱。",
+        "创意融合： 鼓励学生将现代元素或自己的个性融入传统脸谱设计中。"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "人工智能工具",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "本环节将利用人工智能的风格迁移模型，让学生理解并体验艺术风格是如何被“拆解”和“重组”的，并以此来指导他们的创作。",
+      "content": [
+        "风格迁移是一种人工智能技术，它可以将一幅图像的内容（如一张照片、一幅素描）与另一幅图像的风格（如梵高的《星月夜》、毕加索的抽象画）进行融合，生成一幅全新的作品。",
+        "我们可以用马勺脸谱的创作原理来理解这个过程：",
+        "内容图片就像是一个待绘制的空白马勺，它决定了作品的基本“骨架”，比如一个人物肖像或一幅风景画。",
+        "风格图片就是一幅经典的马勺脸谱，它决定了作品的色彩、线条和笔触等艺术风格。",
+        "AI生成图片的过程，就如同你将马勺脸谱那粗犷、浓烈的画法，应用到一张人物照片上，最终得到一张既能辨认出人物，又充满了马勺脸谱艺术特色的新作品。"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "实例演练：为3D打印马勺设计AI参考图",
+      "content": [
+        "第一步： 准备一张内容图片，例如：一张卡通人物的肖像。",
+        "第二步： 撰写提示词，告诉AI如何进行风格迁移。",
+        "提示词： 用**关中马勺脸谱**的风格重新绘制一张卡通人物的照片。保持人物的轮廓，但使用马勺脸谱的粗犷线条和鲜艳色彩，并突出其神秘与威严感。",
+        "第三步： AI根据提示词生成参考图。学生将得到一个以卡通人物为“内容”，但画风完全是马勺脸谱的全新设计，这可以为他们的3D打印笔创作提供灵感。",
+        "提示词（Prompt）讲解与实例"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_14_thumb.png"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "回顾：本课我们学习了马勺脸谱的文化内涵，利用3D打印笔进行了创意绘制，并学会了如何用AI的风格迁移模型进行艺术创作。",
+      "content": [
+        "展望：未来，我们可以将同样的方法应用于其他艺术形式，如将水墨画、油画等风格应用到不同的内容上，探索更多的艺术可能性。"
+      ],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_15_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "您的观看",
+      "content": [],
+      "images": [
+        "/presentations/mashao-mask/assets/slide_16_thumb.png"
+      ]
+    }
+  ]
+}

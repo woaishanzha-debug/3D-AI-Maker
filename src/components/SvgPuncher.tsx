@@ -1,0 +1,352 @@
+"use client";
+
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Download, Scissors, Circle, Upload, MousePointer2, Plus, Image as ImageIcon } from 'lucide-react';
+// @ts-ignore
+import ImageTracer from 'imagetracerjs';
+// @ts-ignore
+import paper from 'paper/dist/paper-core';
+
+type ToolType = 'select' | 'cut' | 'joint' | 'hole';
+
+export default function SvgPuncher() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const sourceImageRef = useRef<HTMLImageElement | null>(null);
+
+    const [tool, setTool] = useState<ToolType>('select');
+    const [threshold, setThreshold] = useState(150);
+    const [jointRadius, setJointRadius] = useState(25);
+    const [holeRadius, setHoleRadius] = useState(5);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // --- Paper.js Initialization ---
+    useEffect(() => {
+        if (!canvasRef.current) return;
+        paper.setup(canvasRef.current);
+        
+        // Initial setup of Layers
+        const puppetLayer = new paper.Layer();
+        puppetLayer.name = 'puppetLayer';
+        const toolLayer = new paper.Layer();
+        toolLayer.name = 'toolLayer';
+        puppetLayer.activate();
+
+        const handleResize = () => {
+            if (canvasRef.current && paper.view) {
+                const rect = canvasRef.current.parentElement?.getBoundingClientRect();
+                if (rect) {
+                    paper.view.viewSize = new paper.Size(rect.width, rect.height);
+                }
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            if (paper.project) paper.project.remove();
+        };
+    }, []);
+
+    // --- Image Processing & Vector Tracing ---
+    const traceImage = useCallback(() => {
+        if (!sourceImageRef.current || !canvasRef.current) return;
+        setIsProcessing(true);
+        
+        const canvas = document.createElement('canvas');
+        const img = sourceImageRef.current;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        ctx.drawImage(img, 0, 0);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+
+        // Binary Thresholding
+        for (let i = 0; i < data.length; i += 4) {
+            const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            if (data[i + 3] < 50 || lum > threshold) {
+                data[i + 3] = 0;
+            } else {
+                data[i] = data[i+1] = data[i+2] = 0;
+                data[i + 3] = 255;
+            }
+        }
+
+        const options = { ltres: 1, qtres: 1, pathomit: 8, scale: 1, viewbox: true };
+        const svgStr = ImageTracer.imagedataToSVG(imgData, options);
+
+        if (paper.project) {
+            paper.project.clear();
+            const puppetLayer = new paper.Layer();
+            puppetLayer.name = 'puppetLayer';
+            const toolLayer = new paper.Layer();
+            toolLayer.name = 'toolLayer';
+            puppetLayer.activate();
+
+            paper.project.importSVG(svgStr, {
+                onLoad: (item: any) => {
+                    item.fillColor = new paper.Color('black');
+                    item.strokeColor = null;
+                    
+                    // Fit to Viewport
+                    if (paper.view) {
+                        const viewScale = Math.min(
+                            (paper.view.size.width * 0.8) / item.bounds.width,
+                            (paper.view.size.height * 0.8) / item.bounds.height
+                        );
+                        item.scale(viewScale);
+                        item.position = paper.view.center;
+                    }
+                    
+                    // Filter Background & Tag Parts
+                    const scanAndTag = (obj: any) => {
+                        if (obj.children) {
+                            [...obj.children].forEach(scanAndTag);
+                        } else if (obj instanceof paper.PathItem) {
+                            // Ignore paths that are practically the background frame
+                            const isBackground = obj.bounds.width > item.bounds.width * 0.95 && obj.bounds.height > item.bounds.height * 0.95;
+                            if (isBackground) {
+                                obj.remove();
+                            } else {
+                                obj.data.isPuppetPart = true;
+                                puppetLayer.addChild(obj);
+                            }
+                        }
+                    };
+                    scanAndTag(item);
+                    item.remove(); // Remove original group
+                    setIsProcessing(false);
+                }
+            });
+        }
+    }, [threshold]);
+
+    // --- Interaction Tools Logic ---
+    useEffect(() => {
+        if (!paper.project || !paper.view) return;
+
+        const interactTool = new paper.Tool();
+        let activeItem: any = null;
+        let dragLine: any = null;
+        let previewItems: any[] = [];
+
+        const clearToolGraphics = () => {
+            previewItems.forEach(i => i.remove());
+            previewItems = [];
+            if (dragLine) {
+                dragLine.remove();
+                dragLine = null;
+            }
+        };
+
+        interactTool.onMouseDown = (event: any) => {
+            clearToolGraphics();
+            const puppetLayer = paper.project.layers['puppetLayer'] as any;
+            const toolLayer = paper.project.layers['toolLayer'] as any;
+
+            if (tool === 'select') {
+                const hit = paper.project.hitTest(event.point, { fill: true, tolerance: 5 });
+                if (hit && hit.item && hit.item.data.isPuppetPart) {
+                    activeItem = hit.item;
+                    activeItem.bringToFront();
+                }
+            } else if (tool === 'cut') {
+                toolLayer.activate();
+                dragLine = new paper.Path.Line({
+                    from: event.point, to: event.point,
+                    strokeColor: '#ef4444', strokeWidth: 2, dashArray: [5, 5]
+                });
+                puppetLayer.activate();
+            } else if (tool === 'joint') {
+                const hit = paper.project.hitTest(event.point, { fill: true });
+                if (hit && hit.item && hit.item.data.isPuppetPart) {
+                    const ball = new paper.Path.Circle({ center: event.point, radius: jointRadius });
+                    const result = (hit.item as any).unite(ball);
+                    result.data.isPuppetPart = true;
+                    hit.item.replaceWith(result);
+                }
+            } else if (tool === 'hole') {
+                const hit = paper.project.hitTest(event.point, { fill: true });
+                if (hit && hit.item && hit.item.data.isPuppetPart) {
+                    const hole = new paper.Path.Circle({ center: event.point, radius: holeRadius });
+                    const result = (hit.item as any).subtract(hole);
+                    result.data.isPuppetPart = true;
+                    hit.item.replaceWith(result);
+                }
+            }
+        };
+
+        interactTool.onMouseDrag = (event: any) => {
+            if (tool === 'select' && activeItem) {
+                activeItem.position = activeItem.position.add(event.delta);
+            } else if (tool === 'cut' && dragLine) {
+                const toolLayer = paper.project.layers['toolLayer'] as any;
+                toolLayer.activate();
+                dragLine.segments[1].point = event.point;
+                
+                previewItems.forEach(i => i.remove()); previewItems = [];
+                const mid = dragLine.segments[0].point.add(event.point).divide(2);
+                const p = new paper.Path.Circle({ center: mid, radius: jointRadius, fillColor: 'rgba(59, 130, 246, 0.3)' });
+                previewItems.push(p);
+                
+                (paper.project.layers['puppetLayer'] as any).activate();
+            }
+        };
+
+        interactTool.onMouseUp = (event: any) => {
+            if (tool === 'cut' && dragLine) {
+                executeSlash(dragLine);
+            }
+            clearToolGraphics();
+            activeItem = null;
+        };
+
+        const executeSlash = (line: paper.Path.Line) => {
+            const puppetLayer = paper.project.layers['puppetLayer'] as any;
+            const items = [...puppetLayer.children];
+            
+            items.forEach(item => {
+                if (item instanceof paper.PathItem && item.data.isPuppetPart) {
+                    const intersections = item.getIntersections(line);
+                    if (intersections.length >= 2) {
+                        const p1 = intersections[0].point;
+                        const p2 = intersections[intersections.length - 1].point;
+                        const vector = p2.subtract(p1);
+                        const normal = (vector as any).rotate(90).normalize(20000); 
+                        
+                        const cutter = new paper.Path({
+                            segments: [
+                                p1.subtract(vector.normalize(10000)),
+                                p2.add(vector.normalize(10000)),
+                                p2.add(vector.normalize(10000)).add(normal),
+                                p1.subtract(vector.normalize(10000)).add(normal)
+                            ],
+                            closed: true,
+                            visible: false
+                        });
+
+                        try {
+                            const partA = (item as any).intersect(cutter);
+                            const partB = (item as any).subtract(cutter);
+                            const mid = p1.add(p2).divide(2);
+                            const joint = new paper.Path.Circle(mid, jointRadius);
+                            const male = (partA as any).unite(joint);
+                            const female = (partB as any).subtract(joint);
+
+                            const color = item.fillColor ? (item.fillColor as any).clone() : new paper.Color('black');
+                            item.remove(); cutter.remove(); joint.remove();
+
+                            const finalize = (p: any) => {
+                                if (!p || p.isEmpty()) return;
+                                if (p instanceof paper.CompoundPath) {
+                                    [...p.children].forEach(child => {
+                                        child.fillColor = color;
+                                        child.data.isPuppetPart = true;
+                                        puppetLayer.addChild(child);
+                                    });
+                                    p.remove();
+                                } else {
+                                    p.fillColor = color;
+                                    p.data.isPuppetPart = true;
+                                    puppetLayer.addChild(p);
+                                }
+                            };
+                            finalize(male);
+                            finalize(female);
+                        } catch (e) { console.error("Cut error:", e); }
+                    }
+                }
+            });
+        };
+
+        interactTool.activate();
+        return () => { interactTool.remove(); };
+    }, [tool, jointRadius, holeRadius]);
+
+    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const img = new Image();
+            img.onload = () => { sourceImageRef.current = img; traceImage(); };
+            img.src = ev.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    return (
+        <div className="flex flex-col md:flex-row h-[750px] w-full bg-slate-100 text-slate-800 rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
+            {/* Sidebar */}
+            <div className="w-full md:w-72 bg-white p-6 flex flex-col gap-6 border-r border-slate-200 shrink-0 shadow-sm overflow-y-auto styled-scrollbar">
+                <div>
+                    <h2 className="text-xl font-black text-slate-900 flex items-center gap-2"><Plus className="text-blue-600" /> 皮影工匠 Pro</h2>
+                    <p className="text-[9px] text-slate-400 uppercase font-black">Geometric Shadow Engine</p>
+                </div>
+
+                <label className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-xl cursor-pointer transition-all font-black text-sm shadow-xl">
+                    <Upload size={20} /> 上传底图组件
+                    <input type="file" className="hidden" onChange={handleUpload} />
+                </label>
+
+                <div className="space-y-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                    <div className="flex justify-between items-end text-blue-600 font-black italic">
+                        <span className="text-[10px] uppercase">Threshold</span>
+                        <span className="text-2xl">{threshold}</span>
+                    </div>
+                    <input type="range" min="0" max="255" value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} onMouseUp={traceImage} className="w-full accent-blue-600" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                    <button onClick={() => setTool('select')} className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 ${tool === 'select' ? 'border-sky-500 bg-sky-50 text-sky-600' : 'border-slate-50 bg-slate-50 text-slate-400'}`}>
+                        <MousePointer2 size={22} /> <span className="text-[10px] font-black">挪 拽</span>
+                    </button>
+                    <button onClick={() => setTool('cut')} className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 ${tool === 'cut' ? 'border-pink-500 bg-pink-50 text-pink-600' : 'border-slate-50 bg-slate-50 text-slate-400'}`}>
+                        <Scissors size={22} /> <span className="text-[10px] font-black">切 割</span>
+                    </button>
+                    <button onClick={() => setTool('joint')} className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 ${tool === 'joint' ? 'border-amber-500 bg-amber-50 text-amber-600' : 'border-slate-50 bg-slate-50 text-slate-400'}`}>
+                        <Circle size={22} /> <span className="text-[10px] font-black">加 关 节</span>
+                    </button>
+                    <button onClick={() => setTool('hole')} className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 ${tool === 'hole' ? 'border-emerald-500 bg-emerald-50 text-emerald-600' : 'border-slate-50 bg-slate-50 text-slate-400'}`}>
+                        <Plus className="rotate-45" size={22} /> <span className="text-[10px] font-black">打 孔</span>
+                    </button>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-slate-100 italic font-black">
+                    <div className="flex justify-between text-[10px] text-slate-400 uppercase"><span>Joint Size</span><span>{jointRadius}px</span></div>
+                    <input type="range" min="10" max="80" value={jointRadius} onChange={(e) => setJointRadius(Number(e.target.value))} className="w-full accent-slate-300" />
+                    <div className="flex justify-between text-[10px] text-slate-400 uppercase"><span>Hole Size</span><span>{holeRadius}px</span></div>
+                    <input type="range" min="2" max="30" value={holeRadius} onChange={(e) => setHoleRadius(Number(e.target.value))} className="w-full accent-slate-300" />
+                </div>
+
+                <button onClick={() => { if (paper.project) { const svg = paper.project.exportSVG({asString:true}); const b = new Blob([svg as string],{type:'image/svg+xml'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='puppet.svg'; a.click(); }}} className="w-full py-4 mt-auto rounded-xl bg-slate-900 text-white font-black italic hover:bg-black shadow-xl">
+                    <Download className="inline mr-2" /> DOWNLOAD (SVG)
+                </button>
+            </div>
+
+            {/* Canvas Area */}
+            <div className="flex-1 relative bg-slate-50 overflow-hidden group">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#e2e8f0_0%,_#f8fafc_70%)] opacity-100"></div>
+                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] bg-repeat bg-[length:40px_40px]"></div>
+                <canvas ref={canvasRef} className="w-full h-full relative z-10 block pointer-events-auto cursor-crosshair" />
+                
+                <div className="absolute top-8 left-8 z-20 pointer-events-none flex flex-col gap-1">
+                    <div className="px-4 py-2 bg-white/80 backdrop-blur-xl border border-slate-200 rounded-lg shadow-sm inline-flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                        <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">{tool} ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+            
+            <style jsx>{`
+                .styled-scrollbar::-webkit-scrollbar { width: 4px; }
+                .styled-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .styled-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+            `}</style>
+        </div>
+    );
+}

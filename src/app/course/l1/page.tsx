@@ -27,7 +27,6 @@ export default function CourseL1Page() {
     const toggleCompletion = async (lessonId: string) => {
         const isCurrentlyCompleted = completions.includes(lessonId);
 
-        // Optimistic update
         if (isCurrentlyCompleted) {
             setCompletions(completions.filter(id => id !== lessonId));
         } else {
@@ -55,37 +54,37 @@ export default function CourseL1Page() {
         {
             id: 'P1', phase: '宫廷工艺篇',
             lessons: [
-                { name: '景泰蓝工艺：点蓝与掐丝', ppt: '景泰蓝课件.pptx' },
-                { name: '掐丝珐琅：金属线描之美', ppt: '掐丝珐琅课件.pptx' },
-                { name: '传统刺绣：线性的律动', ppt: '刺绣课件.pptx' },
-                { name: '宋锦织造：几何平铺逻辑', ppt: '宋锦课件.pptx' },
+                { name: '景泰蓝工艺：点蓝与掐丝', slug: 'cloisonne-intro' },
+                { name: '掐丝珐琅：金属线描之美', slug: 'cloisonne' },
+                { name: '传统刺绣：线性的律动', slug: 'embroidery' },
+                { name: '宋锦织造：几何平铺逻辑', slug: 'song-brocade' },
             ]
         },
         {
             id: 'P2', phase: '民间艺术篇',
             lessons: [
-                { name: '影戏乾坤：皮影戏骨架', ppt: '皮影课件.pptx' },
-                { name: '纸上乾坤：镂空艺术窗花', ppt: '窗花课件.pptx' },
-                { name: '秦风社火：马勺脸谱', ppt: '马勺课件.pptx' },
-                { name: '张灯结彩：传统灯笼形制', ppt: '灯笼课件.pptx' },
+                { name: '影戏乾坤：皮影戏骨架', slug: 'shadow-play' },
+                { name: '纸上乾坤：镂空艺术窗花', slug: 'paper-cut' },
+                { name: '秦风社火：马勺脸谱', slug: 'mashao-mask' },
+                { name: '张灯结彩：传统灯笼形制', slug: 'lantern' },
             ]
         },
         {
             id: 'P3', phase: '陶艺与书法',
             lessons: [
-                { name: '古韵唐风：唐三彩造型', ppt: '唐三彩课件.pptx' },
-                { name: '秦俑之光：兵马俑堆叠建造', ppt: '泥条盘筑兵马俑.pptx' },
-                { name: '素胚勾勒：青花瓷纹饰', ppt: '青花瓷课件.pptx' },
-                { name: '笔墨纸砚：书法空间间架', ppt: '书法课件.pptx' },
+                { name: '古韵唐风：唐三彩造型', slug: 'tang-sancai' },
+                { name: '秦俑之光：兵马俑堆叠建造', slug: 'terracotta-warriors' },
+                { name: '素胚勾勒：青花瓷纹饰', slug: 'blue-white-porcelain' },
+                { name: '笔墨纸砚：书法空间间架', slug: 'calligraphy' },
             ]
         },
         {
             id: 'P4', phase: '历史记忆篇',
             lessons: [
-                { name: '指尖兵符：虎符立体复刻', ppt: '虎符课件.pptx' },
-                { name: '流光溢彩：螺钿工艺设计', ppt: '螺钿课件.pptx' },
-                { name: '金玉其内：煤精组印逻辑', ppt: '煤精组印课件.pptx' },
-                { name: '梨园华彩：秦腔脸谱艺术', ppt: '秦腔脸谱课件.pptx' },
+                { name: '指尖兵符：虎符立体复刻', slug: 'tiger-tally' },
+                { name: '流光溢彩：螺钿工艺设计', slug: 'mother-of-pearl' },
+                { name: '金玉其内：煤精组印逻辑', slug: 'coal-seal' },
+                { name: '梨园华彩：秦腔脸谱艺术', slug: 'qinqiang-mask' },
             ]
         },
     ];
@@ -232,9 +231,9 @@ export default function CourseL1Page() {
                                     {phase.lessons.map((lesson, i) => {
                                         const lessonKey = `${idx}-${i}`;
                                         const isCompleted = completions.includes(lessonKey);
-                                        const isCloisonne = lesson.name.includes('掐丝珐琅');
-                                        const isInteractive = isCloisonne; // Currently only cloisonne is interactive
-                                        const isLocked = !isL1Authorized && !isInteractive && !isLoading;
+                                        const experienceSlugs = ['cloisonne-intro', 'cloisonne', 'shadow-play'];
+                                        const isInteractive = isL1Authorized || experienceSlugs.includes(lesson.slug);
+                                        const isLocked = !isL1Authorized && !experienceSlugs.includes(lesson.slug) && !isLoading;
 
                                         return (
                                             <li
@@ -272,12 +271,12 @@ export default function CourseL1Page() {
                                                         )}>
                                                             {lesson.name}
                                                         </span>
-                                                        {isInteractive && !isL1Authorized && (
+                                                        {experienceSlugs.includes(lesson.slug) && !isL1Authorized && (
                                                             <span className="text-[8px] px-2 py-0.5 bg-blue-600 text-white font-black uppercase tracking-widest rounded-full shadow-lg">
                                                                 Visitor Access
                                                             </span>
                                                         )}
-                                                        {isL1Authorized && !isInteractive && (
+                                                        {isL1Authorized && (
                                                             <span className="text-[8px] px-2 py-0.5 bg-green-50 text-green-600 font-black uppercase tracking-widest rounded-full border border-green-100">
                                                                 UNLOCKED
                                                             </span>
@@ -286,7 +285,7 @@ export default function CourseL1Page() {
 
                                                     {isInteractive ? (
                                                         <Link
-                                                            href="/course/l1/cloisonne"
+                                                            href={`/course/l1/${lesson.slug}`}
                                                             className="text-[10px] text-blue-600 font-black uppercase tracking-[0.1em] flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all font-sans"
                                                         >
                                                             开启数字非遗实验室 <ArrowRight className="w-3 h-3" />

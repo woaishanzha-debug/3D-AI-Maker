@@ -1,0 +1,170 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { PresentationViewer } from '@/components/PresentationViewer';
+import { ArrowLeft, BookOpen, ChevronRight, Wand2, Trophy } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const PotteryLathe = dynamic(() => import('@/components/PotteryLathe'), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-[600px] bg-slate-900 rounded-[40px] flex items-center justify-center border border-white/5 shadow-2xl">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                <p className="text-blue-400 font-black text-xs uppercase tracking-widest animate-pulse">正在初始化制瓷窑炉...</p>
+            </div>
+        </div>
+    )
+});
+
+export default function LessonPage() {
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab (Pottery), 3: Success
+    
+    const nextLesson = 'calligraphy';
+
+    return (
+        <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
+            {/* 顶部简易导航 */}
+            <div className="fixed top-0 left-0 right-0 h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-8">
+                <div className="flex items-center gap-6">
+                    <Link href="/course/l1" className="text-white/40 hover:text-white transition-colors">
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div className="h-6 w-[1px] bg-white/10" />
+                    <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-tighter">L1-11</span>
+                        <h1 className="font-black text-sm italic tracking-widest uppercase">素胚勾勒：青花瓷纹饰</h1>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-1">
+                        {[0, 1, 2, 3].map((s) => (
+                            <div key={s} className={`h-1.5 w-8 rounded-full transition-all ${s <= step ? 'bg-blue-500' : 'bg-white/10'}`} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* 主教学区 */}
+            <div className="pt-24 pb-12 px-6 max-w-[1400px] mx-auto min-h-[calc(100vh-4rem)] flex flex-col">
+                <AnimatePresence mode="wait">
+                    {/* 步骤 0：进入页 */}
+                    {step === 0 && (
+                        <motion.div
+                            key="intro"
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+                            className="flex-1 relative rounded-[48px] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl flex flex-col p-16"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-purple-600/10 opacity-30" />
+                            <div className="relative z-10 flex-1 flex flex-col justify-center gap-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="px-4 py-1.5 bg-blue-600/20 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-blue-500/20">Phase 01 | 文化溯源</div>
+                                    <div className="h-[1px] flex-1 bg-gradient-to-r from-blue-500/30 to-transparent" />
+                                </div>
+                                <h2 className="text-5xl md:text-6xl font-black italic leading-[1.2]">
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">数字非遗进化：</span><br />
+                                    素胚勾勒
+                                </h2>
+                                <p className="text-xl text-blue-100/60 max-w-2xl leading-relaxed font-light">
+                                    “天青色等烟雨，而我在等你。” 探索青花瓷的造型与纹样，利用 3D 车削算法与 3D 打印技术重塑拉胚工艺，赋予千年文化数字新生。
+                                </p>
+                                <button onClick={() => setStep(1)} className="w-fit px-12 py-5 bg-white text-black rounded-3xl font-black italic hover:scale-105 transition-transform flex items-center gap-3 shadow-2xl">
+                                    进入沉浸式数字课件 <ChevronRight className="w-6 h-6" />
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* 步骤 1：教学课件 */}
+                    {step === 1 && (
+                        <motion.div
+                            key="viewer"
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 relative rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-slate-900"
+                        >
+                            <div className="absolute top-8 left-8 z-30 flex items-center gap-3">
+                                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <BookOpen className="w-5 h-5 text-white" />
+                                </div>
+                                <span className="text-xs font-black text-white/40 uppercase tracking-widest">Interactive Courseware</span>
+                            </div>
+
+                            <PresentationViewer slug="blue-white-porcelain" dataFile="refined.json" />
+
+                            <div className="absolute top-8 right-8 z-30 flex gap-4">
+                                <button onClick={() => setStep(2)} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-500 transition-all shadow-2xl active:scale-95">
+                                    前往数字拉胚工坊 <Wand2 className="w-4 h-4 ml-2" />
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* 步骤 2：互动小工具 - 3D 智能拉胚机 */}
+                    {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 flex flex-col gap-6"
+                        >
+                            <div className="flex items-center justify-between px-4">
+                                <div>
+                                    <div className="text-[10px] font-black tracking-widest text-blue-500 uppercase">Phase 02 | 交互实验</div>
+                                    <h2 className="text-2xl font-black italic">参数化 3D 智能陶艺</h2>
+                                </div>
+                                <div className="text-right max-w-sm hidden md:block">
+                                    <p className="text-xs font-medium text-slate-400 leading-relaxed tracking-wide">
+                                        基于旋转曲面（Lathe Geometry）算法，通过控制左侧的 2D 贝塞尔截面曲线，实时渲染并生成 3D 实体空心花瓶。
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <PotteryLathe />
+
+                            <div className="flex justify-end pt-4 border-t border-white/5">
+                                <button onClick={() => setStep(3)} className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-sm tracking-widest uppercase transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center gap-2">
+                                    完成并进入线下实作 <ChevronRight className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* 步骤 3：完成并引导实物制作 */}
+                    {step === 3 && (
+                        <motion.div
+                            key="success"
+                            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
+                            className="flex-1 rounded-[48px] bg-slate-900 border border-white/5 flex flex-col items-center justify-center p-20 text-center gap-10 shadow-2xl relative overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent pointer-events-none" />
+                            <div className="w-32 h-32 bg-blue-600 rounded-[40px] flex items-center justify-center shadow-[0_0_80px_rgba(37,99,235,0.4)] relative z-10">
+                                <Trophy className="w-16 h-16 text-white" />
+                            </div>
+                            <div className="space-y-4 relative z-10 max-w-2xl">
+                                <h2 className="text-6xl font-black italic tracking-tighter text-white">READY FOR PRINTING</h2>
+                                <p className="text-blue-200/60 font-medium leading-relaxed mt-4">
+                                    你已成功设计了专属的瓷瓶并生成了 3D STL 模型底稿。接下来：
+                                    <br /><br />
+                                    1. 将你的 STL 文件发送至 3D 打印机，打印出白色的花瓶“素胚”。<br />
+                                    2. 拿起 3D 打印笔，换上青花（钴蓝色）耗材，参考 PPT 上的传统吉祥纹饰，在素胚上进行 3D 绘画与创作吧！
+                                </p>
+                            </div>
+                            <div className="flex gap-4 relative z-10 mt-6">
+                                <button onClick={() => setStep(2)} className="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl font-black text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors">
+                                    重新修改拉胚器型
+                                </button>
+                                {nextLesson && (
+                                    <Link href={`/course/l1/${nextLesson}`} className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all flex items-center gap-2">
+                                        进入下一章 <ChevronRight className="w-5 h-5" />
+                                    </Link>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+}

@@ -1,0 +1,117 @@
+{
+  "title": "皮影",
+  "slides": [
+    {
+      "index": 1,
+      "title": "非遗文化",
+      "content": [
+        "Cultural Heritage",
+        "智驭文明：人工智能拓展应用中华非遗匠艺",
+        "与3D打印前沿科学探索实践教育方案"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_1_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "皮影戏的历史与文化艺术",
+      "content": [],
+      "images": [
+        "/presentations/shadow-play/assets/slide_2_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "皮影戏的历史",
+      "content": [
+        "皮影戏，又称“影子戏”或“灯影戏”，是一种以兽皮或纸板做成的人物剪影。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_3_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "皮影戏的起源",
+      "content": [
+        "皮影戏最早诞生在两千年前的西汉，发祥于中国陕西，成熟于唐宋时代的秦晋豫，极盛于清代的河北。",
+        "我国地方戏曲剧种很多都是从皮影戏中派生出来的。",
+        "皮影戏是世界上最早由人配音的活动影画艺术，所用的幕影演出道理，艺术手段，对电影的发明和美术片的发展也起到先导作用。",
+        "皮影戏，又称“影子戏”或“灯影戏”，是一种以兽皮或纸板做成的人物剪影，在灯光照射下用隔亮布进行演戏，是我国民间广为流传的傀儡戏之一。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_6_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "皮影戏的起源",
+      "content": [
+        "表演时，艺人们在白色幕布后面，一边用手操纵戏曲人物，一边用当地流行的曲调唱述故事，同时配以打击乐器和弦乐，有浓厚的乡土气息。",
+        "皮影戏是中国汉族民间的一门古老传统艺术，老北京人都叫它“驴皮影”。据史书记载，皮影戏始于战国，兴于汉朝，盛于宋代，元代时期传至西亚和欧洲，可谓历史悠久，源远流长。",
+        "中国皮影艺术，是我国民间工艺美术与戏曲巧妙结合而成的独特艺术品种，是中华民族艺术殿堂里不可或缺的一颗精巧的明珠。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_7_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "皮影戏介绍",
+      "content": [
+        "传统的皮影人物由兽皮（如牛皮、驴皮）雕刻而成，再涂上鲜艳的色彩。它的艺术特点在于：",
+        "雕镂之美： 每一个皮影人物都经过精细的镂空雕刻，线条流畅，细节丰富。",
+        "色彩之美： 在光线照射下，染色的皮影能投射出五彩斑斓的影子，创造出强烈的视觉效果。",
+        "动静之美： 操纵师通过竹竿或铁丝操纵皮影，使其在幕布上舞动，实现行走、战斗等复杂动作。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_8_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "3D打印笔实践：立体皮影的现代创作",
+      "content": [
+        "利用3D打印笔，让学生们亲手将平面的皮影艺术，转化为具有立体感和可动性的现代作品。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_9_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "1. 创作环节：描绘与组装",
+      "content": [
+        "勾勒轮廓： 沿骨架的线条，用3D打印笔描绘出人物的衣饰、花纹等细节，模仿皮影的镂空效果。",
+        "色彩填充： 在线条内部填充不同颜色的线材，就像给皮影上色一样，让作品更加鲜艳。",
+        "连接关节： 使用3D打印笔将人物的四肢与身体连接，制作出可动的关节，让人物可以摆出各种姿势。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_10_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "2. 创作要点与技巧",
+      "content": [
+        "线条控制： 掌握3D打印笔的移动速度和出丝量，以确保线条流畅、均匀。",
+        "颜色搭配： 像传统皮影艺人一样，大胆使用鲜艳的色彩，创造出引人注目的视觉效果。",
+        "关节加固： 在连接关节时，多进行几次叠加，确保关节牢固耐用。"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "非遗文化",
+      "content": [
+        "Cultural Heritage"
+      ],
+      "images": [
+        "/presentations/shadow-play/assets/slide_12_thumb.jpeg"
+      ]
+    }
+  ]
+}

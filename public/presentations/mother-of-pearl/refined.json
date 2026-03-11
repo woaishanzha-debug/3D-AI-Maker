@@ -1,0 +1,167 @@
+{
+  "title": "螺钿",
+  "slides": [
+    {
+      "index": 1,
+      "title": "非遗文化",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_1_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "螺钿工艺的艺术与文化内涵",
+      "content": [
+        "3D打印笔实践：螺钿仿制与创作"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "螺钿工艺的艺术与文化内涵",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_3_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "螺钿，是一种将贝壳、螺壳等具有珍珠光泽的材料切成薄片，镶嵌在漆器、家具或乐器表面的装饰工艺。它以其绚烂多变的虹彩光泽而著称，古时常用于宫廷御用或贵族藏品，是传统手工艺中极具代表性的一支。",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_7_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "1. 历史典故：来自盛唐的浪漫",
+      "content": [
+        "同学们，你们知道吗？螺钿工艺的鼎盛时期，就发生在那个以繁华和浪漫著称的朝代——唐朝。在《长恨歌》里，诗人白居易写道“缓歌慢舞凝丝竹，尽日君王看不足”，这句诗描写了唐玄宗和杨贵妃的盛大宴会。当时，皇宫里使用的乐器和家具，许多都镶嵌着华丽的螺钿。想象一下，当乐声响起，阳光透过窗棂，洒在一把螺钿镶嵌的琵琶上，那贝壳片折射出流光溢彩的七彩虹光，仿佛凝聚了唐朝的盛世繁华和那段流传千古的爱情。因此，螺钿不仅是一种工艺，更是盛唐文化和浪漫情感的象征。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "2. 独特之美：珍珠光泽",
+      "content": [
+        "螺钿最显著的特点是它那随着光线和视角变化而流动的珍珠光泽。这种光泽不是单纯的颜色，而是贝壳在不同角度下折射出的七彩虹光，变幻莫测，赋予作品独特的生命力。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "3. 工艺与应用",
+      "content": [
+        "螺钿工艺通常分为“硬螺钿”和“软螺钿”。硬螺钿片厚，光泽强；软螺钿片薄如纸，可以弯曲，常用于器皿的曲面装饰。其应用范围广泛，从精美的漆器盒子、古雅的屏风、桌椅，到乐器和文房用品，无不闪烁着螺钿的光芒。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_10_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "3D打印笔实践：",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "利用3D打印技术，通过一种创新的方式来体验螺钿的镶嵌之美。学生将使用3D打印笔，在预制的底板或图形上，进行“仿螺钿”装饰。",
+      "content": [
+        "装饰片选择与构图： 观察不同形状和光泽",
+        "的装饰片，思考如何排列组合，创作出富有美感的图案。",
+        "3D打印笔操作： 掌握3D打印笔的低温或慢速模式，用少量材料将装饰片稳固地“焊接”到主体上。",
+        "细节填充与勾勒： 创作完成后，可以用3D打印笔对连接处进行修饰，或在作品上勾勒出额外的线条，增加作品的层次感。",
+        "1. 创作环节：粘贴与填充",
+        "耐心与细致： 粘贴小巧的装饰片需要耐心，确保每",
+        "控制用料： 每次出料量要少，避免过多的材料覆盖住装饰片的细节。",
+        "创意构图： 将装饰片视为画笔，用它们在底板上进行创作，尝试不同的排列方式。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "人工智能",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "1. 认识线稿约束模型",
+      "content": [
+        "ControlNet是一个强大的AI工具，它可以让AI在生成图片时遵循一个“骨架”或“线索”。其中，lineart（线稿）功能就是给AI一个黑白线稿图，然后让AI在不改变这个线稿结构的基础上，根据你的文字描述（提示词）来填充色彩和细节。",
+        "我们可以用螺钿的创作原理来理解这个过程：",
+        "线稿图就像一个已经雕刻好的木质底板，上面的线条勾勒出了花瓶、盒子或鸟儿的轮廓。这是固定不变的“骨架”。",
+        "提示词就像你的设计图，它告诉你应该用什么颜色的螺钿片，是“蓝色和绿色”还是“金色和红色”。",
+        "AI生成图片的过程，就如同你把各种颜色的螺钿装饰片，一片片地镶嵌到这个固定的底板轮廓中。底板决定了物体的形状，而螺钿片决定了它的色彩、光泽和最终的风格。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_14_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "2. 提示词（Prompt）讲解与实例",
+      "content": [
+        "好的提示词可以引导AI生成符合预期的设计。一个有效的提示词应包含：线稿描述、艺术风格、色彩要求和细节强调。",
+        "基于提供的[物品/图案]线稿，请生成一个螺钿镶嵌图案。风格为[风格]，用[主色调]作为背景，并用高光突显珍珠光泽效果。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_15_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "实例演练：为3D打印花瓶设计螺钿图案",
+      "content": [
+        "第一步： 绘制一个简单的花瓶轮廓线稿，作为 ControlNet 的输入。",
+        "第二步： 撰写提示词，告诉AI如何“填充”螺钿。",
+        "提示词： 基于提供的花瓶线稿，请生成一个精致的螺钿装饰图案。风格为中式古典，用青色作为背景，以蓝色、绿色为主色调，并用高光来突出螺钿片的珍珠光泽。",
+        "第三步： AI根据线稿和提示词生成图案。学生将看到一个充满螺钿光泽、青花瓷般典雅的花瓶设计。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_16_thumb.png"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_17_thumb.png"
+      ]
+    },
+    {
+      "index": 15,
+      "title": "回顾：",
+      "content": [
+        "本课我们学习了螺钿工艺的独特之处，利用3D打印笔进行了“仿螺钿”创作，并学会了如何用AI的线稿约束模型进行设计构思。",
+        "未来，我们可以将同样的方法应用于其他传统手工艺，如玉石雕刻、漆器彩绘等，利用现代技术赋予传统文化新的生命。"
+      ],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_18_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 16,
+      "title": "您的观看",
+      "content": [],
+      "images": [
+        "/presentations/mother-of-pearl/assets/slide_19_thumb.png"
+      ]
+    }
+  ]
+}

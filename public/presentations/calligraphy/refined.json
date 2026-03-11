@@ -1,0 +1,135 @@
+{
+  "title": "书法",
+  "slides": [
+    {
+      "index": 1,
+      "title": "书法艺术的传统技巧与表现形式",
+      "content": [
+        "3D打印笔实践：立体书法的现代创作"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "书法艺术的传统技巧与表现形式",
+      "content": [],
+      "images": [
+        "/presentations/calligraphy/assets/slide_5_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "历史典故：张旭的“狂草”",
+      "content": [
+        "书法，被誉为“无言的诗，无形的舞”，是中国最独特的传统艺术形式之一。它不仅仅是书写汉字，更是通过线条的粗细、墨色的浓淡、结构的疏密，来表达书写者的情感与思想。",
+        "同学们，你们知道唐代有一位被称为“草圣”的书法家，名叫张旭吗？他为人豪放不羁，嗜酒如命。每当他醉酒之后，便灵感泉涌，挥毫泼墨。相传，他喝醉时会用自己的头发蘸墨，在墙壁上、衣衫上、甚至是地板上肆意狂书。他的草书笔法变幻莫测，如同“龙飞凤舞，惊蛇走电”，气势磅礴，难以预料。他将内心的激情和不羁完全融入笔墨之中，创造出一种前所未有的艺术风格。",
+        "这个故事告诉我们，书法不仅仅是技巧的堆砌，更是个性与情感的极致表达。它是一种可以超越工具，甚至超越介质的艺术。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_6_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "传统技法：线条与结构的“气韵”",
+      "content": [
+        "书法的表现形式丰富多样，主要体现在以下几个方面：",
+        "用笔： 笔画的轻重、快慢、提按转折，形成独特的“骨力”和“气韵”。",
+        "结构： 字形的疏密、平衡，以及笔画之间的相互关系。",
+        "章法： 整幅作品中字与字、行与行之间的布局与呼应，形成和谐的整体美感。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_7_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "3D打印笔实践：",
+      "content": [],
+      "images": [
+        "/presentations/calligraphy/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "临摹与重塑",
+      "content": [
+        "描摹笔画： 沿凸起的线条用3D打印笔均匀地描摹，给笔画增加厚度和立体感。",
+        "立体构建： 在笔画交汇处，通过堆叠线材来模拟笔墨的“积墨”效果，使作品更具层次感。",
+        "留白艺术： 在创作时，要像传统书法一样注意“留白”，即笔画以外的空间，以保持作品的整体美感。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "创作要点与技巧",
+      "content": [
+        "控制速度： 缓慢均匀地移动3D打印笔，确保线条平滑流畅。",
+        "叠加技巧： 在需要加粗或突出笔画的地方，可以进行多层叠加，增加视觉冲击力。",
+        "清洁处理： 在作品完成后，可以去除多余的细丝，使作品更显精致。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "人工智能（Kontext模型）工具创作教学",
+      "content": [],
+      "images": [
+        "/presentations/calligraphy/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "本环节将利用人工智能Kontext模型，让学生理解并体验AI如何“读懂”书法的精髓，并进行再创作。",
+      "content": [
+        "1. 认识Kontext模型",
+        "Kontext（意为“背景”或“上下文”）模型是一种专注于理解图像上下文关联和底层逻辑的人工智能模型。它不仅仅识别画面中的物体，更能分析它们之间的关系、比例和风格。在书法创作中，Kontext模型能“读懂”笔画的走向、字体的结构、以及整体构图的“气韵”，从而生成更加符合艺术规范的作品。",
+        "类比书法： 就像书法家在书写时，不仅要遵循笔画，更要考虑字体的整体结构和笔画之间的相互呼应，Kontext模型也是如此。它将书法的“气韵”作为一种重要的上下文信息来处理。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "2. 提示词（Prompt）讲解及再创作",
+      "content": [
+        "要用Kontext模型创作出高质量的书法作品，提示词需要包含风格、结构和意境。",
+        "[书写内容]，风格为[某种书法字体]，表现出[某种情感或意境]，参考[某种艺术风格]，背景为[背景描述]。",
+        "实例演练：用Kontext模型创作“龙”字书法图",
+        "第一步： 准备一张简单的书法“龙”字图片，作为参考输入。",
+        "第二步： 撰写提示词，告诉AI如何进行再创作。",
+        "提示词： 中国书法作品，“龙”字，风格为草书，笔画流畅，气势磅礴，参考日本浮世绘风格，背景为水墨云雾。",
+        "第三步： AI将根据提示词，生成一幅融合了草书气势与浮世绘风格的“龙”字书法作品。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/calligraphy/assets/slide_14_thumb.png"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "回顾与展望",
+      "content": [
+        "回顾： 本课我们学习了书法的历史与艺术特点，利用3D打印笔将书法立体化，并掌握了使用AI Kontext模型进行深度创作的方法。",
+        "展望： AI模型正在不断进化，未来它们将能更好地理解和创作像书法这样蕴含深刻文化内涵的艺术。希望同学们能继续探索，用科技的力量传承和发扬中华传统美学。"
+      ],
+      "images": [
+        "/presentations/calligraphy/assets/slide_15_thumb.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "title": "泥条盘筑兵马俑.pptx",
+  "slides": [
+    {
+      "index": 1,
+      "title": "智驭文明：人工智能拓展应用中华非遗匠艺",
+      "content": [
+        "与3D打印前沿科学探索实践教育方案"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_1_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "兵马俑的历史与制作工艺",
+      "content": [
+        "人工智能（法线贴图模型）工具创作教学"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "兵马俑的历史与制作工艺",
+      "content": [],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_3_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "历史典故：一个不朽的地下军团",
+      "content": [
+        "同学们，你们可曾想过，在两千多年前，一位帝王为了他的不朽梦想，究竟能做到什么？",
+        "相传，秦始皇在统一六国、建立大秦帝国后，心中升起了更宏大的愿望：即使死后，他也要将这片江山牢牢掌握在手中。于是，他命令全国最顶尖的工匠和艺术家，秘密打造一支能够在他死后继续守护天下的“不朽之军”。",
+        "这不是简单的雕塑。帝王要求这支军队的每一个士兵，都要有独立的灵魂与面貌，每一个细节都要一丝不苟。为了这个宏伟的使命，成千上万的工匠们被召集到骊山脚下，在地下深处，他们用泥土和烈火，日夜不停地塑造着这支无言的军团。他们不能留下任何文字记录，只能凭借口传心授和精湛的技艺，将帝王的意志刻画在每一寸陶土上。这支军队是帝王意志的延伸，是人类智慧与信念的极致体现。",
+        "这个故事，让我们看到兵马俑背后那股不可思议的决心与宏大愿景，而他们所使用的，正是我们今天要学习的“泥条盘筑法”。",
+        "秦始皇兵马俑，被誉为“世界第八大奇迹”，是秦始皇陵的陪葬坑，也是中华文明的瑰宝。它们不仅是栩栩如生的雕塑，更是秦代艺术与军事文化的生动体现。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_4_thumb.png"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "传统工艺：泥条盘筑法",
+      "content": [
+        "要制作如此庞大的兵马俑军团，需要一种高效且稳固的制作方法。秦朝工匠们采用了一种名为“泥条盘筑法”的古老技艺。这种方法的核心是：将陶泥搓成一圈圈的“泥条”，然后像盘筑城墙一样，一层层地将这些泥条盘叠起来，逐渐向上收拢，最终塑造成中空的、完整的陶俑形体。这种方法既减轻了陶俑的重量，又保证了其结构的稳固性。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_5_thumb.png"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "3D打印笔实践：兵马俑的现代创作",
+      "content": [],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_7_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "兵马俑的现代创作",
+      "content": [
+        "1. 创作环节：模仿盘筑与纹理雕刻",
+        "模仿“泥条盘筑”： 在兵马俑的头盔、发髻等部分，用3D打印笔拉出粗细均匀的线条，像盘筑泥条一样，一层层地构建出立体的造型。",
+        "•  • 雕刻细节与纹理： 在兵马俑的盔甲、面部和发丝等处，用3D打印笔的细微笔触，描绘出盔甲的鳞片、面部的褶皱和头发的纹理。",
+        "控制线材： 在“盘筑”时，控制好线材的挤出量和移动速度，以确保线条均匀。",
+        "耐心塑形： 细节的塑造需要耐心，可以像古代工匠一样，反复描绘，精益求精。",
+        "•  • 安全使用： 在使用3D打印笔时，务必注意高温，避免烫伤。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "为兵马俑上色",
+      "content": [],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "人工智能工具",
+      "content": [],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "1. 认识法线贴图模型",
+      "content": [
+        "法线贴图（Normal Map）是一种特殊的纹理图片，它并不存储颜色信息，而是存储关于物体表面凹凸方向的数据。当它被应用到一个3D模型上时，能欺骗光线和眼睛，让一个平滑的表面看起来拥有丰富的细节和立体感，而模型的实际几何结构并没有改变。这就像是用光影的魔法，为物体创造了虚拟的纹理。",
+        "我们可以将法线贴图模型理解为：",
+        "模型的“盔甲”： 它提供了无限的纹理细节。",
+        "提示词的“指令”： 你输入的文字描述，就像是为盔甲刻画纹理的指令，它决定了最终呈现的细节。",
+        "2. 提示词（Prompt）讲解及再创作",
+        "使用法线贴图模型时，提示词需要精确描述你想要的纹理、材质和细节。",
+        "3D法线贴图，[材质类型]，表面细节为[细节描述]，风格为[风格描述]。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "实例演练：为兵马俑主题设计AI纹理图",
+      "content": [
+        "第一步： 撰写提示词，告诉AI如何进行再创作。",
+        "提示词： 3D法线贴图，陶土材质，表面布满细小的裂痕和磨损，古老粗糙的质感，秦代风格。",
+        "第二步： AI将根据提示词，生成一幅用于3D模型的法线贴图。学生们可以通过这个练习，理解AI如何从抽象的文字描述中提取材质、纹理等信息，并最终生成一个完整的设计图。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "本课我们学习了兵马俑的历史与“泥条盘筑法”的智慧，利用3D打印笔实践了立体造型，并掌握了使用AI法线贴图模型进行纹理创作的方法。",
+      "content": [
+        "展望： 人工智能正在为传统艺术注入新的活力。希望同学们能继续探索，将更多中华非遗元素，用这种新颖的方式进行数字化和艺术化呈现，让传统文化在现代科技的赋能下，焕发新的光彩。"
+      ],
+      "images": [
+        "/presentations/terracotta-warrior/assets/slide_14_thumb.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "title": "灯笼",
+  "slides": [
+    {
+      "index": 1,
+      "title": "我的中国风",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_1_thumb.png"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_2_thumb.png"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "灯笼的艺术与文化内涵",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_3_thumb.png"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "灯笼，作为中国传统文化的重要象征，不仅仅是一种照明工具，更承载着团圆、光明与希望的美好寓意。每逢元宵节、中秋节等重要节日，家家户户悬挂起各式各样的灯笼，点亮夜空，也点亮了人们对美好生活的期盼。",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_6_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "1. 历史典故：元宵节灯笼的由来",
+      "content": [
+        "同学们，你们知道元宵节赏灯的习俗是怎么来的吗？相传在汉朝，有一只神鸟飞到人间，被一个猎人误杀了。天帝得知后大怒，决定在正月十五这天，放火烧毁整个人间以示惩罚。",
+        "天帝的女儿心有不忍，偷偷来到人间，将这个消息告诉了大家，人们听后吓得不知所措。这时，一位聪明的老人想出了一个办法：既然天帝要放火，那我们就在正月十四、十五、十六这三天，家家户户都挂起红灯笼，点燃鞭炮，这样天帝就会以为人间已经在燃烧了。",
+        "人们照着老人的话做了。正月十五那天，天帝从天上往下看，果真看到人间火光冲天、鞭炮齐鸣，以为计划已经成功，便没有再放火。从此，人们为了纪念这次“死里逃生”，便将这三天定为元宵节，并形成了赏灯、放烟花的习俗。",
+        "这个故事告诉我们，灯笼不仅是美丽的艺术品，更是一种智慧的象征，承载着人们对和平与幸福生活的祈愿。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_7_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "2. 传统工艺：结构与光影之美",
+      "content": [
+        "传统灯笼的制作主要包括骨架搭建、蒙皮、彩绘与装饰。它的核心美学在于其内部的骨架结构与外部蒙皮所形成的光影效果。当灯光从内部透出时，光影交错，层次分明，营造出独特的氛围。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_8_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "3D打印笔实践：灯笼的现代创作",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_9_thumb.png"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "利用3D打印笔，让学生亲手搭建和装饰一个立体灯笼。",
+      "content": [
+        "连接骨架： 将3D打印笔作为“热熔胶”，将灯笼的各个骨架部分（如上下盖、支撑柱）精确地连接起来，形成一个稳定的立体结构。",
+        "绘制蒙皮： 在灯笼骨架的间隙中，用3D打印笔拉出平整的线条或网格，模仿传统灯笼的“蒙皮”效果。可以尝试使用不同颜色和粗细的线材，创造出独特的视觉效果。",
+        "装饰点缀： 在灯笼表面添加流苏、花朵、文字等装饰性元素，使其更具个性化。",
+        "1. 创作环节：骨架搭建与装饰",
+        "稳固连接： 在连接骨架时，确保每个接口都牢固，避免结构松散。",
+        "拉丝技巧： 在制作“蒙皮”时，控制好笔尖与骨架的距离和移动速度，以拉出平直、光滑的线条。",
+        "安全使用： 在使用3D打印笔时，务必注意高温，避免烫伤。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "人工智能工具",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_11_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "1. 认识开源模型",
+      "content": [
+        "与之前的课程中使用的特定功能模型（如线稿、深度图）不同",
+        "，开源模型（如Stable Diffusion）更像是一个万能的画笔。它没有预设的功能限制，完全依赖于你的文字描述（提示词）来创作。这就像给了你一个可以实现任何愿望的神奇灯笼，只要你清楚地描述你的愿望，它就能为你点亮。",
+        "我们可以将开源模型理解为：",
+        "模型的“光”： 它拥有无限的创作能力，可以生成各种风格、内容的图片。",
+        "提示词的“影”： 你输入的文字描述，就像是灯笼内的“图案”，它决定了最终作品的形状与风格。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_12_thumb.png"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "2. 提示词（Prompt）讲解及再创作",
+      "content": [
+        "一个高质量的提示词是创作成功的关键。它通常包含以下几个部分：",
+        "主体描述 (Subject)： 你想要画什么？（如：一个中式灯笼）",
+        "风格描述 (Style)： 用什么风格呈现？（如：水墨画、赛博朋克、皮克斯动画风格）",
+        "构图和光影 (Composition &amp; Lighting)： 画面构图如何？光线怎么样？（如：从下往上拍、逆光、电影感）",
+        "附加指令 (Additional Instructions)： 对细节的补充要求。（如：细节丰富、超高清、8K）",
+        "负面提示词 (Negative Prompt)： 你不想要什么？（如：模糊、变形、低质量）"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_13_thumb.png"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "实例演练：为灯笼主题设计AI参考图",
+      "content": [
+        "基础提示词： a beautiful Chinese lantern",
+        "效果： 可能会生成一个普通的灯笼图片。",
+        "进阶提示词： 一个精美的中式灯笼，水墨画风格，高分辨率，电影感光线，微距拍摄",
+        "负面提示词： 模糊, 变形, 低质量",
+        "效果： AI会生成一幅充满艺术感的水墨画风格灯笼，光影和细节都非常出色。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_14_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_15_thumb.png"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "展望：",
+      "content": [
+        "开源模型提供了无限的创作可能性。希望同学们能继续探索，将灯笼、窗花、马勺脸谱等多种非遗元素融合在一起，用AI创作出更多跨越时空的艺术作品。",
+        "这份教案将灯笼的文化之美与人工智能的创作自由相结合，希望它能为您的教学带来启发。如果您需要进一步修改或有其他课程想法，请随时告诉我。",
+        "本课我们学习了灯笼背后的文化故事，利用3D打印笔进行了创意实践，并掌握了使用人工智能开源模型进行自由创作的方法。"
+      ],
+      "images": [
+        "/presentations/lantern/assets/slide_16_thumb.png"
+      ]
+    },
+    {
+      "index": 15,
+      "title": "感谢观看",
+      "content": [],
+      "images": [
+        "/presentations/lantern/assets/slide_17_thumb.png"
+      ]
+    }
+  ]
+}

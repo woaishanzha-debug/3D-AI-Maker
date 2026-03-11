@@ -1,0 +1,174 @@
+{
+  "title": "窗花",
+  "slides": [
+    {
+      "index": 1,
+      "title": "独具匠心",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_1_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "独具匠心",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_2_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "窗花的艺术与文化内涵",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_3_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "窗花，作为中国传统剪纸艺术的一种形式，承载着深厚的文化底蕴。每逢春节、婚礼或喜庆日子，人们便将窗花贴在窗户上，寓意着对美好生活的向往与祝福。它不仅是简单的装饰，更是中国人情感的寄托与文化的传承。",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_5_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "1. 历史典故：武则天与“立春日赐彩胜”",
+      "content": [
+        "同学们，你们知道窗花艺术的流行与一位历史上的传奇女皇有关吗？在唐朝，女皇武则天曾颁布一道诏令，要求在立春这一天，宫女们用五彩丝绸或金箔剪成小人、花鸟等图案，相互赠送，称为“彩胜”。这一习俗很快从宫廷传到民间，人们开始用更加廉价易得的纸张进行剪刻，并将这些美丽的图案贴在窗户上，这便是我们今天所见的窗花。",
+        "这个故事告诉我们，窗花艺术最初并非只是一种民间习俗，它曾是宫廷里精致的时尚，最终通过皇家的推崇而普及开来，从高雅走向了寻常百姓家，成为中华文化的重要符号。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_6_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "2. 历史渊源与发展",
+      "content": [
+        "窗花艺术源于中国的剪纸文化。早在汉朝时期，随着造纸术的发明，人们便开始用纸张进行剪刻。窗花作为一种独特的剪纸形式，在唐宋时期逐渐兴盛，并与民间风俗、节庆习俗紧密结合。它不仅仅是简单的装饰，更是一种祈福纳祥的仪式。到了清代，窗花的创作技巧达到了高峰，形成了南北不同的流派，内容也更加丰富，从最初的吉祥图案，发展到花鸟鱼虫、历史人物等，成为一种成熟的民间艺术。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_7_thumb.png"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "3. 传统工艺：负空间之美",
+      "content": [
+        "窗花艺术的核心在于“负空间”。所谓负空间，就是指图案之外**的留白部分。剪纸时，我们剪掉的是图案的轮廓，但真正让图案栩栩如生、层次分明的，却是那些没有被剪掉的、相互连接的留白部分。",
+        "窗花的美，正是源于这种“虚实相生”的哲学——有形的图案与无形的留白相互映衬，共同构成一个完整的艺术品。它教导我们，有时候，空白和缺失也能创造出独特的美。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_8_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "窗花的现代创作",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_9_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "3D打印笔实践",
+      "content": [
+        "利用3D打印笔，将窗花艺术从平面的纸张带入立体的空间。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_10_thumb.png"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "1. 创作环节：线条与结构的搭建",
+      "content": [
+        "填充负空间： 使用3D打印笔，将模板上被剪去",
+        "的“负空间”部分重新填充，创造出立体的花纹。",
+        "搭建骨架： 直接用3D打印笔在空中拉出线条，连接成复杂的窗花图案。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_11_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 11,
+      "title": "2. 创作要点与技巧",
+      "content": [
+        "控制出丝速度： 保持缓慢而稳定",
+        "的出丝速度，以确保线条的平整与流畅。",
+        "： 在搭建复杂结构时，注意线的交叉与连接，确保图案的稳定性。",
+        "创新设计： 鼓励学生在传统窗花图案的基础上，融入现代元素或个人风格，创作出新颖的立体窗花。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_12_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 12,
+      "title": "人工智能工具创作教学",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_13_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 13,
+      "title": "1. 认识深度图解构模型",
+      "content": [
+        "深度图就像是窗花中的负空间，它决定了作品的结构与层次。图中越亮的区域代表离我们越近，越暗的区域则越远，这正好对应了窗花的实心与空心。",
+        "文字描述（提示词）就像是设计师的创意构想，它告诉AI“这个结构要用什么材质、什么风格来呈现”。",
+        "AI生成图片的过程，就如同将窗花的二维负空间结构，用魔法转化为一个三维的、具有真实光影和材质的全新作品。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_14_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 14,
+      "title": "2. 提示词（Prompt）讲解与实例",
+      "content": [
+        "一个有效的提示词应包含：主体描述、风格描述和色彩描述。",
+        "基于[深度图]，生成一幅[主体]的图片，风格为[风格]，色彩为[色彩描述]。",
+        "实例演练：为3D打印窗花设计AI参考图",
+        "第一步： 准备一张内容深度图，例如：一张简单的窗花图案的深度图。",
+        "第二步： 撰写提示词，告诉AI如何进行创作。",
+        "提示词： 基于*窗花深度图*，生成一幅*精雕细琢的木雕*，背景为*柔和的光线*，使用*古朴的棕色*，呈现出*东方园林*的静谧感。",
+        "第三步： AI根据深度图和提示词生成参考图。学生将得到一幅内容是窗花，但风格和材质完全不同的全新设计，这可以为他们的3D打印笔创作提供灵感。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_15_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 15,
+      "title": "课堂小结与拓展",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_16_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 16,
+      "title": "回顾：本课我们学习了窗花的文化内涵与负空间之美，利用3D打印笔进行了创意绘制，并学会了如何用AI的深度图解构模型进行艺术创作。",
+      "content": [
+        "展望：未来，我们可以将同样的方法应用于其他以空间结构为核心的艺术形式，如建筑设计、雕塑等，探索更多的艺术可能性。"
+      ],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_17_thumb.jpeg"
+      ]
+    },
+    {
+      "index": 17,
+      "title": "独具匠心",
+      "content": [],
+      "images": [
+        "/presentations/paper-cutting/assets/slide_18_thumb.jpeg"
+      ]
+    }
+  ]
+}
