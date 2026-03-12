@@ -191,7 +191,12 @@ async function addTeacherToOrg() {
     console.log("Add teacher logic should be moved to OrgMatrix page");
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({
+    searchParams
+}: {
+    searchParams: { tab?: string }
+}) {
+    const initialTab = searchParams.tab === 'works' ? 'works' : 'auth';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const session = await getServerSession(authOptions) as any;
     if (!session || session.user?.role !== 'SUPER_ADMIN') {
@@ -246,6 +251,7 @@ export default async function AdminPage() {
             organizations={transformedOrgs}
             pendingWorks={pendingWorks}
             courseSeries={allSeries}
+            initialTab={initialTab}
             actions={{
                 createOrgAndCodes,
                 addTeacherToOrg,

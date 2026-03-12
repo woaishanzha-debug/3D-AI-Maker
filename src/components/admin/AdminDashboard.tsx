@@ -12,6 +12,7 @@ interface AdminDashboardProps {
     pendingWorks: any[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     courseSeries: any[];
+    initialTab?: 'auth' | 'works';
     actions: {
         createOrgAndCodes: (formData: FormData) => Promise<void>;
         addTeacherToOrg: (formData: FormData) => Promise<void>;
@@ -22,8 +23,8 @@ interface AdminDashboardProps {
     };
 }
 
-export default function AdminDashboard({ organizations, pendingWorks, courseSeries, actions }: AdminDashboardProps) {
-    const [activeTab, setActiveTab] = useState<'auth' | 'works'>('auth');
+export default function AdminDashboard({ organizations, pendingWorks, courseSeries, initialTab = 'auth', actions }: AdminDashboardProps) {
+    const [activeTab, setActiveTab] = useState<'auth' | 'works'>(initialTab);
 
     return (
         <div className="min-h-screen bg-[#F8FAFC]">

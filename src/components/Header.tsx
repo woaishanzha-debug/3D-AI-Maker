@@ -96,7 +96,7 @@ export function Header() {
                             {session ? (
                                 <div className="flex items-center gap-2">
                                     {isAdmin && (
-                                        <Link href="/admin" className="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="管理控制台">
+                                        <Link href="/admin?tab=works" className="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="管理控制台">
                                             <ShieldAlert className="w-5 h-5" />
                                         </Link>
                                     )}

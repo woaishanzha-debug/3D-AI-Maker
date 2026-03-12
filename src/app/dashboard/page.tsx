@@ -206,6 +206,10 @@ export default async function DashboardPage() {
         };
     }
 
+    if (role === 'SUPER_ADMIN') {
+        redirect('/admin?tab=works');
+    }
+
     const user = await prisma.user.findUnique({
         where: { id: userId },
         include: includeOptions
