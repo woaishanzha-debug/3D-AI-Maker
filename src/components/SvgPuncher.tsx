@@ -164,8 +164,8 @@ export default function SvgPuncher() {
 
         interactTool.onMouseDown = (event: any) => {
             clearToolGraphics();
-            const puppetLayer = paper.project.layers['puppetLayer'] as any;
-            const toolLayer = paper.project.layers['toolLayer'] as any;
+            const puppetLayer = (paper.project.layers as any)['puppetLayer'];
+            const toolLayer = (paper.project.layers as any)['toolLayer'];
 
             if (tool === 'select') {
                 const hit = paper.project.hitTest(event.point, { fill: true, tolerance: 5 });
@@ -210,7 +210,7 @@ export default function SvgPuncher() {
             if (tool === 'select' && activeItem) {
                 activeItem.position = activeItem.position.add(event.delta);
             } else if (tool === 'cut' && dragLine) {
-                const toolLayer = paper.project.layers['toolLayer'] as any;
+                const toolLayer = (paper.project.layers as any)['toolLayer'];
                 toolLayer.activate();
                 dragLine.segments[1].point = event.point;
                 
@@ -219,7 +219,7 @@ export default function SvgPuncher() {
                 const p = new paper.Path.Circle({ center: mid, radius: jointRadius, fillColor: 'rgba(59, 130, 246, 0.3)' });
                 previewItems.push(p);
                 
-                (paper.project.layers['puppetLayer'] as any).activate();
+                (paper.project.layers as any)['puppetLayer'].activate();
             }
         };
 
@@ -232,7 +232,7 @@ export default function SvgPuncher() {
         };
 
         const executeSlash = (line: paper.Path.Line) => {
-            const puppetLayer = paper.project.layers['puppetLayer'] as any;
+            const puppetLayer = (paper.project.layers as any)['puppetLayer'];
             const items = [...puppetLayer.children];
             
             items.forEach(item => {
