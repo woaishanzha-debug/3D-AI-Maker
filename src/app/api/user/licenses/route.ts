@@ -9,17 +9,17 @@ export async function GET() {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // @ts-expect-error - role/id extension
-    const { id: userId, role, orgId } = session.user;
-
-    let authorizedSeriesIds: string[] = [];
-    let authorizedCourseIds: string[] = [];
+    const { id: userId, role, orgId } = session.user as any;
 
     if (role === 'SUPER_ADMIN') {
         return NextResponse.json({ seriesIds: ['ALL'], courseIds: ['ALL'] });
     }
 
-    if (role === 'ORG_ADMIN' && orgId) {
+    let authorizedSeriesIds: string[] = [];
+    let authorizedCourseIds: string[] = [];
+
+    try {
+        if (role === 'ORG_ADMIN' && orgId) {
         // 校长：获取机构购买的所有系列
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const orgLicenses = await (prisma as any).orgLicense.findMany({
@@ -60,8 +60,14 @@ export async function GET() {
         }
     }
 
-    return NextResponse.json({
-        seriesIds: authorizedSeriesIds,
-        courseIds: authorizedCourseIds
-    });
+        return NextResponse.json({
+            seriesIds: authorizedSeriesIds,
+            courseIds: authorizedCourseIds
+        });
+    } catch (error) {
+        console.error('CRITICAL: License fetch error:', error);
+        // Fallback for emergency or errors: super admin check already handled above, 
+        // so this is for other roles
+        return NextResponse.json({ seriesIds: [], courseIds: [], error: 'Internal Server Error' }, { status: 500 });
+    }
 }
