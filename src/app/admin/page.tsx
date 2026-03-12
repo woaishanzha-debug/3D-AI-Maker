@@ -137,19 +137,35 @@ async function allocateCourseToOrg(formData: FormData) {
 
 async function deleteOrganization(orgId: string) {
     'use server'
-    // 先删除该机构下的所有激活码 (InvitationCode)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const users = await prisma.user.findMany({ where: { orgId } as any });
     const userIds = users.map(u => u.id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+    // 1. Break User-to-InvitationCode and User-to-User circular references
+    await prisma.user.updateMany({
+        where: { orgId } as any,
+        data: { usedInvitationCodeId: null, teacherId: null } as any
+    });
+
+    // 2. Clean up user dependencies
+    await (prisma as any).post.deleteMany({ where: { authorId: { in: userIds } } });
+    await (prisma as any).toolHistory.deleteMany({ where: { userId: { in: userIds } } });
+    await (prisma as any).completion.deleteMany({ where: { userId: { in: userIds } } });
+    await (prisma as any).teacherLicense.deleteMany({ where: { teacherId: { in: userIds } } });
+
+    // 3. Delete InvitationCodes created by teachers in this org
     await (prisma as any).invitationCode.deleteMany({
         where: { teacherId: { in: userIds } }
     });
-    // 删除用户
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+    // 4. Delete Users
     await prisma.user.deleteMany({ where: { orgId } as any });
-    // 删除机构
+
+    // 5. Delete OrgLicenses
+    await (prisma as any).orgLicense.deleteMany({ where: { orgId } });
+
+    // 6. Delete the Organization
     await prisma.organization.delete({ where: { id: orgId } });
+
     revalidatePath('/admin');
 }
 
