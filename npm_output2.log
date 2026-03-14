@@ -1,0 +1,24 @@
+
+> 3d-ai-maker@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3002
+
+ ✓ Starting...
+ ✓ Ready in 2.1s
+ ○ Compiling /login ...
+ ✓ Compiled /login in 9s (756 modules)
+ ✓ Compiled in 1053ms (361 modules)
+ GET /login 200 in 10115ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 5.9s (734 modules)
+ GET /grid.svg 404 in 6079ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1805ms (960 modules)
+ GET /login 404 in 1938ms
+ ✓ Compiled in 1844ms (596 modules)
+ ✓ Compiled in 479ms (547 modules)
+ ✓ Compiled in 1429ms (582 modules)

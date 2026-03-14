@@ -1,0 +1,84 @@
+
+> 3d-ai-maker@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+ ⚠ Port 3002 is in use, trying 3003 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3003
+
+ ✓ Starting...
+ ✓ Ready in 3s
+ ○ Compiling /login ...
+ ✓ Compiled /login in 8.5s (756 modules)
+ GET /login 200 in 9969ms
+ ✓ Compiled in 1417ms (361 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /api/auth/[...nextauth] in 7.6s (972 modules)
+ GET /grid.svg 404 in 7970ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 6519ms
+ GET /api/auth/session 200 in 32ms
+ ✓ Compiled in 1799ms (986 modules)
+ ⨯ ./src/app/test-puncher/page.tsx:3:1
+Module not found: Can't resolve '../../src/components/SvgPuncher'
+[0m [90m 1 |[39m [32m"use client"[39m[33m;[39m[0m
+[0m [90m 2 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m [33mSvgPuncher[39m [36mfrom[39m [32m'../../src/components/SvgPuncher'[39m[33m;[39m[0m
+[0m [90m   |[39m [31m[1m^[22m[39m[0m
+[0m [90m 4 |[39m[0m
+[0m [90m 5 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mTestPage[39m() {[0m
+[0m [90m 6 |[39m     [36mreturn[39m ([0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ○ Compiling /test-puncher ...
+ ⨯ ./src/app/test-puncher/page.tsx:3:1
+Module not found: Can't resolve '../../src/components/SvgPuncher'
+[0m [90m 1 |[39m [32m"use client"[39m[33m;[39m[0m
+[0m [90m 2 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m [33mSvgPuncher[39m [36mfrom[39m [32m'../../src/components/SvgPuncher'[39m[33m;[39m[0m
+[0m [90m   |[39m [31m[1m^[22m[39m[0m
+[0m [90m 4 |[39m[0m
+[0m [90m 5 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mTestPage[39m() {[0m
+[0m [90m 6 |[39m     [36mreturn[39m ([0m
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /test-puncher 500 in 3225ms
+ ✓ Compiled /_error in 1787ms (1248 modules)
+ GET /test-puncher 200 in 381ms
+ GET /grid.svg 404 in 66ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 99ms
+ GET /api/auth/session 200 in 13ms
+ ⨯ Failed to generate static paths for /api/auth/[...nextauth]:
+TypeError: Cannot read properties of undefined (reading 'call')
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts (/app/.next/server/app/api/auth/[...nextauth]/route.js:192:1)
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=%2Fapp%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fapp&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:97)
+    at (rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=%2Fapp%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fapp&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! (/app/.next/server/app/api/auth/[...nextauth]/route.js:182:1)
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at __webpack_exec__ (/app/.next/server/app/api/auth/[...nextauth]/route.js:222:39)
+    at /app/.next/server/app/api/auth/[...nextauth]/route.js:223:416
+    at __webpack_require__.X (/app/.next/server/webpack-runtime.js:163:21) {
+  type: 'TypeError'
+}
+ ⨯ Failed to generate static paths for /api/auth/[...nextauth]:
+TypeError: Cannot read properties of undefined (reading 'call')
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts (/app/.next/server/app/api/auth/[...nextauth]/route.js:192:1)
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=%2Fapp%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fapp&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:97)
+    at (rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=%2Fapp%2Fsrc%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fapp&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! (/app/.next/server/app/api/auth/[...nextauth]/route.js:182:1)
+    at __webpack_require__ (/app/.next/server/webpack-runtime.js:33:43)
+    at __webpack_exec__ (/app/.next/server/app/api/auth/[...nextauth]/route.js:222:39)
+    at /app/.next/server/app/api/auth/[...nextauth]/route.js:223:416
+    at __webpack_require__.X (/app/.next/server/webpack-runtime.js:163:21) {
+  type: 'TypeError'
+}
+ ✓ Compiled in 1595ms (1198 modules)
