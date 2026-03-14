@@ -3,14 +3,28 @@ import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 // @ts-ignore
 import { exportTo3MF } from 'three-3mf-exporter'; 
 
+export interface Export3mfConfig {
+  baseLayerId: string;
+  baseDepth: number;
+  itemDepth: number;
+  filename?: string;
+  groupName?: string;
+}
+
 export async function exportSvgTo3mf(
   svgString: string,
-  baseDepth: number = 2, // 底板厚度 2mm
-  totemDepth: number = 3, // 图腾厚度 3mm
-  filename: string = 'guanzhong-totem.3mf'
+  config: Export3mfConfig
 ): Promise<void> {
+  const {
+    baseLayerId,
+    baseDepth,
+    itemDepth,
+    filename = 'exported-model.3mf',
+    groupName = 'Export_Project'
+  } = config;
+
   const exportGroup = new THREE.Group();
-  exportGroup.name = "Mashao_Project";
+  exportGroup.name = groupName;
   
   const loader = new SVGLoader();
   const svgData = loader.parse(svgString);
@@ -29,9 +43,9 @@ export async function exportSvgTo3mf(
       const svgNodeId = (path.userData as any)?.node?.id;
 
       // 精确匹配 ID，同时保留 index === 0 作为极端情况下的安全兜底 (Fallback)
-      const isBasePlate = svgNodeId === 'Mashao_Base' || index === 0;
+      const isBasePlate = svgNodeId === baseLayerId || index === 0;
 
-      const depth = isBasePlate ? baseDepth : totemDepth;
+      const depth = isBasePlate ? baseDepth : itemDepth;
 
       const geometry = new THREE.ExtrudeGeometry(shape, {
         depth: depth,
@@ -56,7 +70,7 @@ export async function exportSvgTo3mf(
         exportGroup.position.set(-centerOffset.x, -centerOffset.y, 0);
       }
 
-      mesh.name = isBasePlate ? "Mashao_Base" : `Totem_${index}`;
+      mesh.name = isBasePlate ? baseLayerId : `Item_${index}`;
       exportGroup.add(mesh);
     });
   });
