@@ -45,7 +45,10 @@ export default function SvgPuncher() {
 
         return () => {
             window.removeEventListener('resize', handleResize);
-            if (paper.project) paper.project.remove();
+            if (paper.project) {
+                paper.project.clear();
+                paper.project.remove();
+            }
         };
     }, []);
 
@@ -87,7 +90,12 @@ export default function SvgPuncher() {
             toolLayer.name = 'toolLayer';
             puppetLayer.activate();
 
-            paper.project.importSVG(svgStr, {
+            // Explicitly clear any existing children in the active layer to prevent ghosting
+            paper.project.activeLayer.removeChildren();
+
+            const currentProject = paper.project;
+
+            currentProject.importSVG(svgStr, {
                 onLoad: (item: any) => {
                     item.fillColor = new paper.Color('black');
                     item.strokeColor = null;
@@ -102,7 +110,8 @@ export default function SvgPuncher() {
                         item.position = paper.view.center;
                     }
                     
-                    // Filter Background & Tag Parts
+                    // Filter Background, Tag Parts, and Unite into Solid Silhouette
+                    const validPaths: any[] = [];
                     const scanAndTag = (obj: any) => {
                         if (obj.children) {
                             [...obj.children].forEach(scanAndTag);
@@ -115,19 +124,39 @@ export default function SvgPuncher() {
                                 else if (color.red > 0.8 && color.green > 0.8 && color.blue > 0.8) keep = false;
                             }
                             
+                            // Ignore tiny noise paths
+                            if (Math.abs((obj as any).area) < 10) keep = false;
+
                             // Ignore paths that are practically the background frame
                             const isBackground = obj.bounds.width > item.bounds.width * 0.95 && obj.bounds.height > item.bounds.height * 0.95;
                             
                             if (isBackground || !keep) {
                                 obj.remove();
                             } else {
-                                obj.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
-                                obj.data.isPuppetPart = true;
-                                puppetLayer.addChild(obj);
+                                if (obj instanceof paper.Path) {
+                                    obj.closed = true;
+                                }
+                                validPaths.push(obj);
                             }
                         }
                     };
+
                     scanAndTag(item);
+
+                    if (validPaths.length > 0) {
+                        let unitedPath: any = validPaths[0];
+                        for (let i = 1; i < validPaths.length; i++) {
+                            const newUnited = unitedPath.unite(validPaths[i]);
+                            unitedPath.remove();
+                            validPaths[i].remove();
+                            unitedPath = newUnited;
+                        }
+
+                        unitedPath.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
+                        unitedPath.data.isPuppetPart = true;
+                        puppetLayer.addChild(unitedPath);
+                    }
+
                     item.remove(); // Remove original group
                     setIsProcessing(false);
                 }

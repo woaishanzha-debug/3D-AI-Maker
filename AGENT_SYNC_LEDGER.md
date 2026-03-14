@@ -11,11 +11,12 @@
   - 动态教学目标打钩联动 (Quest Progress)
   - 纯前端 3MF 物理导出 (已重构为通用配置对象导出方式，支持跨 16 课程)
   - Generic Course Event Bus 演进蓝图建立
+  - SvgPuncher React Cleanup and Path Unification
 * **Pending / Next Big Feature:** AI 风格迁移与提示词引擎 (Route C)
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
-* **Task:** 对半成品 Shadow Puppetry (皮影) 课程进行深度架构扫描，生成 SHADOW_PUPPET_SYNC.md 报告。
+* **Task:** Fix the persistent layer ghosting and multi-instance race conditions in src/components/SvgPuncher.tsx. Added clear() and remove() to useEffect cleanup, explicitly cleared active layer children before imported SVG, and modified scan logic to ignore noise paths, explicitly close Paths, and unite valid paths into a single solid CompoundPath.
 * **Executed By:** Jules (Cloud Execution)
 * **Verification Trace:** 4562441
 
