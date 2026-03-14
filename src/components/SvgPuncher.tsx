@@ -103,6 +103,8 @@ export default function SvgPuncher() {
                     }
                     
                     // Filter Background & Tag Parts
+                    let combinedPath: any = null;
+
                     const scanAndTag = (obj: any) => {
                         if (obj.children) {
                             [...obj.children].forEach(scanAndTag);
@@ -118,17 +120,35 @@ export default function SvgPuncher() {
                             // Ignore paths that are practically the background frame
                             const isBackground = obj.bounds.width > item.bounds.width * 0.95 && obj.bounds.height > item.bounds.height * 0.95;
                             
-                            if (isBackground || !keep) {
-                                obj.remove();
-                            } else {
-                                obj.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
-                                obj.data.isPuppetPart = true;
-                                puppetLayer.addChild(obj);
+                            if (!isBackground && keep) {
+                                if (!combinedPath) {
+                                    combinedPath = obj.clone();
+                                } else {
+                                    const newCombined = combinedPath.unite(obj);
+                                    combinedPath.remove();
+                                    combinedPath = newCombined;
+                                }
                             }
+                            // Clean up original artifacts
+                            obj.remove();
                         }
                     };
                     scanAndTag(item);
                     item.remove(); // Remove original group
+
+                    // Explicitly remove source raster image or any existing items that aren't the tool layer
+                    [...paper.project.layers].forEach((layer) => {
+                        if (layer.name !== 'puppetLayer' && layer.name !== 'toolLayer') {
+                            layer.remove();
+                        }
+                    });
+
+                    if (combinedPath) {
+                        combinedPath.fillColor = new paper.Color('#1e293b'); // solid black silhouette
+                        combinedPath.data.isPuppetPart = true;
+                        puppetLayer.addChild(combinedPath);
+                    }
+
                     setIsProcessing(false);
                 }
             });
@@ -242,14 +262,14 @@ export default function SvgPuncher() {
                         const p1 = intersections[0].point;
                         const p2 = intersections[intersections.length - 1].point;
                         const vector = p2.subtract(p1);
-                        const normal = (vector as any).rotate(90).normalize(20000); 
+                        const normal = (vector as any).rotate(90).normalize(1);
                         
                         const cutter = new paper.Path({
                             segments: [
-                                p1.subtract(vector.normalize(10000)),
-                                p2.add(vector.normalize(10000)),
-                                p2.add(vector.normalize(10000)).add(normal),
-                                p1.subtract(vector.normalize(10000)).add(normal)
+                                p1,
+                                p2,
+                                p2.add(normal),
+                                p1.add(normal)
                             ],
                             closed: true,
                             visible: false
