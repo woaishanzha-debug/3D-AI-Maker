@@ -6,12 +6,15 @@ import { Download, Scissors, Circle, Upload, MousePointer2, Plus, Image as Image
 import ImageTracer from 'imagetracerjs';
 // @ts-ignore
 import paper from 'paper/dist/paper-core';
+import { exportSvgTo3mf } from '@/lib/svgTo3mfConverter';
+import { EVENTS } from '@/lib/event-bus';
 
 type ToolType = 'select' | 'cut' | 'joint' | 'hole' | 'erase';
 
 export default function SvgPuncher() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sourceImageRef = useRef<HTMLImageElement | null>(null);
+    const paperProjectRef = useRef<any>(null);
 
     const [tool, setTool] = useState<ToolType>('select');
     const [threshold, setThreshold] = useState(150);
@@ -22,7 +25,15 @@ export default function SvgPuncher() {
     // --- Paper.js Initialization ---
     useEffect(() => {
         if (!canvasRef.current) return;
+        
+        // Ensure any existing project is removed
+        if (paperProjectRef.current) {
+            paperProjectRef.current.remove();
+        }
+
+        // Setup Paper.js on the canvas
         paper.setup(canvasRef.current);
+        paperProjectRef.current = paper.project;
         
         // Initial setup of Layers
         const puppetLayer = new paper.Layer();
@@ -45,18 +56,19 @@ export default function SvgPuncher() {
 
         return () => {
             window.removeEventListener('resize', handleResize);
-            if (paper.project) {
-                paper.project.clear();
-                paper.project.remove();
+            if (paperProjectRef.current) {
+                paperProjectRef.current.remove();
+                paperProjectRef.current = null;
             }
         };
     }, []);
 
     // --- Image Processing & Vector Tracing ---
     const traceImage = useCallback(() => {
-        if (!sourceImageRef.current || !canvasRef.current) return;
+        if (!sourceImageRef.current || !canvasRef.current || !paperProjectRef.current) return;
         setIsProcessing(true);
         
+        const currentProject = paperProjectRef.current;
         const canvas = document.createElement('canvas');
         const img = sourceImageRef.current;
         canvas.width = img.width;
@@ -72,6 +84,7 @@ export default function SvgPuncher() {
         for (let i = 0; i < data.length; i += 4) {
             const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
             if (data[i + 3] < 50 || lum > threshold) {
+                data[i] = data[i+1] = data[i+2] = 255;
                 data[i + 3] = 0;
             } else {
                 data[i] = data[i+1] = data[i+2] = 0;
@@ -79,92 +92,88 @@ export default function SvgPuncher() {
             }
         }
 
-        const options = { ltres: 1, qtres: 1, pathomit: 8, scale: 1, viewbox: true };
+        const options = { 
+            ltres: 1, 
+            qtres: 1, 
+            pathomit: 8, 
+            scale: 1, 
+            viewbox: true,
+            colorsampling: 0,
+            numberofcolors: 2,
+            pal: [{r:0,g:0,b:0,a:255}, {r:255,g:255,b:255,a:0}],
+            layering: 0,
+            stroke: 0
+        };
         const svgStr = ImageTracer.imagedataToSVG(imgData, options);
 
-        if (paper.project) {
-            paper.project.clear();
-            const puppetLayer = new paper.Layer();
-            puppetLayer.name = 'puppetLayer';
-            const toolLayer = new paper.Layer();
-            toolLayer.name = 'toolLayer';
-            puppetLayer.activate();
+        currentProject.activate();
+        currentProject.clear();
 
-            // Explicitly clear any existing children in the active layer to prevent ghosting
-            paper.project.activeLayer.removeChildren();
+        const puppetLayer = new paper.Layer();
+        puppetLayer.name = 'puppetLayer';
+        const toolLayer = new paper.Layer();
+        toolLayer.name = 'toolLayer';
+        puppetLayer.activate();
 
-            const currentProject = paper.project;
-
-            currentProject.importSVG(svgStr, {
-                onLoad: (item: any) => {
-                    item.fillColor = new paper.Color('black');
-                    item.strokeColor = null;
-                    
-                    // Fit to Viewport
-                    if (paper.view) {
-                        const viewScale = Math.min(
-                            (paper.view.size.width * 0.8) / item.bounds.width,
-                            (paper.view.size.height * 0.8) / item.bounds.height
-                        );
-                        item.scale(viewScale);
-                        item.position = paper.view.center;
-                    }
-                    
-                    // Filter Background, Tag Parts, and Unite into Solid Silhouette
-                    const validPaths: any[] = [];
-                    const scanAndTag = (obj: any) => {
-                        if (obj.children) {
-                            [...obj.children].forEach(scanAndTag);
-                        } else if (obj instanceof paper.PathItem) {
-                            let keep = true;
-                            if (obj.fillColor) {
-                                const color = obj.fillColor as paper.Color;
-                                // Ignore transparent or white fragments generated by trace
-                                if (color.alpha !== undefined && color.alpha < 0.1) keep = false;
-                                else if (color.red > 0.8 && color.green > 0.8 && color.blue > 0.8) keep = false;
-                            }
-                            
-                            // Ignore tiny noise paths
-                            if (Math.abs((obj as any).area) < 10) keep = false;
-
-                            // Ignore paths that are practically the background frame
-                            const isBackground = obj.bounds.width > item.bounds.width * 0.95 && obj.bounds.height > item.bounds.height * 0.95;
-                            
-                            if (isBackground || !keep) {
-                                obj.remove();
-                            } else {
-                                if (obj instanceof paper.Path) {
-                                    obj.closed = true;
-                                }
-                                validPaths.push(obj);
-                            }
-                        }
-                    };
-
-                    scanAndTag(item);
-
-                    if (validPaths.length > 0) {
-                        let unitedPath: any = validPaths[0];
-                        for (let i = 1; i < validPaths.length; i++) {
-                            const newUnited = unitedPath.unite(validPaths[i]);
-                            unitedPath.remove();
-                            validPaths[i].remove();
-                            unitedPath = newUnited;
+        currentProject.importSVG(svgStr, {
+            onLoad: (item: any) => {
+                let validPaths: paper.PathItem[] = [];
+                
+                const scanAndTag = (obj: any) => {
+                    if (obj.children) {
+                        [...obj.children].forEach(scanAndTag);
+                    } else if (obj instanceof paper.PathItem) {
+                        let keep = true;
+                        if (obj.fillColor) {
+                            const color = obj.fillColor as paper.Color;
+                            if (color.alpha !== undefined && color.alpha < 0.1) keep = false;
+                            else if (color.red > 0.8 && color.green > 0.8 && color.blue > 0.8) keep = false;
+                        } else {
+                            keep = false;
                         }
 
-                        unitedPath.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
-                        unitedPath.data.isPuppetPart = true;
-                        puppetLayer.addChild(unitedPath);
+                        if (obj.bounds.width > item.bounds.width * 0.95 && obj.bounds.height > item.bounds.height * 0.95) {
+                            keep = false;
+                        }
+                        
+                        if (keep && obj.area > 10) {
+                            obj.closed = true;
+                            validPaths.push(obj);
+                        }
                     }
+                };
+                scanAndTag(item);
 
-                    item.remove(); // Remove original group
-                    setIsProcessing(false);
+                let unitedPath: paper.PathItem | null = null;
+                if (validPaths.length > 0) {
+                    unitedPath = validPaths[0].clone() as paper.PathItem;
+                    for (let i = 1; i < validPaths.length; i++) {
+                        const next = unitedPath.unite(validPaths[i]);
+                        unitedPath.remove();
+                        unitedPath = next as paper.PathItem;
+                    }
                 }
-            });
-        }
+
+                if (unitedPath) {
+                    const view = currentProject.view;
+                    const viewScale = Math.min(
+                        (view.size.width * 0.8) / unitedPath.bounds.width,
+                        (view.size.height * 0.8) / unitedPath.bounds.height
+                    );
+                    unitedPath.scale(viewScale);
+                    unitedPath.position = view.center;
+                    unitedPath.fillColor = new paper.Color('#1e293b');
+                    unitedPath.data.isPuppetPart = true;
+                    puppetLayer.addChild(unitedPath);
+                }
+
+                item.remove();
+                currentProject.view.update();
+                setIsProcessing(false);
+            }
+        });
     }, [threshold]);
 
-    // Triggers tracing automatically with debounce when threshold changes
     useEffect(() => {
         if (!sourceImageRef.current || !canvasRef.current) return;
         const timer = setTimeout(() => {
@@ -175,7 +184,9 @@ export default function SvgPuncher() {
 
     // --- Interaction Tools Logic ---
     useEffect(() => {
-        if (!paper.project || !paper.view) return;
+        if (!paperProjectRef.current) return;
+        const currentProject = paperProjectRef.current;
+        currentProject.activate();
 
         const interactTool = new paper.Tool();
         let activeItem: any = null;
@@ -193,11 +204,11 @@ export default function SvgPuncher() {
 
         interactTool.onMouseDown = (event: any) => {
             clearToolGraphics();
-            const puppetLayer = (paper.project.layers as any)['puppetLayer'];
-            const toolLayer = (paper.project.layers as any)['toolLayer'];
+            const puppetLayer = currentProject.layers['puppetLayer'];
+            const toolLayer = currentProject.layers['toolLayer'];
 
             if (tool === 'select') {
-                const hit = paper.project.hitTest(event.point, { fill: true, tolerance: 5 });
+                const hit = currentProject.hitTest(event.point, { fill: true, tolerance: 5 });
                 if (hit && hit.item && hit.item.data.isPuppetPart) {
                     activeItem = hit.item;
                     activeItem.bringToFront();
@@ -210,7 +221,7 @@ export default function SvgPuncher() {
                 });
                 puppetLayer.activate();
             } else if (tool === 'joint') {
-                const hit = paper.project.hitTest(event.point, { fill: true });
+                const hit = currentProject.hitTest(event.point, { fill: true });
                 if (hit && hit.item && hit.item.data.isPuppetPart) {
                     const ball = new paper.Path.Circle({ center: event.point, radius: jointRadius });
                     const result = (hit.item as any).unite(ball);
@@ -219,7 +230,7 @@ export default function SvgPuncher() {
                     ball.remove();
                 }
             } else if (tool === 'hole') {
-                const hit = paper.project.hitTest(event.point, { fill: true });
+                const hit = currentProject.hitTest(event.point, { fill: true });
                 if (hit && hit.item && hit.item.data.isPuppetPart) {
                     const hole = new paper.Path.Circle({ center: event.point, radius: holeRadius });
                     const result = (hit.item as any).subtract(hole);
@@ -228,7 +239,7 @@ export default function SvgPuncher() {
                     hole.remove();
                 }
             } else if (tool === 'erase') {
-                const hit = paper.project.hitTest(event.point, { fill: true });
+                const hit = currentProject.hitTest(event.point, { fill: true });
                 if (hit && hit.item && hit.item.data.isPuppetPart) {
                     hit.item.remove();
                 }
@@ -239,7 +250,7 @@ export default function SvgPuncher() {
             if (tool === 'select' && activeItem) {
                 activeItem.position = activeItem.position.add(event.delta);
             } else if (tool === 'cut' && dragLine) {
-                const toolLayer = (paper.project.layers as any)['toolLayer'];
+                const toolLayer = currentProject.layers['toolLayer'];
                 toolLayer.activate();
                 dragLine.segments[1].point = event.point;
                 
@@ -248,7 +259,7 @@ export default function SvgPuncher() {
                 const p = new paper.Path.Circle({ center: mid, radius: jointRadius, fillColor: 'rgba(59, 130, 246, 0.3)' });
                 previewItems.push(p);
                 
-                (paper.project.layers as any)['puppetLayer'].activate();
+                currentProject.layers['puppetLayer'].activate();
             }
         };
 
@@ -261,7 +272,7 @@ export default function SvgPuncher() {
         };
 
         const executeSlash = (line: paper.Path.Line) => {
-            const puppetLayer = (paper.project.layers as any)['puppetLayer'];
+            const puppetLayer = currentProject.layers['puppetLayer'];
             const items = [...puppetLayer.children];
             
             items.forEach(item => {
@@ -271,15 +282,10 @@ export default function SvgPuncher() {
                         const p1 = intersections[0].point;
                         const p2 = intersections[intersections.length - 1].point;
                         const vector = p2.subtract(p1);
-                        const normal = (vector as any).rotate(90).normalize(20000); 
+                        const normal = (vector as any).rotate(90).normalize(1); 
                         
                         const cutter = new paper.Path({
-                            segments: [
-                                p1.subtract(vector.normalize(10000)),
-                                p2.add(vector.normalize(10000)),
-                                p2.add(vector.normalize(10000)).add(normal),
-                                p1.subtract(vector.normalize(10000)).add(normal)
-                            ],
+                            segments: [p1, p2, p2.add(normal), p1.add(normal)],
                             closed: true,
                             visible: false
                         });
@@ -319,7 +325,6 @@ export default function SvgPuncher() {
             });
         };
 
-        interactTool.activate();
         return () => { interactTool.remove(); };
     }, [tool, jointRadius, holeRadius]);
 
@@ -337,7 +342,6 @@ export default function SvgPuncher() {
 
     return (
         <div className="flex flex-col md:flex-row h-[750px] w-full bg-slate-100 text-slate-800 rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
-            {/* Sidebar */}
             <div className="w-full md:w-72 bg-white p-6 flex flex-col gap-6 border-r border-slate-200 shrink-0 shadow-sm overflow-y-auto styled-scrollbar">
                 <div>
                     <h2 className="text-xl font-black text-slate-900 flex items-center gap-2"><Plus className="text-blue-600" /> 皮影工匠 Pro</h2>
@@ -382,17 +386,35 @@ export default function SvgPuncher() {
                     <input type="range" min="2" max="30" value={holeRadius} onChange={(e) => setHoleRadius(Number(e.target.value))} className="w-full accent-slate-300" />
                 </div>
 
-                <button onClick={() => { if (paper.project) { const svg = paper.project.exportSVG({asString:true}); const b = new Blob([svg as string],{type:'image/svg+xml'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='puppet.svg'; a.click(); }}} className="w-full py-4 mt-auto rounded-xl bg-slate-900 text-white font-black italic hover:bg-black shadow-xl">
-                    <Download className="inline mr-2" /> DOWNLOAD (SVG)
+                <button 
+                    disabled={isProcessing}
+                    onClick={async () => {
+                        if (!paperProjectRef.current) return;
+                        setIsProcessing(true);
+                        try {
+                            const svg = paperProjectRef.current.exportSVG({asString:true}) as string; 
+                            await exportSvgTo3mf(svg, {
+                                baseLayerId: 'puppetLayer',
+                                baseDepth: 2,
+                                itemDepth: 2,
+                                filename: 'shadow-puppet.3mf',
+                                isDiscreteMode: true
+                            });
+                            window.dispatchEvent(new CustomEvent(EVENTS.EXPORT_3MF_SUCCESS));
+                        } catch (e) {
+                            console.error('Export failed', e);
+                        } finally {
+                            setIsProcessing(false);
+                        }
+                    }} 
+                    className="w-full py-4 mt-auto rounded-xl bg-slate-900 text-white font-black italic hover:bg-black shadow-xl disabled:opacity-50"
+                >
+                    {isProcessing ? <>PROCESSING...</> : <><Download className="inline mr-2" /> EXPORT TO 3MF</>}
                 </button>
             </div>
 
-            {/* Canvas Area */}
             <div className="flex-1 relative bg-slate-50 overflow-hidden group">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#e2e8f0_0%,_#f8fafc_70%)] opacity-100"></div>
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] bg-repeat bg-[length:40px_40px]"></div>
                 <canvas ref={canvasRef} className="w-full h-full relative z-10 block pointer-events-auto cursor-crosshair" />
-                
                 <div className="absolute top-8 left-8 z-20 pointer-events-none flex flex-col gap-1">
                     <div className="px-4 py-2 bg-white/80 backdrop-blur-xl border border-slate-200 rounded-lg shadow-sm inline-flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
@@ -400,7 +422,6 @@ export default function SvgPuncher() {
                     </div>
                 </div>
             </div>
-            
             <style jsx>{`
                 .styled-scrollbar::-webkit-scrollbar { width: 4px; }
                 .styled-scrollbar::-webkit-scrollbar-track { background: transparent; }
