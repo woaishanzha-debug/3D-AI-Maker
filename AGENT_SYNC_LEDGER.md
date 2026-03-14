@@ -16,9 +16,9 @@
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
-* **Task:** Fix the persistent layer ghosting and multi-instance race conditions in src/components/SvgPuncher.tsx. Added clear() and remove() to useEffect cleanup, explicitly cleared active layer children before imported SVG, and modified scan logic to ignore noise paths, explicitly close Paths, and unite valid paths into a single solid CompoundPath.
-* **Executed By:** Jules (Cloud Execution)
-* **Verification Trace:** 4562441
+* **Task:** Unified Interaction Fix. 1) SvgPuncher: Removed auto-trace polling/performance-trap, implemented manual 'Refine Trace' and added `{ insert: false }` to boolean unite loops. 2) PaperCutting: Fixed unfolded seams via 1.02x scale-unite-deskew logic and intermediate path cleanup. Implemented robust state-reset/project-clear on fold-count change to break state deadlock.
+* **Executed By:** Antigravity (Local Sync & Push)
+* **Verification Trace:** Unified-0a89427
 
 ## 3. 架构师禁区与已知隐患 (Architect's Redlines & Known Issues)
 * **Redline 1:** `svgTo3mfConverter.ts` 的输入 `config.baseLayerId` 必须与前端生成时的底板层级名称精确一致（旧为 `Mashao_Base`），禁止非法名称导致 3MF 模型缺失或变形。
