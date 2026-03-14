@@ -41,7 +41,13 @@ export default function TotemInteractionBoard() {
             setPreviewSvg(svgString);
         } else if (action === 'export') {
             // 直接执行 3MF 导出
-            exportSvgTo3mf(svgString, 2, 4, 'mashao-totem.3mf')
+            exportSvgTo3mf(svgString, {
+                baseLayerId: 'Mashao_Base',
+                baseDepth: 2,
+                itemDepth: 4,
+                filename: 'mashao-totem.3mf',
+                groupName: 'Mashao_Project'
+            })
                 .then(() => {
                     window.dispatchEvent(new CustomEvent(EVENTS.EXPORT_3MF_SUCCESS));
                 })
