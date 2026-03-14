@@ -7,7 +7,7 @@ import { PresentationViewer } from '@/components/PresentationViewer';
 import { ArrowLeft, BookOpen, MessageCircle, Trophy, Wand2, Box, ChevronRight, Share2, Sparkles, GraduationCap, Lightbulb } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const SymmetryCanvas = dynamic(() => import('@/components/SymmetryCanvas').then((mod) => mod.SymmetryCanvas), {
+const InteractionBoard = dynamic(() => import('@/components/Cloisonne/InteractionBoard'), {
     ssr: false,
     loading: () => (
         <div className="w-full h-[600px] bg-slate-900 rounded-[40px] flex items-center justify-center border border-white/5 shadow-2xl">
@@ -124,8 +124,8 @@ export default function CloisonneLesson() {
                                 initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                                 className="flex-1 min-h-[700px] flex flex-col gap-4"
                             >
-                                <SymmetryCanvas />
-                                <div className="flex justify-end">
+                                <InteractionBoard />
+                                <div className="flex justify-end mt-4">
                                     <button onClick={() => setStep(3)} className="px-10 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all">
                                         完成设计并导出确认
                                     </button>
