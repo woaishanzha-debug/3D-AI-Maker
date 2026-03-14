@@ -14,7 +14,7 @@ export default withAuth(
       "/tools/s1",
       "/tools/lithophane-generator",
       "/course/12-ai/lesson-1",
-      "/course/l1/paper-cutting"
+      "/course/l1/paper-cut"
     ];
 
     if (publicLessons.some(path => pathname.startsWith(path))) {
@@ -57,8 +57,7 @@ export default withAuth(
           "/course/l1/shadow-play",
           "/course/l1/blue-white-porcelain",
           "/course/12-ai/lesson-1",
-      "/course/l1/paper-cutting",
-          "/course/l1/paper-cutting",
+          "/course/l1/paper-cut",
           "/tools/s1",
           "/tools/lithophane-generator",
           "/login",

@@ -6,8 +6,15 @@ import { PresentationViewer } from '@/components/PresentationViewer';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import dynamic from 'next/dynamic';
+
+const InteractionBoard = dynamic(() => import('@/components/PaperCutting/InteractionBoard'), {
+    ssr: false,
+    loading: () => <div className="flex-1 flex items-center justify-center text-slate-500 font-bold tracking-widest animate-pulse">LOADING CRAFT LAB...</div>
+});
+
 export default function LessonPage() {
-    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab, 3: Success
     
     const nextLesson = 'mashao-mask';
 
@@ -28,7 +35,7 @@ export default function LessonPage() {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-1">
-                        {[0, 1, 2].map((s) => (
+                        {[0, 1, 2, 3].map((s) => (
                             <div key={s} className={`h-1.5 w-8 rounded-full transition-all ${s <= step ? 'bg-blue-500' : 'bg-white/10'}`} />
                         ))}
                     </div>
@@ -81,13 +88,37 @@ export default function LessonPage() {
 
                             <div className="absolute top-8 right-8 z-30 flex gap-4">
                                 <button onClick={() => setStep(2)} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-500 transition-all shadow-2xl active:scale-95">
-                                    完成学习 <ChevronRight className="w-4 h-4" />
+                                    进入数字工坊 <ChevronRight className="w-4 h-4" />
                                 </button>
                             </div>
                         </motion.div>
                     )}
 
                     {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-white flex flex-col p-8"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                                        <Sparkles className="w-5 h-5 text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-black text-slate-800 uppercase tracking-tight">镂空窗花艺术工坊 (Paper Cutting Lab)</h3>
+                                </div>
+                                <button onClick={() => setStep(3)} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-black text-xs flex items-center gap-2 hover:bg-black transition-all shadow-xl active:scale-95">
+                                    完成设计并导出 <ChevronRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                            
+                            <div className="flex-1 relative rounded-3xl overflow-hidden border border-slate-100 bg-slate-50 shadow-inner">
+                                <InteractionBoard />
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {step === 3 && (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
