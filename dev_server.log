@@ -1,0 +1,22 @@
+
+> 3d-ai-maker@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1819ms
+ ○ Compiling /test-song-brocade ...
+ ✓ Compiled /test-song-brocade in 14.9s (1297 modules)
+ GET /test-song-brocade 200 in 16317ms
+ ✓ Compiled in 1433ms (574 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 8.9s (1277 modules)
+ GET /grid.svg 404 in 9078ms
+ GET /test-song-brocade 200 in 82ms
+ GET /grid.svg 404 in 79ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 1790ms (951 modules)
+ GET /api/auth/session 200 in 2507ms
+ GET /api/auth/session 200 in 33ms
