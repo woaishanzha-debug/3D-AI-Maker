@@ -3,10 +3,16 @@ import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 // @ts-ignore
 import { exportTo3MF } from 'three-3mf-exporter'; 
 
+export interface LayerConfig {
+  id: string;
+  depth: number;
+}
+
 export interface Export3mfConfig {
   baseLayerId: string;
   baseDepth: number;
   itemDepth: number;
+  layerConfigs?: LayerConfig[];
   filename?: string;
   groupName?: string;
   isDiscreteMode?: boolean;
@@ -20,6 +26,7 @@ export async function exportSvgTo3mf(
     baseLayerId,
     baseDepth,
     itemDepth,
+    layerConfigs = [],
     filename = 'exported-model.3mf',
     groupName = 'Export_Project'
   } = config;
@@ -46,7 +53,14 @@ export async function exportSvgTo3mf(
       // 精确匹配 ID，同时保留 index === 0 作为极端情况下的安全兜底 (Fallback)
       const isBasePlate = svgNodeId === baseLayerId || index === 0;
 
-      const depth = isBasePlate ? baseDepth : itemDepth;
+      let depth = isBasePlate ? baseDepth : itemDepth;
+
+      if (!isBasePlate && layerConfigs.length > 0) {
+        const matchingConfig = layerConfigs.find(c => c.id === svgNodeId);
+        if (matchingConfig) {
+          depth = matchingConfig.depth;
+        }
+      }
 
       const geometry = new THREE.ExtrudeGeometry(shape, {
         depth: depth,
@@ -60,6 +74,7 @@ export async function exportSvgTo3mf(
       // 核心修复：Z 轴层级分离形成浮雕！
       // 底板从 Z=0 开始，厚度 2。图腾从 Z=2 开始，厚度 3。避免重叠导致的颜色丢失。
       if (!isBasePlate) {
+          // If a custom layer config was used, we base the Z off the baseDepth to sit on top of the base plate
           mesh.position.z = baseDepth; 
       }
 
