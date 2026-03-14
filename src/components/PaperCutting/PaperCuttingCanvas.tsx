@@ -168,32 +168,33 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
 
       // Try to unite all wedges into a single path for a clean SVG
       try {
-          // Scale slightly to remove subpixel gaps before uniting
+          // Scale significantly to remove subpixel gaps before uniting
+          // This ensures full overlap even under production precision limits
           group.children.forEach(child => {
-              child.scale(1.001, CENTER);
+              child.scale(1.02, CENTER);
           });
 
           const first = group.children[0] as paper.PathItem;
-          let unioned = first.clone() as paper.PathItem;
+          let unioned = first.clone({ insert: false }) as paper.PathItem;
 
           for (let i = 1; i < group.children.length; i++) {
               const current = group.children[i] as paper.PathItem;
-              const nextUnioned = unioned.unite(current) as paper.PathItem;
-              unioned.remove();
+              const nextUnioned = unioned.unite(current, { insert: false }) as paper.PathItem;
+              unioned.remove(); // Kill intermediate
               unioned = nextUnioned;
           }
 
           unioned.name = 'PaperCut_Base';
           unioned.fillColor = new paper.Color('#D32F2F');
-          unioned.strokeWidth = 0; // Remove strokes for clean solid export
-          // Re-scale down to original size
-          unioned.scale(1 / 1.001, CENTER);
+          unioned.strokeWidth = 0; 
+          
+          // Re-scale down exactly to counteract the initial 1.02 expansion
+          unioned.scale(1 / 1.02, CENTER);
 
           group.removeChildren();
           group.addChild(unioned);
       } catch (e) {
           console.warn("Union failed during unfolding. Export might have overlapping layers.", e);
-          // Group still holds the individual wedges as fallback
       }
 
       unfoldedGroupRef.current = group;
@@ -212,23 +213,28 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
     useEffect(() => {
       if (!canvasRef.current) return;
 
-      // If a project already exists for this canvas, clear and remove it completely
+      // Force a clean slate for Paper.js
       if (paper.project) {
         paper.project.clear();
         paper.project.remove();
       }
 
+      // EXPLICIT REF RESET: Prevent ghosting and deadlock by clearing stale references
+      wedgePathRef.current = null;
+      currentCutPathRef.current = null;
+      unfoldedGroupRef.current = null;
+      baseWedgeGroupRef.current = null;
+
       paper.setup(canvasRef.current);
       initializeWedge();
 
       return () => {
-        // Cleanup paper project on unmount or re-init
         if (paper.project) {
           paper.project.clear();
           paper.project.remove();
         }
       };
-    }, [folds]); // Re-init when folds change
+    }, [folds]);
 
     useEffect(() => {
       if (isUnfolded) {
