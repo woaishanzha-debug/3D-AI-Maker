@@ -148,8 +148,8 @@ export default function SvgPuncher() {
                             keep = false;
                         }
                         
-                        if (keep && obj.area > 10) {
-                            obj.closed = true;
+                        if (keep && (obj as any).area > 10) {
+                            (obj as any).closed = true;
                             validPaths.push(obj);
                         }
                     }

@@ -9,6 +9,7 @@ export interface Export3mfConfig {
   itemDepth: number;
   filename?: string;
   groupName?: string;
+  isDiscreteMode?: boolean;
 }
 
 export async function exportSvgTo3mf(
