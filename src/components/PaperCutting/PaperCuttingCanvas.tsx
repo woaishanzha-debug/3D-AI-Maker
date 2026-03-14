@@ -41,12 +41,13 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
 
       const sectorPath = new paper.Path();
       sectorPath.add(CENTER);
-      sectorPath.add(CENTER.add(new paper.Point({ length: WEDGE_RADIUS * 2, angle: 0 })));
 
-      // Approximate arc for intersection
-      for (let i = 0; i >= -angle; i -= 1) {
-         sectorPath.add(CENTER.add(new paper.Point({ length: WEDGE_RADIUS * 2, angle: i })));
-      }
+      const startPoint = CENTER.add(new paper.Point({ length: WEDGE_RADIUS * 2, angle: 0 }));
+      const middlePoint = CENTER.add(new paper.Point({ length: WEDGE_RADIUS * 2, angle: -angle / 2 }));
+      const endPoint = CENTER.add(new paper.Point({ length: WEDGE_RADIUS * 2, angle: -angle }));
+
+      sectorPath.add(startPoint);
+      sectorPath.arcTo(middlePoint, endPoint);
       sectorPath.add(CENTER);
       sectorPath.closePath();
 
@@ -167,6 +168,11 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
 
       // Try to unite all wedges into a single path for a clean SVG
       try {
+          // Scale slightly to remove subpixel gaps before uniting
+          group.children.forEach(child => {
+              child.scale(1.001, CENTER);
+          });
+
           const first = group.children[0] as paper.PathItem;
           let unioned = first.clone() as paper.PathItem;
 
@@ -180,6 +186,8 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
           unioned.name = 'PaperCut_Base';
           unioned.fillColor = new paper.Color('#D32F2F');
           unioned.strokeWidth = 0; // Remove strokes for clean solid export
+          // Re-scale down to original size
+          unioned.scale(1 / 1.001, CENTER);
 
           group.removeChildren();
           group.addChild(unioned);
@@ -203,13 +211,21 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
 
     useEffect(() => {
       if (!canvasRef.current) return;
+
+      // If a project already exists for this canvas, clear and remove it completely
+      if (paper.project) {
+        paper.project.clear();
+        paper.project.remove();
+      }
+
       paper.setup(canvasRef.current);
       initializeWedge();
 
       return () => {
-        // Cleanup paper project on unmount
+        // Cleanup paper project on unmount or re-init
         if (paper.project) {
           paper.project.clear();
+          paper.project.remove();
         }
       };
     }, [folds]); // Re-init when folds change

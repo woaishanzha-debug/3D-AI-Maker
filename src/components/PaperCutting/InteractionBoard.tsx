@@ -48,7 +48,11 @@ export default function InteractionBoard() {
           <span className="font-semibold text-gray-700">折叠次数 (Folds):</span>
           <select
             value={folds}
-            onChange={(e) => setFolds(Number(e.target.value) as FoldCount)}
+            onChange={(e) => {
+              setFolds(Number(e.target.value) as FoldCount);
+              setIsUnfolded(false);
+              if (canvasRef.current) canvasRef.current.clearCanvas();
+            }}
             className="border-gray-300 rounded-md text-gray-700 focus:ring-red-500 focus:border-red-500 shadow-sm px-3 py-1.5 border"
             disabled={isUnfolded}
           >
