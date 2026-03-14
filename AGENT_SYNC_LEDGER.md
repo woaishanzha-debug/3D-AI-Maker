@@ -9,16 +9,17 @@
 * **Core Working Features:** - 非遗贝塞尔曲线底板生成 (Mashao_Base)
   - Twin-Track 对称实体画笔与越界物理裁切
   - 动态教学目标打钩联动 (Quest Progress)
-  - 纯前端 3MF 物理导出 (消除 index 硬编码，采用 ID 识别)
+  - 纯前端 3MF 物理导出 (已重构为通用配置对象导出方式，支持跨 16 课程)
+  - Generic Course Event Bus 演进蓝图建立
 * **Pending / Next Big Feature:** AI 风格迁移与提示词引擎 (Route C)
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
-* **Task:** 提取硬编码 SVG 路径至独立常量文件 (重构压力测试)
+* **Task:** 对半成品 Shadow Puppetry (皮影) 课程进行深度架构扫描，生成 SHADOW_PUPPET_SYNC.md 报告。
 * **Executed By:** Jules (Cloud Execution)
-* **Verification Trace (Commit Hash / PR):** c73a375
+* **Verification Trace:** 4562441
 
 ## 3. 架构师禁区与已知隐患 (Architect's Redlines & Known Issues)
-* **Redline 1:** `svgTo3mfConverter.ts` 强依赖 `Mashao_Base` ID，严禁前端随意更改 SVG layer name。
+* **Redline 1:** `svgTo3mfConverter.ts` 的输入 `config.baseLayerId` 必须与前端生成时的底板层级名称精确一致（旧为 `Mashao_Base`），禁止非法名称导致 3MF 模型缺失或变形。
 * **Redline 2:** Antigravity 严禁直接推送 `main` 分支，必须通过本地 PR 或唤醒 Jules 远端操作。
 * **Known Issue 1:** 暂无阻断性 Bug，等待 AI 接口接入。
