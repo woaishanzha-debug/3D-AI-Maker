@@ -3,13 +3,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { InteractionBoard, LanternTool, ShapeOption } from './components/InteractionBoard';
+import { LanternCanvas } from './components/LanternCanvas';
 
 export default function LessonPage() {
     const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
     
-    const nextLesson = 'tang-sancai';
+    const [currentTool, setCurrentTool] = useState<LanternTool>('定型');
+    const [shapeOption, setShapeOption] = useState<ShapeOption>('4-sided');
+    const [clearTrigger, setClearTrigger] = useState(0);
+    const [exportTrigger, setExportTrigger] = useState(0);
 
     return (
         <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
@@ -89,29 +94,27 @@ export default function LessonPage() {
 
                     {step === 2 && (
                         <motion.div
-                            key="success"
-                            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
-                            className="flex-1 rounded-[48px] bg-slate-900 border border-white/5 flex flex-col items-center justify-center p-20 text-center gap-10 shadow-2xl relative overflow-hidden"
+                            key="lab"
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                            className="flex-1 relative rounded-[48px] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl flex flex-col lg:flex-row p-6 gap-6"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent pointer-events-none" />
-                            <div className="w-32 h-32 bg-blue-600 rounded-[40px] flex items-center justify-center shadow-[0_0_80px_rgba(37,99,235,0.4)] relative z-10">
-                                <Trophy className="w-16 h-16 text-white" />
+                            <div className="w-full lg:w-80 shrink-0 h-[400px] lg:h-auto">
+                                <InteractionBoard
+                                    currentTool={currentTool}
+                                    setCurrentTool={setCurrentTool}
+                                    shapeOption={shapeOption}
+                                    setShapeOption={setShapeOption}
+                                    onClear={() => setClearTrigger(prev => prev + 1)}
+                                    onExport={() => setExportTrigger(prev => prev + 1)}
+                                />
                             </div>
-                            <div className="space-y-4 relative z-10">
-                                <h2 className="text-6xl font-black italic tracking-tighter text-white">MISSION COMPLETE</h2>
-                                <p className="text-blue-200/60 font-medium max-w-lg mx-auto leading-relaxed">
-                                    恭喜！你已完成《张灯结彩：传统灯笼形制》的数字化溯源学习。相关的 3D 打印实践任务已在创客空间开启。
-                                </p>
-                            </div>
-                            <div className="flex gap-4 relative z-10">
-                                <Link href="/course/l1" className="px-8 py-4 bg-white/5 rounded-2xl font-black text-sm text-white/60 hover:text-white transition-colors">
-                                    返回课程索引
-                                </Link>
-                                {nextLesson && (
-                                    <Link href={`/course/l1/${nextLesson}`} className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all">
-                                        进入下一章 <ChevronRight className="w-5 h-5" />
-                                    </Link>
-                                )}
+                            <div className="flex-1 h-[500px] lg:h-auto min-h-[500px] rounded-xl overflow-hidden shadow-inner border border-white/10">
+                                <LanternCanvas
+                                    currentTool={currentTool}
+                                    shapeOption={shapeOption}
+                                    clearTrigger={clearTrigger}
+                                    exportTrigger={exportTrigger}
+                                />
                             </div>
                         </motion.div>
                     )}

@@ -16,6 +16,11 @@
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
+* **Task:** Traditional Lantern (张灯结彩) plugin implementation. Created `InteractionBoard.tsx` and `LanternCanvas.tsx` under `src/app/course/l1/lantern/components`. Implemented flat-pack 3MF export cloning the main panel logic (4 or 6 sides) horizontally. Resolved ESLint warnings correctly by wrapping tool setup in `useCallback`. Added course to public paths in `middleware.ts`.
+* **Executed By:** Jules (Remote execution)
+* **Verification Trace:** Verified with Playwright visual testing.
+
+* **Date:** 2026-03-14
 * **Task:** Unified Interaction Fix. 1) SvgPuncher: Removed auto-trace polling/performance-trap, implemented manual 'Refine Trace' and added `{ insert: false }` to boolean unite loops. 2) PaperCutting: Fixed unfolded seams via 1.02x scale-unite-deskew logic and intermediate path cleanup. Implemented robust state-reset/project-clear on fold-count change to break state deadlock.
 * **Executed By:** Antigravity (Local Sync & Push)
 * **Verification Trace:** Unified-0a89427
