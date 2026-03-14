@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { InteractionBoard } from './components/InteractionBoard';
+import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LessonPage() {
-    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab, 3: Success
     
     const nextLesson = 'terracotta-warriors';
 
@@ -28,7 +29,7 @@ export default function LessonPage() {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-1">
-                        {[0, 1, 2].map((s) => (
+                        {[0, 1, 2, 3].map((s) => (
                             <div key={s} className={`h-1.5 w-8 rounded-full transition-all ${s <= step ? 'bg-blue-500' : 'bg-white/10'}`} />
                         ))}
                     </div>
@@ -81,13 +82,38 @@ export default function LessonPage() {
 
                             <div className="absolute top-8 right-8 z-30 flex gap-4">
                                 <button onClick={() => setStep(2)} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-500 transition-all shadow-2xl active:scale-95">
-                                    完成学习 <ChevronRight className="w-4 h-4" />
+                                    进入数字工坊 <ChevronRight className="w-4 h-4" />
                                 </button>
                             </div>
                         </motion.div>
                     )}
 
                     {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 relative rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-slate-900 flex flex-col"
+                        >
+                            <div className="absolute top-8 left-8 z-30 flex items-center gap-3">
+                                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <Layers className="w-5 h-5 text-white" />
+                                </div>
+                                <span className="text-xs font-black text-white/40 uppercase tracking-widest">Digital Lab</span>
+                            </div>
+
+                            <div className="flex-1 mt-20 p-4">
+                                <InteractionBoard />
+                            </div>
+
+                            <div className="absolute top-8 right-8 z-30 flex gap-4">
+                                <button onClick={() => setStep(3)} className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-indigo-500 transition-all shadow-2xl active:scale-95">
+                                    完成创作 <ChevronRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {step === 3 && (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
@@ -100,7 +126,7 @@ export default function LessonPage() {
                             <div className="space-y-4 relative z-10">
                                 <h2 className="text-6xl font-black italic tracking-tighter text-white">MISSION COMPLETE</h2>
                                 <p className="text-blue-200/60 font-medium max-w-lg mx-auto leading-relaxed">
-                                    恭喜！你已完成《古韵唐风：唐三彩造型》的数字化溯源学习。相关的 3D 打印实践任务已在创客空间开启。
+                                    恭喜！你已完成《古韵唐风：唐三彩造型》的数字化溯源与实验创作。你的 3MF 模型已准备就绪，可以进行 3D 打印！
                                 </p>
                             </div>
                             <div className="flex gap-4 relative z-10">

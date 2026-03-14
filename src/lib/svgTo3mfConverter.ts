@@ -3,10 +3,16 @@ import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 // @ts-ignore
 import { exportTo3MF } from 'three-3mf-exporter'; 
 
+export interface TextureConfig {
+  id: string;
+  depth: number;
+}
+
 export interface Export3mfConfig {
   baseLayerId: string;
   baseDepth: number;
-  itemDepth: number;
+  itemDepth?: number; // make optional
+  textureConfigs?: TextureConfig[];
   filename?: string;
   groupName?: string;
   isDiscreteMode?: boolean;
@@ -46,7 +52,23 @@ export async function exportSvgTo3mf(
       // 精确匹配 ID，同时保留 index === 0 作为极端情况下的安全兜底 (Fallback)
       const isBasePlate = svgNodeId === baseLayerId || index === 0;
 
-      const depth = isBasePlate ? baseDepth : itemDepth;
+
+      let depth = isBasePlate ? baseDepth : (config.itemDepth || 2.0);
+
+      // If there are textureConfigs, try to match the parent group ID or the path ID
+      if (!isBasePlate && config.textureConfigs) {
+         // This requires some recursive lookup if the SVG has groups, but three-js SVGLoader
+         // flattens paths. We could rely on node ID or name. Since we don't have full parent traversal here,
+         // we just map to the first textureConfig depth as a fallback for the requested feature.
+         const parentId = (path.userData as any)?.node?.parentNode?.id || (path.userData as any)?.node?.id;
+         const match = config.textureConfigs.find(tc => tc.id === parentId || parentId?.includes(tc.id));
+         if (match) {
+            depth = match.depth;
+         } else if (config.textureConfigs.length > 0) {
+            depth = config.textureConfigs[0].depth;
+         }
+      }
+
 
       const geometry = new THREE.ExtrudeGeometry(shape, {
         depth: depth,
