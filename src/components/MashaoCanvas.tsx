@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Trash2, Download, BoxSelect, Sparkles, Paintbrush, ShieldAlert } from 'lucide-react';
 import { EVENTS, TotemInjectedPayload } from '@/lib/event-bus';
+import { totemSymbols } from '@/constants/totem-symbols';
 
 interface MashaoCanvasProps {
     onExportSVG?: (svg: string) => void;
@@ -220,16 +221,7 @@ export const MashaoCanvas: React.FC<MashaoCanvasProps> = () => {
                       const tLayer = p.project.layers.find((l: any) => l.name === 'TotemLayer');
                       if (tLayer) tLayer.activate();
 
-                      const totemSymbols: Record<string, { path: string, color: string }> = {
-                        '火': { color: '#E53935', path: 'M12,2 C12,2 17,9 17,14 C17,17 14.5,19 12,19 C9.5,19 7,17 7,14 C7,9 12,2 12,2 Z' },
-                        '水': { color: '#1E88E5', path: 'M12,4 L8,11 C6.5,13.5 7.5,17 10.5,18 C13.5,19 16.5,16.5 16,13 L12,4 Z' },
-                        '木': { color: '#43A047', path: 'M8,18 L16,18 L16,14 L20,14 L12,4 L4,14 L8,14 Z' },
-                        '金': { color: '#FDD835', path: 'M12,2 L15,9 L22,9 L16,14 L18,21 L12,17 L6,21 L8,14 L2,9 L9,9 Z' },
-                        '土': { color: '#8D6E63', path: 'M4,10 L20,10 L20,18 L4,18 Z M6,6 L18,6 L18,10 L6,10 Z' },
-                        '风': { color: '#00ACC1', path: 'M4,12 C4,8 8,4 12,4 C16,4 20,8 20,12 M8,16 C8,14 10,12 12,12 C14,12 16,14 16,16' },
-                        '雷': { color: '#8E24AA', path: 'M13,2 L4,12 L11,12 L9,22 L19,10 L12,10 Z' },
-                        '云': { color: '#90CAF9', path: 'M16,16 A4,4 0 0,0 12,12 A5,5 0 0,0 3,14 A3,3 0 0,0 6,20 L16,20 A4,4 0 0,0 16,16 Z' }
-                      };
+                      
 
                       const symbolData = totemSymbols[el] || totemSymbols['火'];
                       const vectorItem = new p.CompoundPath(symbolData.path);
