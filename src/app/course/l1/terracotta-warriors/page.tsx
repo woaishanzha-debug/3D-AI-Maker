@@ -5,6 +5,11 @@ import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+const InteractionBoard = dynamic(() => import('./components/InteractionBoard'), {
+  ssr: false, // Paper.js relies on window/document and causes hydration issues if rendered on server
+});
 
 export default function LessonPage() {
     const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
@@ -12,7 +17,7 @@ export default function LessonPage() {
     const nextLesson = 'blue-white-porcelain';
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
+        <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 flex flex-col">
             {/* 顶部简易导航 */}
             <div className="fixed top-0 left-0 right-0 h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-8">
                 <div className="flex items-center gap-6">
@@ -36,7 +41,7 @@ export default function LessonPage() {
             </div>
 
             {/* 主教学区 */}
-            <div className="pt-24 pb-12 px-6 max-w-[1400px] mx-auto min-h-[calc(100vh-4rem)] flex flex-col">
+            <div className="pt-24 pb-12 px-6 max-w-[1400px] mx-auto min-h-[calc(100vh-4rem)] flex flex-col flex-1 w-full">
                 <AnimatePresence mode="wait">
                     {step === 0 && (
                         <motion.div
@@ -68,7 +73,7 @@ export default function LessonPage() {
                         <motion.div
                             key="viewer"
                             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                            className="flex-1 relative rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-slate-900"
+                            className="flex-1 relative rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-slate-900 flex flex-col p-8"
                         >
                             <div className="absolute top-8 left-8 z-30 flex items-center gap-3">
                                 <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -77,7 +82,10 @@ export default function LessonPage() {
                                 <span className="text-xs font-black text-white/40 uppercase tracking-widest">Interactive Courseware</span>
                             </div>
 
-                            <PresentationViewer slug="terracotta-warriors" dataFile="refined.json" />
+                            {/* Interaction Board Plugin Space */}
+                            <div className="flex-1 mt-16 relative">
+                                <InteractionBoard />
+                            </div>
 
                             <div className="absolute top-8 right-8 z-30 flex gap-4">
                                 <button onClick={() => setStep(2)} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-500 transition-all shadow-2xl active:scale-95">
