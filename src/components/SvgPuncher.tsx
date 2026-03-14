@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Download, Scissors, Circle, Upload, MousePointer2, Plus, Image as ImageIcon, Trash2 } from 'lucide-react';
-// @ts-ignore
+import { Download, Scissors, Circle, Upload, MousePointer2, Plus, Trash2 } from 'lucide-react';
+// @ts-expect-error - no types available
 import ImageTracer from 'imagetracerjs';
-// @ts-ignore
+// @ts-expect-error - using paper-core dist directly
 import paper from 'paper/dist/paper-core';
 
 type ToolType = 'select' | 'cut' | 'joint' | 'hole' | 'erase';
@@ -17,7 +17,7 @@ export default function SvgPuncher() {
     const [threshold, setThreshold] = useState(150);
     const [jointRadius, setJointRadius] = useState(25);
     const [holeRadius, setHoleRadius] = useState(5);
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [, setIsProcessing] = useState(false);
 
     // --- Paper.js Initialization ---
     useEffect(() => {
@@ -80,7 +80,12 @@ export default function SvgPuncher() {
         const svgStr = ImageTracer.imagedataToSVG(imgData, options);
 
         if (paper.project) {
+            // CRITICAL BUG FIX 1 & 2: Explicitly remove all existing items to prevent stacking when threshold slider updates.
+            // paper.project.clear() does not reliably clear paths for imported SVGs in some Paper.js versions,
+            // so we manually remove all children of all layers.
+            paper.project.layers.forEach(layer => layer.removeChildren());
             paper.project.clear();
+
             const puppetLayer = new paper.Layer();
             puppetLayer.name = 'puppetLayer';
             const toolLayer = new paper.Layer();
@@ -121,14 +126,20 @@ export default function SvgPuncher() {
                             if (isBackground || !keep) {
                                 obj.remove();
                             } else {
-                                obj.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
-                                obj.data.isPuppetPart = true;
-                                puppetLayer.addChild(obj);
+                                // Clone the object so it's not bound to the original SVG group that we will delete
+                                const newPath = obj.clone();
+                                newPath.fillColor = new paper.Color('#1e293b'); // standard dark silhouette color
+                                newPath.data.isPuppetPart = true;
+                                puppetLayer.addChild(newPath);
                             }
                         }
                     };
                     scanAndTag(item);
-                    item.remove(); // Remove original group
+
+                    // Explicitly remove the original group containing raw SVG paths
+                    item.remove();
+                    // Force a view update to ensure the canvas reflects the new state immediately
+                    paper.view.update();
                     setIsProcessing(false);
                 }
             });

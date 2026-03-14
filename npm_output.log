@@ -1,0 +1,86 @@
+
+> 3d-ai-maker@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1703ms
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 1458ms (174 modules)
+[next-auth][error][NO_SECRET]
+https://next-auth.js.org/errors#no_secret
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 1546ms (268 modules)
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/error?error=Configuration 302 in 2736ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 8.6s (994 modules)
+ GET /login?error=Configuration 200 in 9534ms
+ ✓ Compiled in 868ms (361 modules)
+ ✓ Compiled /_not-found in 349ms (972 modules)
+ GET /grid.svg 404 in 524ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 104ms
+ GET /api/auth/session 200 in 33ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat '/app/.next/server/app'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/_not-found/page' in /app/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/app/.next/server/app/_not-found/page.js', but to 'Error: Can't resolve '../../../../.next/server/app/_not-found/page' in '/app/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/_not-found/page (expected /app/.next/server/app/_not-found/page.js)
+<w>  at file dependencies /app/node_modules/next/dist/server/require.js
+<w>  at file /app/node_modules/next/dist/server/require.js
+<w>  at file dependencies /app/node_modules/next/dist/server/load-components.js
+<w>  at file /app/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /app/node_modules/next/dist/build/utils.js
+<w>  at file /app/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+<w>  at file /app/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack-config.js
+<w>  at file /app/node_modules/next/dist/build/webpack-config.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
+<w>  at file /app/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /app/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /app/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /app/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /app/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /app/node_modules/next/dist/build/swc/index.js
+<w>  at file /app/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/api/auth/[...nextauth]/route' in /app/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/app/.next/server/app/api/auth/[...nextauth]/route.js', but to 'Error: Can't resolve '../../../../.next/server/app/api/auth/[...nextauth]/route' in '/app/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/api/auth/[...nextauth]/route (expected /app/.next/server/app/api/auth/[...nextauth]/route.js)
+<w>  at file dependencies /app/node_modules/next/dist/server/require.js
+<w>  at file /app/node_modules/next/dist/server/require.js
+<w>  at file dependencies /app/node_modules/next/dist/server/load-components.js
+<w>  at file /app/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /app/node_modules/next/dist/build/utils.js
+<w>  at file /app/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+<w>  at file /app/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack-config.js
+<w>  at file /app/node_modules/next/dist/build/webpack-config.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
+<w>  at file /app/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /app/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /app/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /app/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /app/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /app/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /app/node_modules/next/dist/build/swc/index.js
+<w>  at file /app/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /app/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+ ✓ Compiled in 5s (921 modules)
+ ✓ Compiled in 502ms (361 modules)
+ ✓ Compiled in 1040ms (907 modules)
