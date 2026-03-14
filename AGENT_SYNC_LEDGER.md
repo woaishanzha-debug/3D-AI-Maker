@@ -16,9 +16,9 @@
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
-* **Task:** Unified Interaction Fix. 1) SvgPuncher: Removed auto-trace polling/performance-trap, implemented manual 'Refine Trace' and added `{ insert: false }` to boolean unite loops. 2) PaperCutting: Fixed unfolded seams via 1.02x scale-unite-deskew logic and intermediate path cleanup. Implemented robust state-reset/project-clear on fold-count change to break state deadlock.
-* **Executed By:** Antigravity (Local Sync & Push)
-* **Verification Trace:** Unified-0a89427
+* **Task:** Implement '指尖兵符' (Hufu) plugin. Created new isolated route `src/app/course/l1/hufu` with exact traditional terms for tools. Developed React cleanup logic for `HufuCanvas` using Paper.js. Implemented tiger tally generation with Mating/Symmetry logic and freehand `铭文` drawing. Modified 3MF export logic in `svgTo3mfConverter.ts` to support `isSunken` config for recessed 3D pen inlay.
+* **Executed By:** Jules
+* **Verification Trace:** Type checked. Pre-commit manual review request in PR.
 
 ## 3. 架构师禁区与已知隐患 (Architect's Redlines & Known Issues)
 * **Redline 1:** `svgTo3mfConverter.ts` 的输入 `config.baseLayerId` 必须与前端生成时的底板层级名称精确一致（旧为 `Mashao_Base`），禁止非法名称导致 3MF 模型缺失或变形。
