@@ -10,13 +10,13 @@
   - Twin-Track 对称实体画笔与越界物理裁切
   - 动态教学目标打钩联动 (Quest Progress)
   - 纯前端 3MF 物理导出 (消除 index 硬编码，采用 ID 识别)
-* **Pending / Next Big Feature:** AI 风格迁移与提示词引擎 (Route C)
+* **Pending / Next Big Feature:** AI 风格迁移与提示词引擎 (Route C) 以及 Shadow Puppetry (Piying) 课程的 3MF 导出和事件总线集成。
 
 ## 2. 最近执行记录 (Last Executed Task)
-* **Date:** 2026-03-14
-* **Task:** 提取硬编码 SVG 路径至独立常量文件 (重构压力测试)
+* **Date:** 2024-03-14
+* **Task:** 对半成品 Shadow Puppetry 课程进行深度架构扫描，生成 SHADOW_PUPPET_SYNC.md 报告。
 * **Executed By:** Jules (Cloud Execution)
-* **Verification Trace (Commit Hash / PR):** c73a375
+* **Verification Trace (Commit Hash / PR):** Pending Submission
 
 ## 3. 架构师禁区与已知隐患 (Architect's Redlines & Known Issues)
 * **Redline 1:** `svgTo3mfConverter.ts` 强依赖 `Mashao_Base` ID，严禁前端随意更改 SVG layer name。
