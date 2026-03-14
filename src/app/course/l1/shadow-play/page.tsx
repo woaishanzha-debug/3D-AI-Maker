@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
 import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { EVENTS } from '@/lib/event-bus';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
@@ -16,6 +17,20 @@ export default function LessonPage() {
     const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
     
     const nextLesson = 'paper-cut';
+
+    useEffect(() => {
+        const handleExportSuccess = () => {
+            if (step === 2) {
+                setStep(3);
+            }
+        };
+
+        window.addEventListener(EVENTS.EXPORT_3MF_SUCCESS, handleExportSuccess);
+        
+        return () => {
+            window.removeEventListener(EVENTS.EXPORT_3MF_SUCCESS, handleExportSuccess);
+        };
+    }, [step]);
 
     return (
         <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
@@ -100,13 +115,6 @@ export default function LessonPage() {
                             className="flex-1 rounded-[48px] overflow-hidden shadow-2xl border border-white/5 bg-slate-900 flex"
                         >
                             <SvgPuncher />
-                            
-                            {/* Navigation to success */}
-                            <div className="absolute bottom-8 right-8 z-30 flex gap-4">
-                                <button onClick={() => setStep(3)} className="px-8 py-4 bg-blue-600/90 hover:bg-blue-500 backdrop-blur-md text-white rounded-2xl font-black text-sm flex items-center gap-2 transition-all shadow-2xl active:scale-95 border border-blue-400/20">
-                                    完成并进入下一环节 <ChevronRight className="w-4 h-4" />
-                                </button>
-                            </div>
                         </motion.div>
                     )}
 

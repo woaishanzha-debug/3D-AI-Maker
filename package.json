@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@playwright/test": "^1.58.2",
     "@prisma/client": "^6.19.2",
     "@react-three/drei": "^9.121.5",
     "@react-three/fiber": "^8.17.14",

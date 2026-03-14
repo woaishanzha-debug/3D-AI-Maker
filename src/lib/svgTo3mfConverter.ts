@@ -9,6 +9,7 @@ export interface Export3mfConfig {
   itemDepth: number;
   filename?: string;
   groupName?: string;
+  isDiscreteMode?: boolean;
 }
 
 export async function exportSvgTo3mf(
@@ -20,7 +21,8 @@ export async function exportSvgTo3mf(
     baseDepth,
     itemDepth,
     filename = 'exported-model.3mf',
-    groupName = 'Export_Project'
+    groupName = 'Export_Project',
+    isDiscreteMode = false
   } = config;
 
   const exportGroup = new THREE.Group();
@@ -43,7 +45,11 @@ export async function exportSvgTo3mf(
       const svgNodeId = (path.userData as any)?.node?.id;
 
       // 精确匹配 ID，同时保留 index === 0 作为极端情况下的安全兜底 (Fallback)
-      const isBasePlate = svgNodeId === baseLayerId || index === 0;
+      let isBasePlate = svgNodeId === baseLayerId || index === 0;
+      
+      if (isDiscreteMode || (svgNodeId && (svgNodeId.includes('joint') || svgNodeId.includes('hole') || svgNodeId.includes('puppet')))) {
+          isBasePlate = true; // Treats discrete parts as bases so they don't stack on Z-axis
+      }
 
       const depth = isBasePlate ? baseDepth : itemDepth;
 
@@ -60,6 +66,8 @@ export async function exportSvgTo3mf(
       // 底板从 Z=0 开始，厚度 2。图腾从 Z=2 开始，厚度 3。避免重叠导致的颜色丢失。
       if (!isBasePlate) {
           mesh.position.z = baseDepth; 
+      } else {
+          mesh.position.z = 0; // Ensure discrete bases lay flat on plate
       }
 
       // 居中偏移优化
