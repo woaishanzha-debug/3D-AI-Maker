@@ -1,0 +1,92 @@
+
+> 3d-ai-maker@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3001
+
+ ✓ Starting...
+ ✓ Ready in 3.3s
+ ○ Compiling /test-coal-seal ...
+ ✓ Compiled /test-coal-seal in 9.9s (768 modules)
+ GET /test-coal-seal 200 in 10829ms
+ ✓ Compiled in 923ms (369 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /api/auth/[...nextauth] in 10.1s (986 modules)
+ GET /grid.svg 404 in 10564ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 9847ms
+ GET /api/auth/session 200 in 42ms
+ ○ Compiling /test-tang-sancai ...
+ ✓ Compiled /test-tang-sancai in 11.7s (2155 modules)
+ GET /test-tang-sancai 200 in 12076ms
+ GET /grid.svg 404 in 186ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 105ms
+ GET /api/auth/session 200 in 33ms
+ ○ Compiling /test-tiger-tally ...
+ ✓ Compiled /test-tiger-tally in 1495ms (2171 modules)
+ GET /test-tiger-tally 200 in 1701ms
+ GET /grid.svg 404 in 89ms
+[next-auth][warn][NEXTAUTH_URL]
+https://ne ✓ Compiled in 1032ms (340 modules)
+ ✓ Compiled in 7s (354 modules)
+ ✓ Compiled in 4.6s (354 modules)
+ ✓ Compiled in 981ms (354 modules)
+ ✓ Compiled in 759ms (354 modules)
+ ✓ Compiled in 746ms (354 modules)
+ ✓ Compiled in 851ms (340 modules)
+ ✓ Compiled in 1238ms (354 modules)
+ ✓ Compiled in 740ms (354 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 1115ms (354 modules)
+ ✓ Compiled in 846ms (354 modules)
+ ✓ Compiled in 706ms (354 modules)
+ ✓ Compiled in 761ms (354 modules)
+ ✓ Compiled in 647ms (354 modules)
+ ✓ Compiled in 809ms (354 modules)
+ ✓ Compiled in 1148ms (354 modules)
+ ✓ Compiled in 562ms (354 modules)
+ ✓ Compiled in 595ms (354 modules)
+ ✓ Compiled in 768ms (354 modules)
+ ✓ Compiled in 735ms (354 modules)
+ ✓ Compiled in 539ms (354 modules)
+ ✓ Compiled in 790ms (354 modules)
+ ✓ Compiled in 647ms (354 modules)
+test-coal-seal 200 in 233ms
+ GET /grid.svg 404 in 83ms
+ GET /api/auth/session 200 in 65ms
+ GET /api/auth/session 200 in 34ms
+ GET /test-coal-seal 200 in 68ms
+ GET /grid.svg 404 in 70ms
+ GET /api/auth/session 200 in 63ms
+ GET /api/auth/session 200 in 44ms
+ ✓ Compiled in 274ms (392 modules)
+ ✓ Compiled in 913ms (374 modules)
+ ✓ Compiled in 708ms (374 modules)
+ ✓ Compiled in 1158ms (374 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 965ms (374 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 841ms (374 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 700ms (374 modules)
+ ✓ Compiled in 687ms (374 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 938ms (374 modules)
+ ✓ Compiled in 742ms (766 modules)
+ ✓ Compiled in 1394ms (766 modules)
+ ✓ Compiled in 688ms (766 modules)
+ ✓ Compiled in 702ms (766 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 1052ms (766 modules)
+ ✓ Compiled in 881ms (766 modules)
+ ✓ Compiled in 604ms (374 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 930ms (766 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 963ms (766 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
