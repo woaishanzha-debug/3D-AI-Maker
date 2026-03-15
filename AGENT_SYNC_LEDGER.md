@@ -12,13 +12,14 @@
   - 纯前端 3MF 物理导出 (已重构为通用配置对象导出方式，支持跨 16 课程)
   - Generic Course Event Bus 演进蓝图建立
   - SvgPuncher React Cleanup and Path Unification
+  - L1 Batch 3 (Final Five) Course Redevelopment: Cloisonne, Qinqiang Mask, Terracotta Warriors, Calligraphy, Embroidery.
 * **Pending / Next Big Feature:** AI 风格迁移与提示词引擎 (Route C)
 
 ## 2. 最近执行记录 (Last Executed Task)
 * **Date:** 2026-03-14
-* **Task:** Unified Interaction Fix. 1) SvgPuncher: Removed auto-trace polling/performance-trap, implemented manual 'Refine Trace' and added `{ insert: false }` to boolean unite loops. 2) PaperCutting: Fixed unfolded seams via 1.02x scale-unite-deskew logic and intermediate path cleanup. Implemented robust state-reset/project-clear on fold-count change to break state deadlock.
-* **Executed By:** Antigravity (Local Sync & Push)
-* **Verification Trace:** Unified-0a89427
+* **Task:** Redeveloped the final 5 L1 courses. Addressed component collisions. Implemented accurate math-based self-intersection for `cloisonne`, 2D symmetry for `qinqiang-mask`, 3D modular AABB snapping using `@react-three/fiber` for `terracotta-warriors`, path tracking for `calligraphy`, and procedural lines for `embroidery`. Applied SSR-free `next/dynamic` imports across pages.
+* **Executed By:** Jules (Remote execution)
+* **Verification Trace:** jules-15265747888190207947-ffaadd37
 
 ## 3. 架构师禁区与已知隐患 (Architect's Redlines & Known Issues)
 * **Redline 1:** `svgTo3mfConverter.ts` 的输入 `config.baseLayerId` 必须与前端生成时的底板层级名称精确一致（旧为 `Mashao_Base`），禁止非法名称导致 3MF 模型缺失或变形。
