@@ -108,7 +108,7 @@ export default function LessonPage() {
                                     返回课程索引
                                 </Link>
                                 {nextLesson && (
-                                    <Link href={`/course/l1/${nextLesson}`} className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all">
+                                    <Link href={`/course/l1/${nextLesson}`} className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all flex items-center gap-2">
                                         进入下一章 <ChevronRight className="w-5 h-5" />
                                     </Link>
                                 )}
