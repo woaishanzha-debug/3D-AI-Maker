@@ -91,17 +91,13 @@ const DraggablePart: React.FC<PartProps> = ({ type, initialPosition, size, color
             onPointerOut={() => type !== 'torso' && setHovered(false)}
         >
             <boxGeometry args={size} />
-            <meshStandardMaterial
-                color={color}
-                roughness={0.7}
-                metalness={0.2}
-                emissive={hovered ? new THREE.Color('#3b82f6') : new THREE.Color('#000000')}
-                emissiveIntensity={hovered ? 0.2 : 0}
+            <meshBasicMaterial
+                color={hovered ? "#60a5fa" : color}
             />
             {/* Edges for better visibility */}
             <lineSegments>
                 <edgesGeometry args={[new THREE.BoxGeometry(...size)]} />
-                <lineBasicMaterial color={hovered ? "#ffffff" : "#ea580c"} linewidth={2} />
+                <lineBasicMaterial color={hovered ? "#ffffff" : "#ffffff"} opacity={0.3} transparent linewidth={1} />
             </lineSegments>
         </mesh>
     );
@@ -129,7 +125,7 @@ export const ModularAssemblyCanvas: React.FC = () => {
     };
 
     return (
-        <div className="relative w-full h-full bg-[#0a1128] rounded-[40px] overflow-hidden border border-blue-500/30 shadow-2xl flex flex-col items-center justify-center group touch-none">
+        <div className="relative w-full h-[600px] bg-[#0a1128] rounded-[40px] overflow-hidden border border-blue-500/30 shadow-2xl flex flex-col items-center justify-center group touch-none" style={{ minHeight: '600px' }}>
 
             <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20">
                 <div className={`flex items-center gap-3 px-6 py-2.5 backdrop-blur-xl rounded-full border shadow-xl transition-colors ${isComplete ? 'bg-green-500/20 border-green-500/40' : 'bg-black/40 border-blue-500/20'}`}>
@@ -143,14 +139,14 @@ export const ModularAssemblyCanvas: React.FC = () => {
             {/* 3D Canvas Area */}
             <div className="absolute inset-0 z-10 cursor-move">
                 <Canvas camera={{ position: [4, 2, 6], fov: 45 }}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
-
+                    <ambientLight intensity={1} />
+                    <pointLight position={[10, 10, 10]} intensity={2} />
+                    
                     <DraggablePart
                         type="head"
                         initialPosition={[-2, 2, 0]}
                         size={[0.8, 1.0, 0.8]}
-                        color="#f97316" // orange-500
+                        color="#f97316" 
                         onSnapChange={(s) => handleSnapChange('head', s)}
                     />
 
@@ -158,20 +154,19 @@ export const ModularAssemblyCanvas: React.FC = () => {
                         type="torso"
                         initialPosition={[0, 0, 0]}
                         size={[1.2, 1.6, 1.0]}
-                        color="#ea580c" // orange-600
+                        color="#ea580c" 
                     />
 
                     <DraggablePart
                         type="base"
                         initialPosition={[2, -2, 0]}
                         size={[1.6, 0.4, 1.2]}
-                        color="#c2410c" // orange-700
+                        color="#c2410c" 
                         onSnapChange={(s) => handleSnapChange('base', s)}
                     />
 
                     <Grid renderOrder={-1} position={[0, -2, 0]} infiniteGrid fadeDistance={20} fadeStrength={5} cellColor="#3b82f6" sectionColor="#1e3a8a" />
                     <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 1.5} enablePan={false} />
-                    <Environment preset="city" />
                 </Canvas>
             </div>
 

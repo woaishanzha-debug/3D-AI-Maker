@@ -14,6 +14,7 @@ export default function CourseL1Page() {
     const { isAuthorizedSeries, isLoading } = useAuthorization();
     const isL1Authorized = isAuthorizedSeries('maker-l1');
 
+    /* 
     useEffect(() => {
         fetch('/api/courses/complete')
             .then(res => res.ok ? res.json() : [])
@@ -27,6 +28,7 @@ export default function CourseL1Page() {
                 setCompletions([]);
             });
     }, []);
+    */
 
     const toggleCompletion = async (lessonId: string) => {
         const isCurrentlyCompleted = completions.includes(lessonId);
