@@ -70,8 +70,8 @@ export default function LessonPage() {
                                 <p className="text-xl text-blue-100/60 max-w-2xl leading-relaxed font-light">
                                     探索传统工艺的底层几何逻辑，利用 3D 打印技术赋予千年文化数字新生。
                                 </p>
-                                <button onClick={() => setStep(1)} className="w-fit px-12 py-5 bg-white text-black rounded-3xl font-black italic hover:scale-105 transition-transform flex items-center gap-3 shadow-2xl">
-                                    进入沉浸式数字课件 <ChevronRight className="w-6 h-6" />
+                                <button onClick={() => setStep(2)} className="w-fit px-12 py-5 bg-white text-black rounded-3xl font-black italic hover:scale-105 transition-transform flex items-center gap-3 shadow-2xl">
+                                    进入沉浸式数字实验室 <ChevronRight className="w-6 h-6" />
                                 </button>
                             </div>
                         </motion.div>
