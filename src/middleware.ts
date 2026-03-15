@@ -21,6 +21,25 @@ export default withAuth(
       return NextResponse.next();
     }
 
+    // Bypass AuthGuard for Local Development / QA for the 10 new L1 courses
+    if (process.env.NODE_ENV === 'development') {
+      const qaRoutes = [
+        "/course/l1/qin-lianpu",
+        "/course/l1/lantern",
+        "/course/l1/coal-seal",
+        "/course/l1/hufu",
+        "/course/l1/raden",
+        "/course/l1/terracotta",
+        "/course/l1/calligraphy",
+        "/course/l1/tang-sancai",
+        "/course/l1/cloisonne",
+        "/course/l1/song-brocade"
+      ];
+      if (qaRoutes.some(path => pathname.startsWith(path))) {
+        return NextResponse.next();
+      }
+    }
+
     // 2. 权限拦截：
     const token = req.nextauth.token;
 
@@ -69,6 +88,24 @@ export default withAuth(
 
         if (publicPaths.some(path => pathname.startsWith(path))) {
           return true;
+        }
+
+        if (process.env.NODE_ENV === 'development') {
+          const qaRoutes = [
+            "/course/l1/qin-lianpu",
+            "/course/l1/lantern",
+            "/course/l1/coal-seal",
+            "/course/l1/hufu",
+            "/course/l1/raden",
+            "/course/l1/terracotta",
+            "/course/l1/calligraphy",
+            "/course/l1/tang-sancai",
+            "/course/l1/cloisonne",
+            "/course/l1/song-brocade"
+          ];
+          if (qaRoutes.some(path => pathname.startsWith(path))) {
+            return true;
+          }
         }
 
         return !!token;
