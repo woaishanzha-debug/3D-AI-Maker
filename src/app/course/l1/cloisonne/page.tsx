@@ -7,13 +7,13 @@ import { PresentationViewer } from '@/components/PresentationViewer';
 import { ArrowLeft, BookOpen, MessageCircle, Trophy, Wand2, Box, ChevronRight, Share2, Sparkles, GraduationCap, Lightbulb } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const SymmetryCanvas = dynamic(() => import('@/components/SymmetryCanvas').then((mod) => mod.SymmetryCanvas), {
+const CloisonneCanvas = dynamic(() => import('@/components/CloisonneCanvas').then((mod) => mod.CloisonneCanvas), {
     ssr: false,
     loading: () => (
         <div className="w-full h-[600px] bg-slate-900 rounded-[40px] flex items-center justify-center border border-white/5 shadow-2xl">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-                <p className="text-blue-400 font-black text-xs uppercase tracking-widest animate-pulse">正在初始化数字实验室...</p>
+                <div className="w-12 h-12 border-4 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin" />
+                <p className="text-[#D4AF37] font-black text-xs uppercase tracking-widest animate-pulse">正在初始化数字实验室...</p>
             </div>
         </div>
     )
@@ -124,10 +124,10 @@ export default function CloisonneLesson() {
                                 initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                                 className="flex-1 min-h-[700px] flex flex-col gap-4"
                             >
-                                <SymmetryCanvas />
+                                <CloisonneCanvas />
                                 <div className="flex justify-end">
                                     <button onClick={() => setStep(3)} className="px-10 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all">
-                                        完成设计并导出确认
+                                        完成闭合填色验证并确认
                                     </button>
                                 </div>
                             </motion.div>
@@ -153,8 +153,8 @@ export default function CloisonneLesson() {
                                     <button onClick={() => setStep(2)} className="px-8 py-4 bg-white/5 rounded-2xl font-black text-sm text-white/60 hover:text-white transition-colors">
                                         继续优化设计
                                     </button>
-                                    <Link href="/course/l1" className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all">
-                                        解锁下一章：马勺脸谱 <ChevronRight className="w-5 h-5" />
+                                    <Link href="/course/l1/embroidery" className="px-10 py-4 bg-blue-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-blue-500 transition-all">
+                                        解锁下一章：传统刺绣 <ChevronRight className="w-5 h-5" />
                                     </Link>
                                 </div>
                             </motion.div>
