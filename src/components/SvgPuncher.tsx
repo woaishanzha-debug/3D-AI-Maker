@@ -127,7 +127,7 @@ export default function SvgPuncher() {
                 toolLayer.name = 'toolLayer';
                 puppetLayer.activate();
 
-                let validPaths: paper.PathItem[] = [];
+                const validPaths: paper.PathItem[] = [];
                 
                 const scanAndTag = (obj: any) => {
                     if (obj.children) {

@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, Sparkles, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import TangSancaiLab from './Lab';
 
 export default function LessonPage() {
-    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab, 3: Success
     
     const nextLesson = 'terracotta-warriors';
 
@@ -88,6 +89,35 @@ export default function LessonPage() {
                     )}
 
                     {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
+                            className="flex-1 flex flex-col gap-6"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-amber-600 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(217,119,6,0.4)]">
+                                        <Sparkles className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-black italic">模块化唐三彩与釉色流淌</h2>
+                                        <p className="text-sm text-blue-200/60">组合各个组件，并通过调节强度触发釉色的“流动”窑变效果。</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <button onClick={() => setStep(3)} className="px-8 py-4 bg-white text-black rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-blue-50 transition-all shadow-xl active:scale-95">
+                                        完成实验 <ChevronRight className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 rounded-[48px] overflow-hidden border border-white/5 shadow-2xl bg-slate-900/50">
+                                <TangSancaiLab />
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {step === 3 && (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}

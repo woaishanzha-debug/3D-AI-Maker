@@ -248,7 +248,7 @@ const PaperCuttingCanvas = forwardRef<PaperCuttingCanvasRef, PaperCuttingCanvasP
       getUnfoldedSvg: () => {
         if (!paper.project) return null;
 
-        let tempGroup: paper.Group | null = null;
+        const tempGroup: paper.Group | null = null;
         let wasFolded = false;
 
         // If currently folded, we need to temporarily unfold to generate the SVG
