@@ -23,11 +23,18 @@ export function Canvas() {
   };
 
   const generateLanternFrame = () => {
-    if (!paper.project) return;
+    if (!paper.project || !paper.view) return;
     paper.project.clear();
 
     const bounds = paper.view.bounds;
-    const center = bounds.center;
+    // ensure center is not [0,0] if bounds are 0
+    let center = bounds.center;
+    if (bounds.width === 0 || bounds.height === 0) {
+      const w = containerRef.current?.clientWidth || window.innerWidth;
+      const h = containerRef.current?.clientHeight || window.innerHeight;
+      paper.view.viewSize = new paper.Size(w, h);
+      center = paper.view.bounds.center;
+    }
     const bg = new paper.Path.Rectangle(bounds);
     bg.fillColor = new paper.Color('#0f172a');
 
@@ -92,17 +99,21 @@ export function Canvas() {
     }
 
     // Clean up overlaps by uniting everything into a single compound path
-    let finalFrame = frameGroup.children[0].clone() as paper.PathItem;
-    for (let i = 1; i < frameGroup.children.length; i++) {
-        const item = frameGroup.children[i] as paper.PathItem;
-        const united = finalFrame.unite(item);
-        finalFrame.remove();
-        finalFrame = united as paper.PathItem;
-    }
+    if (frameGroup.children.length > 0) {
+        let finalFrame = frameGroup.children[0].clone() as paper.PathItem;
+        for (let i = 1; i < frameGroup.children.length; i++) {
+            const item = frameGroup.children[i] as paper.PathItem;
+            // Prevent float precision gaps by slightly scaling up, then uniting, then scaling down.
+            item.scale(1.02, item.bounds.center);
+            const united = finalFrame.unite(item);
+            finalFrame.remove();
+            finalFrame = united as paper.PathItem;
+        }
 
-    frameGroup.remove();
-    finalFrame.fillColor = new paper.Color('#fca5a5'); // lighter red for preview
-    finalFrame.name = 'lantern_frame_unified';
+        frameGroup.remove();
+        finalFrame.fillColor = new paper.Color('#fca5a5'); // lighter red for preview
+        finalFrame.name = 'lantern_frame_unified';
+    }
 
     paper.view.update();
   };
@@ -110,12 +121,26 @@ export function Canvas() {
   useEffect(() => {
     initPaper();
 
+    // Handle canvas resize
+    const onResize = () => {
+        if (paper.view) {
+            paper.view.viewSize = new paper.Size(
+                containerRef.current?.clientWidth || window.innerWidth,
+                containerRef.current?.clientHeight || window.innerHeight
+            );
+            generateLanternFrame();
+        }
+    };
+    window.addEventListener('resize', onResize);
+
     // Defer generation to ensure canvas has dimensions
     setTimeout(() => {
+        onResize();
         generateLanternFrame();
     }, 100);
 
     return () => {
+      window.removeEventListener('resize', onResize);
       if (paper.project) {
         paper.project.clear();
         paper.project.remove();

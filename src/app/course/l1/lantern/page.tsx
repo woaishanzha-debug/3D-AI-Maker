@@ -112,6 +112,14 @@ export default function LanternLesson() {
                                     <Trophy className="w-16 h-16 text-white" />
                                 </div>
                                 <h2 className="text-6xl font-black italic tracking-tighter text-white">3MF EXPORT READY</h2>
+                                <div className="flex gap-4 relative z-10">
+                                    <Link href="/course/l1" className="px-8 py-4 bg-white/5 rounded-2xl font-black text-sm text-white/60 hover:text-white transition-colors">
+                                        返回课程索引
+                                    </Link>
+                                    <Link href="/course/l1/tang-sancai" className="px-10 py-4 bg-red-600 rounded-2xl font-black text-sm text-white shadow-xl hover:bg-red-500 transition-all flex items-center gap-2">
+                                        进入下一章 <ChevronRight className="w-5 h-5" />
+                                    </Link>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>

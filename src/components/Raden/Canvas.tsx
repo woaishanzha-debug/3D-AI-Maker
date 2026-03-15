@@ -75,9 +75,9 @@ export function Canvas() {
         }
 
         // Randomly color with iridescence for display
-        const hues = [200, 260, 320, 160, 220]; // Mother of pearl colors
+        const hues = [190, 280, 320, 160, 220, 100]; // Brighter mother of pearl colors
         const h = hues[Math.floor(Math.random() * hues.length)];
-        intersected.fillColor = new paper.Color(`hsl(${h}, 70%, 70%)`);
+        intersected.fillColor = new paper.Color(`hsl(${h}, 90%, 85%)`);
         intersected.strokeColor = new paper.Color('#1e293b');
         intersected.strokeWidth = 1;
         shatterGroup.addChild(intersected);
