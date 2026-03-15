@@ -16,11 +16,15 @@ export default function CourseL1Page() {
 
     useEffect(() => {
         fetch('/api/courses/complete')
-            .then(res => res.json())
+            .then(res => res.ok ? res.json() : [])
             .then(data => {
                 if (Array.isArray(data)) {
                     setCompletions(data.map((c: { lessonId: string }) => c.lessonId));
                 }
+            })
+            .catch(err => {
+                console.warn("Progress fetch failed:", err);
+                setCompletions([]);
             });
     }, []);
 

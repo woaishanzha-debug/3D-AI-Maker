@@ -12,15 +12,7 @@ export function Canvas() {
   const [shatterCount, setShatterCount] = useState(50);
   const [gapSize, setGapSize] = useState(2);
 
-  const initPaper = () => {
-    if (canvasRef.current) {
-      if (!paper.project) {
-        paper.setup(canvasRef.current);
-      } else {
-        paper.project.clear();
-      }
-    }
-  };
+  const projectRef = useRef<paper.Project | null>(null);
 
   const generateRadenPattern = () => {
     if (!paper.project) return;
@@ -33,7 +25,7 @@ export function Canvas() {
     const bg = new paper.Path.Rectangle(bounds);
     bg.fillColor = new paper.Color('#0f172a');
 
-    // Create an outline shape (e.g., a simple petal/leaf outline to contain the pattern)
+    // Create an outline shape
     const containerShape = new paper.Path.RegularPolygon(center, 6, Math.min(bounds.width, bounds.height) * 0.35);
     containerShape.fillColor = new paper.Color('#ffffff');
     containerShape.opacity = 0.05;
@@ -62,20 +54,16 @@ export function Canvas() {
       }
       path.closed = true;
 
-      // Intersect Voronoi cell with container shape
       const intersected = containerShape.intersect(path);
       path.remove();
 
       if (intersected instanceof paper.PathItem) {
-        // Apply gap size by scaling down slightly relative to center
         if (gapSize > 0) {
             const pathCenter = intersected.bounds.center;
-            // Scale based on area roughly to simulate gap distance, simplified here
             intersected.scale(1 - (gapSize / 50), pathCenter);
         }
 
-        // Randomly color with iridescence for display
-        const hues = [190, 280, 320, 160, 220, 100]; // Brighter mother of pearl colors
+        const hues = [190, 280, 320, 160, 220, 100];
         const h = hues[Math.floor(Math.random() * hues.length)];
         intersected.fillColor = new paper.Color(`hsl(${h}, 90%, 85%)`);
         intersected.strokeColor = new paper.Color('#1e293b');
@@ -84,21 +72,42 @@ export function Canvas() {
       }
     }
 
+    // Center and fit to view
+    if (shatterGroup.children.length > 0) {
+        shatterGroup.position = paper.view.center;
+        shatterGroup.fitBounds(paper.view.bounds.scale(0.8));
+    }
+
     paper.view.update();
   };
 
   useEffect(() => {
-    initPaper();
+    if (canvasRef.current) {
+        while (paper.projects && paper.projects.length > 0) {
+            paper.projects[0].remove();
+        }
+        paper.setup(canvasRef.current);
+    }
 
-    // Defer generation to ensure canvas has dimensions
+    const onResize = () => {
+        if (paper.view) {
+            paper.view.viewSize = new paper.Size(
+                containerRef.current?.clientWidth || window.innerWidth,
+                containerRef.current?.clientHeight || window.innerHeight
+            );
+            generateRadenPattern();
+        }
+    };
+    window.addEventListener('resize', onResize);
+
     setTimeout(() => {
-        generateRadenPattern();
+        onResize();
     }, 100);
 
     return () => {
-      if (paper.project) {
-        paper.project.clear();
-        paper.project.remove();
+      window.removeEventListener('resize', onResize);
+      while (paper.projects && paper.projects.length > 0) {
+          paper.projects[0].remove();
       }
     };
   }, []);
@@ -128,8 +137,8 @@ export function Canvas() {
       <div ref={containerRef} className="flex-1 rounded-[40px] bg-slate-900 border border-white/5 overflow-hidden shadow-2xl relative">
         <canvas
           ref={canvasRef}
-          className="w-full h-full block cursor-crosshair"
-          style={{ touchAction: 'none' }}
+          className="block cursor-crosshair"
+          style={{ width: '100%', height: '100%', touchAction: 'none' }}
           data-paper-resize="true"
         />
         <div className="absolute top-6 left-6 px-4 py-2 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 text-white/60 text-xs font-bold tracking-widest uppercase">

@@ -12,22 +12,13 @@ export function Canvas() {
   const [sides, setSides] = useState(6);
   const [radius, setRadius] = useState(120);
 
-  const initPaper = () => {
-    if (canvasRef.current) {
-      if (!paper.project) {
-        paper.setup(canvasRef.current);
-      } else {
-        paper.project.clear();
-      }
-    }
-  };
+  const projectRef = useRef<paper.Project | null>(null);
 
   const generateLanternFrame = () => {
     if (!paper.project || !paper.view) return;
     paper.project.clear();
 
     const bounds = paper.view.bounds;
-    // ensure center is not [0,0] if bounds are 0
     let center = bounds.center;
     if (bounds.width === 0 || bounds.height === 0) {
       const w = containerRef.current?.clientWidth || window.innerWidth;
@@ -35,45 +26,39 @@ export function Canvas() {
       paper.view.viewSize = new paper.Size(w, h);
       center = paper.view.bounds.center;
     }
-    const bg = new paper.Path.Rectangle(bounds);
+    const bg = new paper.Path.Rectangle(paper.view.bounds);
     bg.fillColor = new paper.Color('#0f172a');
 
     const frameGroup = new paper.Group();
 
     // Outer polygon frame
     const outerFrame = new paper.Path.RegularPolygon(center, sides, radius);
-    outerFrame.strokeColor = new paper.Color('#ef4444');
-    outerFrame.strokeWidth = 10;
-
-    // Convert stroke to fill for 3D extrusion compat
-    const outerStrokePath = outerFrame.clone();
-    outerStrokePath.strokeColor = null;
-    outerStrokePath.fillColor = new paper.Color('#ef4444');
-
-    // Simulate framing by creating a smaller inner polygon and subtracting
+    outerFrame.fillColor = new paper.Color('#ef4444');
+    
+    // Create a smaller inner polygon for the aperture
     const innerFrame = new paper.Path.RegularPolygon(center, sides, radius - 15);
     innerFrame.fillColor = new paper.Color('#ef4444');
-
-    const frameCompound = outerStrokePath.subtract(innerFrame);
+    
+    const frameCompound = outerFrame.subtract(innerFrame);
     if (frameCompound instanceof paper.PathItem) {
         frameCompound.fillColor = new paper.Color('#ef4444');
         frameCompound.name = 'frame';
         frameGroup.addChild(frameCompound);
+    } else {
+        console.error("Frame subtraction failed or returned non-path item");
     }
 
     outerFrame.remove();
-    outerStrokePath.remove();
     innerFrame.remove();
 
-    // Center hub for mortise and tenon
+    // Center hub
     const hub = new paper.Path.Circle(center, 20);
     hub.fillColor = new paper.Color('#ef4444');
     frameGroup.addChild(hub);
 
-    // Spokes connecting hub to frame
+    // Spokes
     for (let i = 0; i < sides; i++) {
         const angle = (i * 360) / sides;
-        // Adjust angle to point to vertices
         const radian = ((angle - 90) * Math.PI) / 180;
 
         const outerPt = new paper.Point(
@@ -81,11 +66,6 @@ export function Canvas() {
             center.y + Math.sin(radian) * radius
         );
 
-        const spokeLine = new paper.Path.Line(center, outerPt);
-        spokeLine.strokeColor = new paper.Color('#ef4444');
-        spokeLine.strokeWidth = 8;
-
-        // Convert to filled rectangle for 3MF
         const spokeVec = outerPt.subtract(center);
         const rect = new paper.Path.Rectangle({
             point: center.subtract(new paper.Point(4, 0)),
@@ -95,33 +75,44 @@ export function Canvas() {
         rect.rotate(angle, center);
         rect.fillColor = new paper.Color('#ef4444');
         frameGroup.addChild(rect);
-        spokeLine.remove();
     }
 
-    // Clean up overlaps by uniting everything into a single compound path
-    if (frameGroup.children.length > 0) {
-        let finalFrame = frameGroup.children[0].clone() as paper.PathItem;
-        for (let i = 1; i < frameGroup.children.length; i++) {
-            const item = frameGroup.children[i] as paper.PathItem;
-            // Prevent float precision gaps by slightly scaling up, then uniting, then scaling down.
-            item.scale(1.02, item.bounds.center);
-            const united = finalFrame.unite(item);
-            finalFrame.remove();
-            finalFrame = united as paper.PathItem;
+    // Final assembly
+    const finalGroup = new paper.Group([...frameGroup.children, hub]);
+    finalGroup.name = 'lantern_frame_unified';
+    
+    // Explicitly set styles for all items in the group
+    finalGroup.children.forEach(child => {
+        if (child instanceof paper.PathItem) {
+            child.fillColor = new paper.Color('#fca5a5'); 
+            child.strokeColor = new paper.Color('white');
+            child.strokeWidth = 5;
         }
+    });
 
-        frameGroup.remove();
-        finalFrame.fillColor = new paper.Color('#fca5a5'); // lighter red for preview
-        finalFrame.name = 'lantern_frame_unified';
+    // Center and fit to view
+    finalGroup.position = paper.view.center;
+    if (finalGroup.bounds.width > paper.view.bounds.width * 0.8 || 
+        finalGroup.bounds.height > paper.view.bounds.height * 0.8) {
+        finalGroup.fitBounds(paper.view.bounds.scale(0.8));
     }
+
+    finalGroup.bringToFront();
+    paper.project.activeLayer.addChild(finalGroup);
 
     paper.view.update();
+    console.log("Lantern Render Complete. Items:", finalGroup.children.length);
   };
 
   useEffect(() => {
-    initPaper();
+    if (canvasRef.current) {
+        // CRITICAL FIX: Destroy old projects that are clinging to detached DOM canvases
+        while (paper.projects && paper.projects.length > 0) {
+            paper.projects[0].remove();
+        }
+        paper.setup(canvasRef.current);
+    }
 
-    // Handle canvas resize
     const onResize = () => {
         if (paper.view) {
             paper.view.viewSize = new paper.Size(
@@ -133,17 +124,14 @@ export function Canvas() {
     };
     window.addEventListener('resize', onResize);
 
-    // Defer generation to ensure canvas has dimensions
     setTimeout(() => {
         onResize();
-        generateLanternFrame();
     }, 100);
 
     return () => {
       window.removeEventListener('resize', onResize);
-      if (paper.project) {
-        paper.project.clear();
-        paper.project.remove();
+      while (paper.projects && paper.projects.length > 0) {
+          paper.projects[0].remove();
       }
     };
   }, []);
@@ -196,8 +184,8 @@ export function Canvas() {
       <div ref={containerRef} className="flex-1 rounded-[40px] bg-slate-900 border border-white/5 overflow-hidden shadow-2xl relative">
         <canvas
           ref={canvasRef}
-          className="w-full h-full block cursor-crosshair"
-          style={{ touchAction: 'none' }}
+          className="block cursor-crosshair"
+          style={{ width: '100%', height: '100%', touchAction: 'none' }}
           data-paper-resize="true"
         />
         <div className="absolute top-6 left-6 px-4 py-2 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 text-white/60 text-xs font-bold tracking-widest uppercase">

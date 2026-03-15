@@ -2,12 +2,25 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy, Wand2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const RadenCanvas = dynamic(() => import('@/components/Raden/Canvas').then((mod) => mod.Canvas), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-[600px] bg-slate-900 rounded-[40px] flex items-center justify-center border border-white/5 shadow-2xl">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                <p className="text-blue-400 font-black text-xs uppercase tracking-widest animate-pulse">正在构建幻彩实验室...</p>
+            </div>
+        </div>
+    )
+});
+
 export default function LessonPage() {
-    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab, 3: Success
     
     const nextLesson = 'coal-seal';
 
@@ -28,7 +41,7 @@ export default function LessonPage() {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-1">
-                        {[0, 1, 2].map((s) => (
+                        {[0, 1, 2, 3].map((s) => (
                             <div key={s} className={`h-1.5 w-8 rounded-full transition-all ${s <= step ? 'bg-blue-500' : 'bg-white/10'}`} />
                         ))}
                     </div>
@@ -88,6 +101,21 @@ export default function LessonPage() {
                     )}
 
                     {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 min-h-[700px] flex flex-col gap-4"
+                        >
+                            <RadenCanvas />
+                            <div className="flex justify-end">
+                                <button onClick={() => setStep(3)} className="px-10 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all">
+                                    完成设计并提交任务
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {step === 3 && (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
