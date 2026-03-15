@@ -10,6 +10,7 @@ export interface Export3mfConfig {
   filename?: string;
   groupName?: string;
   isDiscreteMode?: boolean;
+  isSunken?: boolean;
 }
 
 export async function exportSvgTo3mf(
@@ -21,7 +22,8 @@ export async function exportSvgTo3mf(
     baseDepth,
     itemDepth,
     filename = 'exported-model.3mf',
-    groupName = 'Export_Project'
+    groupName = 'Export_Project',
+    isSunken = false
   } = config;
 
   const exportGroup = new THREE.Group();
@@ -60,7 +62,11 @@ export async function exportSvgTo3mf(
       // 核心修复：Z 轴层级分离形成浮雕！
       // 底板从 Z=0 开始，厚度 2。图腾从 Z=2 开始，厚度 3。避免重叠导致的颜色丢失。
       if (!isBasePlate) {
-          mesh.position.z = baseDepth; 
+          if (isSunken) {
+              mesh.position.z = baseDepth - depth;
+          } else {
+              mesh.position.z = baseDepth;
+          }
       }
 
       // 居中偏移优化
