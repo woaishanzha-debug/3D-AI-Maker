@@ -3,11 +3,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { PresentationViewer } from '@/components/PresentationViewer';
-import { ArrowLeft, BookOpen, ChevronRight, Sparkles, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+const InteractionBoard = dynamic(() => import('@/components/SongBrocade/InteractionBoard'), {
+    ssr: false,
+    loading: () => <div className="flex-1 flex items-center justify-center text-slate-500 font-bold tracking-widest animate-pulse">LOADING CRAFT LAB...</div>
+});
 
 export default function LessonPage() {
-    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab/Success
+    const [step, setStep] = useState(0); // 0: Intro, 1: Presentation, 2: Lab, 3: Success
     
     const nextLesson = 'shadow-play';
 
@@ -88,6 +94,24 @@ export default function LessonPage() {
                     )}
 
                     {step === 2 && (
+                        <motion.div
+                            key="lab"
+                            initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
+                            className="flex-1 w-full bg-[#1e293b] rounded-t-[48px] overflow-hidden flex flex-col relative z-20 shadow-[0_-20px_80px_rgba(0,0,0,0.5)] border border-slate-700/50"
+                        >
+                            <InteractionBoard />
+
+                            <button
+                                onClick={() => setStep(3)}
+                                className="absolute bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-emerald-500 hover:bg-emerald-400 text-white rounded-2xl font-bold tracking-widest shadow-xl shadow-emerald-500/20 transition-all hover:-translate-y-1"
+                            >
+                                完成创作 (Finish)
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </motion.div>
+                    )}
+
+                    {step === 3 && (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
