@@ -4,7 +4,6 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Download, Scissors, Circle, Upload, MousePointer2, Plus, Image as ImageIcon, Trash2 } from 'lucide-react';
 // @ts-ignore
 import ImageTracer from 'imagetracerjs';
-// @ts-ignore
 import paper from 'paper/dist/paper-core';
 import { exportSvgTo3mf } from '@/lib/svgTo3mfConverter';
 import { EVENTS } from '@/lib/event-bus';
